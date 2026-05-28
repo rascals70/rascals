@@ -559,7 +559,7 @@ function buildApp(){
     <div class="pills">${pills}</div>
     <div class="sync-row">
       <button class="sync-info" data-a="sync" style="color:${scol}">${sico} Cozi ${slbl}</button>
-      ${sc!=="loading"?`<button style="font-size:11px;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.4);border-radius:6px;color:#fff;padding:3px 10px;cursor:pointer;font-family:inherit" data-a="sync">↻ Refresh</button>`:""}
+      <button style="font-size:12px;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.4);border-radius:6px;color:#fff;padding:4px 12px;cursor:pointer;font-family:inherit;font-weight:600" data-a="hard-refresh">↻ Update app</button>
     </div>
   </div>
   <div class="tabs">
@@ -657,6 +657,21 @@ function handle(e){
   if(a==="sync")    fetchLive();
   if(a==="show-add")set({showAdd:true});
   if(a==="cancel")  set({showAdd:false});
+  if(a==="hard-refresh"){
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        Promise.all(regs.map(r => r.unregister())).then(() => {
+          caches.keys().then(keys => {
+            Promise.all(keys.map(k => caches.delete(k))).then(() => {
+              window.location.reload(true);
+            });
+          });
+        });
+      });
+    } else {
+      window.location.reload(true);
+    }
+  }
   if(a==="open-edit"){
     const ev=allEvs().find(e=>e.id===el.dataset.id);
     if(!ev)return;
