@@ -705,5 +705,23 @@ render();
 // Try live sync in background after initial render
 setTimeout(fetchLive, 500);
 </script>
+
+<script>
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(reg => {
+    // Check for updates every 30 seconds
+    setInterval(() => reg.update(), 30000);
+    reg.addEventListener('updatefound', () => {
+      const newSW = reg.installing;
+      newSW.addEventListener('statechange', () => {
+        if(newSW.state === 'installed' && navigator.serviceWorker.controller) {
+          // New version available — reload automatically
+          window.location.reload();
+        }
+      });
+    });
+  });
+}
+</script>
 </body>
 </html>
