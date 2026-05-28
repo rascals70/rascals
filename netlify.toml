@@ -1,0 +1,10 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/"
+  to = "/rascals.html"
+  status = 200
+
+[build.processing]
+  skip_processing = true
