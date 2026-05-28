@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Rascal">
+<meta name="theme-color" content="#0f172a">
+<title>Rascal</title>
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#f0f4f8;--card:#ffffff;--card2:#f8fafc;
+  --bd:#e2e8f0;--tx:#0f172a;--mu:#64748b;--mu2:#94a3b8;
+  --jason:#2563eb;--kerry:#db2777;--oliver:#16a34a;--louis:#7c3aed;
+  --hugo:#d97706;--cal:#0891b2;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden}
+#app{height:100%;display:flex;flex-direction:column;max-width:480px;margin:0 auto;background:var(--bg)}
+.hdr{padding:calc(var(--st) + 16px) 16px 14px;background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 100%);flex-shrink:0}
+.hdr-sub{font-size:11px;letter-spacing:3px;color:rgba(255,255,255,.6);text-transform:uppercase;margin-bottom:3px}
+.hdr-title{font-size:26px;font-weight:700;letter-spacing:-.5px;color:#ffffff}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.pill{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 10px;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-family:inherit;transition:all .15s}
+.pill.on{background:rgba(255,255,255,.9);color:#1e3a8a;border-color:transparent}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sync-row{margin-top:8px;display:flex;align-items:center;justify-content:space-between}
+.sync-info{font-size:11px;display:flex;align-items:center;gap:5px;background:transparent;border:none;cursor:pointer;padding:0;font-family:inherit;color:rgba(255,255,255,.7)}
+.sdot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.tabs{display:flex;border-bottom:2px solid var(--bd);background:#ffffff;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.tab{flex:1;padding:14px 0;border:none;background:transparent;color:var(--mu);font-size:15px;font-family:inherit;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;font-weight:500}
+.tab.on{color:var(--jason);border-bottom-color:var(--jason);font-weight:700}
+.body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--sb) + 20px);background:var(--bg)}
+.sec{padding:14px 14px}
+.mnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.nbtn{background:#ffffff;border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);font-size:20px;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.mtitle{font-weight:700;font-size:18px;color:var(--tx)}
+.dhdr{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
+.dh{text-align:center;font-size:11px;color:var(--mu);font-weight:600;padding:3px 0}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cd{background:#ffffff;border:1.5px solid var(--bd);border-radius:8px;padding:4px 2px;cursor:pointer;color:var(--tx);font-size:14px;font-weight:500;min-height:46px;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:inherit;transition:all .15s}
+.cd.tod{background:#eff6ff;border-color:var(--jason);color:var(--jason)}
+.cd.sel{background:var(--jason);color:#fff;border-color:var(--jason)}
+.cd.emp{background:transparent;border:none;cursor:default}
+.dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center}
+.evd{width:5px;height:5px;border-radius:50%}
+.slbl{font-size:11px;color:var(--mu);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;margin-top:20px;font-weight:700}
+.evc{background:#ffffff;border-radius:10px;padding:12px 14px;margin-bottom:8px;border-left:4px solid var(--mu);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.evt{font-weight:700;font-size:16px;color:var(--tx)}
+.evm{font-size:12px;color:var(--mu);margin-top:3px}
+.upi{display:flex;align-items:center;gap:12px;background:#ffffff;border-radius:10px;padding:13px 14px;margin-bottom:7px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.upbar{width:4px;height:38px;border-radius:2px;flex-shrink:0}
+.upt{font-size:15px;font-weight:700;color:var(--tx)}
+.upm{font-size:12px;color:var(--mu);margin-top:2px}
+.abtn{background:var(--jason);border:none;border-radius:10px;color:#fff;font-size:15px;padding:14px;cursor:pointer;font-family:inherit;font-weight:700;width:100%;margin-top:18px}
+.fbox{margin-top:18px;background:#ffffff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.finp{width:100%;background:var(--bg);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);font-size:14px;padding:10px 12px;font-family:inherit;margin-bottom:8px}
+.brow{display:flex;gap:8px;margin-top:6px}
+.bpri{background:var(--jason);border:none;border-radius:8px;color:#fff;font-size:13px;padding:10px 16px;cursor:pointer;font-family:inherit;font-weight:700}
+.bghost{background:#ffffff;border:1.5px solid var(--bd);border-radius:8px;color:var(--mu);font-size:13px;padding:10px 16px;cursor:pointer;font-family:inherit}
+.hhdr{background:linear-gradient(135deg,#fffbeb,#fef3c7);border-radius:14px;padding:16px 18px;margin-bottom:16px;border:1.5px solid #fde68a}
+.pbar{background:var(--bd);border-radius:4px;height:6px;overflow:hidden;margin-top:8px}
+.pfill{height:100%;border-radius:4px;transition:width .3s}
+.tbtn{width:100%;display:flex;align-items:center;gap:12px;background:#ffffff;border:1.5px solid var(--bd);border-radius:12px;padding:13px 14px;margin-bottom:7px;cursor:pointer;font-family:inherit;text-align:left;transition:all .2s;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.tbtn.done{background:#f0fdf4;border-color:#bbf7d0}
+.tnm{font-size:15px;font-weight:600;color:var(--tx)}
+.tbtn.done .tnm{text-decoration:line-through;color:var(--mu)}
+.ttm{font-size:12px;color:var(--mu);margin-top:2px}
+.chk{width:22px;height:22px;border-radius:50%;flex-shrink:0;background:#ffffff;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
+.chk.done{background:#16a34a;border-color:#16a34a}
+.cbanner{text-align:center;padding:20px;margin-top:8px;background:#f0fdf4;border-radius:12px;border:1.5px solid #bbf7d0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.pulsing{animation:pulse 1s infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinning{display:inline-block;animation:spin .8s linear infinite}</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// PWA manifest
+(function(){
+  const m={name:"Rascal",short_name:"Rascal",start_url:".",display:"standalone",background_color:"#0f172a",theme_color:"#0f172a",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%BE%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
+  const l=document.createElement("link");l.rel="manifest";l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));document.head.appendChild(l);
+})();
+
+const COZI_URL="https://rest.cozi.com/api/ext/1103/e3a95b83-d61c-4cd5-b910-8b119c0ebc8e/icalendar/feed/feed.ics";
+const PROXIES=[
+  u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
+  u=>`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`,
+  u=>`https://thingproxy.freeboard.io/fetch/${u}`,
+];
+const COLORS={Jason:"#2563eb",Kerry:"#db2777",Oliver:"#16a34a",Louis:"#7c3aed",Hugo:"#d97706",All:"#0891b2",Holiday:"#475569"};
+// Normalise member to array
+function getMembers(e){
+  if(Array.isArray(e.member)) return e.member;
+  if(e.member==="All") return ["All"];
+  return [e.member];
+}
+function primaryColor(e){
+  const ms=getMembers(e);
+  const first=ms.find(m=>m!=="All"&&m!=="Holiday");
+  return COLORS[first||ms[0]]||COLORS.All;
+}
+function matchesFilter(e,filter){
+  if(filter==="All") return true;
+  const ms=getMembers(e);
+  return ms.includes(filter)||ms.includes("All");
+}
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const MEMBERS=["Jason","Kerry","Oliver","Louis","Hugo","All"];
+const HT=[
+  {icon:"🍗",task:"Morning feed (puppy kibble)",time:"07:00"},
+  {icon:"🦮",task:"Morning walk / toilet trip",time:"07:15"},
+  {icon:"🏠",task:"Crate rest / alone time",time:"09:00"},
+  {icon:"🍗",task:"Lunchtime feed",time:"12:00"},
+  {icon:"🐾",task:"Midday walk / play session",time:"12:15"},
+  {icon:"🎓",task:"Training session (5 mins)",time:"15:00"},
+  {icon:"🍗",task:"Evening feed",time:"17:00"},
+  {icon:"🦮",task:"Evening walk",time:"17:30"},
+  {icon:"🌙",task:"Last toilet trip",time:"20:00"},
+  {icon:"🏠",task:"Crate for night / Kong",time:"21:00"}
+];
+
+// ALL EVENTS - embedded from Cozi feed (auto-refreshed in background)
+const EMBEDDED=[
+  {
+    "id": "s1",
+    "title": "Arsenal Trophy Parade 🏆",
+    "date": "2026-05-31",
+    "member": "Jason"
+  },
+  {
+    "id": "s3",
+    "title": "King's Birthday 👑",
+    "date": "2026-06-20",
+    "member": "Holiday"
+  },
+  {
+    "id": "s4",
+    "title": "Father's Day 🎉",
+    "date": "2026-06-21",
+    "member": "Holiday"
+  },
+  {
+    "id": "s5",
+    "title": "Churchill Airbnb 🛁 Check-in after 4pm",
+    "date": "2026-07-09",
+    "member": "All"
+  },
+  {
+    "id": "s6",
+    "title": "Churchill Airbnb 🏡 (Axminster, sleeps 15)",
+    "date": "2026-07-10",
+    "member": "All"
+  },
+  {
+    "id": "s7",
+    "title": "Churchill Airbnb 🛁 Checkout by 10am",
+    "date": "2026-07-12",
+    "member": "All"
+  },
+  {
+    "id": "c1",
+    "title": "Paula Parrot 50th 🎉",
+    "date": "2026-05-29",
+    "member": "Kerry"
+  },
+  {
+    "id": "c2",
+    "title": "Haircut ✂️",
+    "date": "2026-05-30",
+    "member": "Kerry"
+  },
+  {
+    "id": "c3",
+    "title": "Matilda home after art club",
+    "date": "2026-06-01",
+    "member": [
+      "Kerry",
+      "Louis"
+    ]
+  },
+  {
+    "id": "c4",
+    "title": "Oliver: Chemistry Paper 1 📝 (9am, SPH R2)",
+    "date": "2026-06-02",
+    "member": "Oliver"
+  },
+  {
+    "id": "cx1",
+    "title": "Oliver: Maths Pure 1 📝 (1:30pm, SPH M4)",
+    "date": "2026-06-03",
+    "member": "Oliver"
+  },
+  {
+    "id": "c5",
+    "title": "Oliver: Economics Paper 3 📝 (9am, SPH P1)",
+    "date": "2026-06-04",
+    "member": "Oliver"
+  },
+  {
+    "id": "c6",
+    "title": "Call vets – Hugo flea treatment 🐶",
+    "date": "2026-06-04",
+    "member": "Hugo"
+  },
+  {
+    "id": "c7",
+    "title": "Leafy meningitis vaccine 💉",
+    "date": "2026-06-05",
+    "member": "Oliver"
+  },
+  {
+    "id": "c8",
+    "title": "Louis & Kerry – HP Studio Tour ⚡",
+    "date": "2026-06-06",
+    "member": [
+      "Kerry",
+      "Louis"
+    ]
+  },
+  {
+    "id": "c9",
+    "title": "Oliver: Chemistry Paper 2 📝 (9am, HALL C5)",
+    "date": "2026-06-09",
+    "member": "Oliver"
+  },
+  {
+    "id": "c10",
+    "title": "Oliver: Maths Pure 2 📝 (1:30pm, SPH M4)",
+    "date": "2026-06-11",
+    "member": "Oliver"
+  },
+  {
+    "id": "c11",
+    "title": "Mum & Dad in France 🇫🇷",
+    "date": "2026-06-11",
+    "member": "All"
+  },
+  {
+    "id": "c12",
+    "title": "Louis arts & culture performance 🎭",
+    "date": "2026-06-12",
+    "member": "Louis"
+  },
+  {
+    "id": "c13",
+    "title": "Will & Jess Wedding 💍",
+    "date": "2026-06-13",
+    "member": "All"
+  },
+  {
+    "id": "c14",
+    "title": "Oliver: Chemistry Paper 3 📝 (9am, SPH Q10)",
+    "date": "2026-06-15",
+    "member": "Oliver"
+  },
+  {
+    "id": "c15",
+    "title": "Kerry at Butcher's wine shop 🍷",
+    "date": "2026-06-18",
+    "member": "Kerry"
+  },
+  {
+    "id": "c16",
+    "title": "Oliver: Maths Stats & Mechanics 📝 (1:30pm, SPH M4)",
+    "date": "2026-06-18",
+    "member": "Oliver"
+  },
+  {
+    "id": "c17",
+    "title": "Leafy, Mum & Dad day out",
+    "date": "2026-07-03",
+    "member": "All"
+  },
+  {
+    "id": "c18",
+    "title": "HT Fest 🎪",
+    "date": "2026-07-04",
+    "member": "All"
+  },
+  {
+    "id": "c19",
+    "title": "Mum & Dad in France 🇫🇷",
+    "date": "2026-07-16",
+    "member": "All"
+  },
+  {
+    "id": "c20",
+    "title": "Emma & Declan engagement party 🥂",
+    "date": "2026-07-25",
+    "member": "All"
+  },
+  {
+    "id": "c21",
+    "title": "Leafy in Swanage 🏖️",
+    "date": "2026-08-21",
+    "member": "Oliver"
+  },
+  {
+    "id": "c22",
+    "title": "Leafy in Spain ☀️",
+    "date": "2026-08-31",
+    "member": "Oliver"
+  },
+  {
+    "id": "c23",
+    "title": "Dragon's Fire Race 🏃",
+    "date": "2026-09-09",
+    "member": "Jason"
+  },
+  {
+    "id": "c24",
+    "title": "Xmas Singalong London 🎄",
+    "date": "2026-12-10",
+    "member": "All"
+  },
+  {
+    "id": "r1",
+    "title": "Ollie's Birthday 🎂",
+    "date": "2026-07-10",
+    "member": "Oliver"
+  },
+  {
+    "id": "r2",
+    "title": "Will & Lou Anniversary",
+    "date": "2026-07-25",
+    "member": "All"
+  },
+  {
+    "id": "r3",
+    "title": "Defender MOT Due 🚗",
+    "date": "2026-08-02",
+    "member": "Jason"
+  },
+  {
+    "id": "r4",
+    "title": "Grandad's Birthday 🎂",
+    "date": "2026-08-12",
+    "member": "All"
+  },
+  {
+    "id": "r5",
+    "title": "Max's Birthday 🎂",
+    "date": "2026-09-19",
+    "member": "All"
+  },
+  {
+    "id": "r6",
+    "title": "Flick's Birthday 🎂",
+    "date": "2026-09-28",
+    "member": "All"
+  },
+  {
+    "id": "r7",
+    "title": "Lou's Birthday 🎂",
+    "date": "2026-10-02",
+    "member": "All"
+  },
+  {
+    "id": "r8",
+    "title": "Mum's Birthday 🎂",
+    "date": "2026-10-06",
+    "member": "All"
+  },
+  {
+    "id": "r9",
+    "title": "Grace's Birthday 🎂",
+    "date": "2026-11-17",
+    "member": "All"
+  },
+  {
+    "id": "r10",
+    "title": "Wedding Anniversary 💑",
+    "date": "2026-12-15",
+    "member": [
+      "Jason",
+      "Kerry"
+    ]
+  },
+  {
+    "id": "r11",
+    "title": "Mandy's Birthday 🎂",
+    "date": "2027-02-17",
+    "member": "All"
+  },
+  {
+    "id": "r12",
+    "title": "Will's Birthday 🎂",
+    "date": "2027-03-16",
+    "member": "All"
+  },
+  {
+    "id": "r13",
+    "title": "Monty's Birthday 🎂",
+    "date": "2027-03-23",
+    "member": "All"
+  }
+];
+
+const NOW=new Date();NOW.setHours(0,0,0,0);
+function fmt(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+const TODAY=fmt(NOW);
+
+let S={
+  tab:"calendar",y:NOW.getFullYear(),mo:NOW.getMonth(),sel:null,
+  events:[...EMBEDDED],user:[],
+  hugo:HT.map((t,i)=>({...t,id:i,done:false})),
+  filter:"All",showAdd:false,showEdit:false,editId:null,nev:{title:"",member:[],date:""},edit:{title:"",member:[],date:""},
+  sync:"embedded",lastSync:null,liveCount:0
+};
+
+function set(p){Object.assign(S,p);render()}
+function allEvs(){return[...S.events,...S.user]}
+function col(m){return COLORS[m]||COLORS.All}
+function fmtD(ds){return new Date(ds+"T12:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"})}
+
+// iCal parser
+function parseDT(v){
+  if(!v)return null;
+  const r=v.includes(":")?v.split(":").pop():v;
+  const s=r.replace(/[TZ\-:]/g,"");
+  if(s.length<8)return null;
+  const d=new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8));
+  return isNaN(d.getTime())?null:d;
+}
+function nextY(base){
+  const d=new Date(base);d.setFullYear(NOW.getFullYear());
+  if(d<NOW)d.setFullYear(NOW.getFullYear()+1);
+  return d;
+}
+function mapM(s){
+  const l=s.toLowerCase();
+  if(/^(jason\/kerry|kerry\/jason):/.test(l))return"Kerry";
+  if(/^(jase|jason):/.test(l))return"Jason";
+  if(/^kerry:/.test(l))return"Kerry";
+  if(/^(ollie\/jason|jason\/ollie):/.test(l))return"Oliver";
+  if(/\blouis\b/.test(l))return"Louis";
+  if(/\bhugo\b/.test(l))return"Hugo";
+  if(/\bleafy\b/.test(l))return"Oliver";
+  return"All";
+}
+function cTitle(s){return s.replace(/^(all|jason\/kerry|kerry\/jason|ollie\/jason|jason|kerry|ollie):\s*/i,"").replace(/\\,/g,",").replace(/\\n/g," ").trim()}
+function parseIcal(txt){
+  const un=txt.replace(/\r\n[ \t]/g,"").replace(/\n[ \t]/g,"");
+  const bl=un.split("BEGIN:VEVENT").slice(1);
+  const out=[];const seen=new Set();
+  for(const b of bl){
+    const p={};
+    for(const ln of b.split("END:VEVENT")[0].split(/\r?\n/)){
+      const ci=ln.indexOf(":");if(ci<0)continue;
+      const k=ln.slice(0,ci).split(";")[0].toUpperCase();
+      if(!p[k])p[k]=ln.slice(ci+1);
+    }
+    if(!p.SUMMARY||!p.DTSTART)continue;
+    const rr=p.RRULE||"";
+    let base=parseDT(p.DTSTART);if(!base)continue;
+    let dt=rr.includes("FREQ=YEARLY")?nextY(base):base;
+    if(!dt||dt<NOW)continue;
+    if(p.EXDATE){const ex=parseDT(p.EXDATE);if(ex&&fmt(ex)===fmt(dt))continue;}
+    const ds=fmt(dt),title=cTitle(p.SUMMARY),key=ds+title;
+    if(seen.has(key))continue;seen.add(key);
+    out.push({id:p.UID||"c"+Math.random().toString(36).slice(2),title,date:ds,member:mapM(p.SUMMARY),source:"cozi"});
+  }
+  return out.sort((a,b)=>a.date.localeCompare(b.date));
+}
+
+// Live fetch — tries 3 proxies silently in background
+async function fetchLive(){
+  set({sync:"loading"});
+  for(const proxyFn of PROXIES){
+    try{
+      const url=proxyFn(COZI_URL);
+      const r=await Promise.race([fetch(url,{cache:"no-store"}),new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),8000))]);
+      if(!r.ok)continue;
+      let txt;
+      const ct=r.headers.get("content-type")||"";
+      if(ct.includes("json")){const j=await r.json();txt=j.contents||j.data||"";}
+      else{txt=await r.text();}
+      if(!txt||!txt.includes("VCALENDAR"))continue;
+      const parsed=parseIcal(txt);
+      if(parsed.length>0){
+        set({events:parsed,sync:"live",lastSync:new Date(),liveCount:parsed.length});
+        return;
+      }
+    }catch(e){continue;}
+  }
+  // All proxies failed — keep embedded data, show status
+  set({sync:"embedded"});
+}
+
+function daysIn(y,m){return new Date(y,m+1,0).getDate()}
+function firstD(y,m){const d=new Date(y,m,1).getDay();return d===0?6:d-1}
+
+function render(){
+  document.getElementById("app").innerHTML=buildApp();
+  document.getElementById("app").addEventListener("click",handle);
+}
+
+function buildApp(){
+  const sc=S.sync;
+  const scol={embedded:"#0891b2",loading:"#d97706",live:"#16a34a",error:"#ef4444"}[sc];
+  const sico={embedded:"📦",loading:'<span class="spinning">⟳</span>',live:"●",error:"⚠"}[sc];
+  const slbl={
+    embedded:`${S.events.length} events (embedded)`,
+    loading:"Syncing live\u2026",
+    live:`${S.liveCount} events · live${S.lastSync?" · "+S.lastSync.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}):""}`,
+    error:"Sync failed"
+  }[sc];
+  const pills=Object.entries(COLORS).filter(([k])=>k!=="Holiday").map(([n,c])=>{
+    const on=S.filter===n;
+    return`<button class="pill" data-a="filter" data-m="${n}" style="border-color:${on?c:"rgba(255,255,255,.12)"};color:${on?"#fff":""}"><span class="dot" style="background:${c}"></span>${n}</button>`;
+  }).join("");
+  return`<div class="hdr">
+    <div class="hdr-sub">${NOW.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"})}</div>
+    <div class="hdr-title">The Leaf Family</div>
+    <div class="pills">${pills}</div>
+    <div class="sync-row">
+      <button class="sync-info" data-a="sync" style="color:${scol}">${sico} Cozi ${slbl}</button>
+      ${sc!=="loading"?`<button style="font-size:11px;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.4);border-radius:6px;color:#fff;padding:3px 10px;cursor:pointer;font-family:inherit" data-a="sync">↻ Refresh</button>`:""}
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab${S.tab==="calendar"?" on":""}" data-a="tab" data-tab="calendar">📅 Calendar</button>
+    <button class="tab${S.tab==="hugo"?" on":""}" data-a="tab" data-tab="hugo">🐶 Hugo</button>
+  </div>
+  <div class="body">${S.tab==="calendar"?buildCal():buildHugo()}</div>`;
+}
+
+function buildCal(){
+  const{y,mo,sel,filter}=S;
+  const all=allEvs();
+  const di=daysIn(y,mo),fd=firstD(y,mo);
+  const isCurM=mo===NOW.getMonth()&&y===NOW.getFullYear();
+  function dEvs(day){
+    const ds=y+"-"+String(mo+1).padStart(2,"0")+"-"+String(day).padStart(2,"0");
+    return all.filter(e=>e.date===ds&&(matchesFilter(e,filter)||getMembers(e).includes("Holiday")));
+  }
+  const selStr=sel?y+"-"+String(mo+1).padStart(2,"0")+"-"+String(sel).padStart(2,"0"):null;
+  const selEvs=selStr?all.filter(e=>e.date===selStr):[];
+  const upc=all.filter(e=>e.date>=TODAY&&matchesFilter(e,filter)).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,10);
+  let grid=Array.from({length:fd},()=>'<div class="cd emp"></div>').join("");
+  grid+=Array.from({length:di},(_,i)=>{
+    const day=i+1,isT=isCurM&&day===NOW.getDate(),isSel=day===sel;
+    const de=dEvs(day);
+    return`<button class="cd${isT?" tod":""}${isSel?" sel":""}" data-a="day" data-d="${day}"><span style="font-weight:${isT?"bold":"normal"}">${day}</span><div class="dots">${de.slice(0,4).map(e=>`<div class="evd" style="background:${primaryColor(e)}"></div>`).join("")}</div></button>`;
+  }).join("");
+  const selHTML=sel?`<div class="slbl">${sel} ${MONTHS[mo]}</div>`+(selEvs.length===0?'<div style="color:var(--mu);font-size:13px;font-style:italic">Nothing on this day</div>':selEvs.map(e=>`<div class="evc" data-a="open-edit" data-id="${e.id}" style="border-left-color:${primaryColor(e)};cursor:pointer"><div class="evt">${e.title}</div><div class="evm">${getMembers(e).join(" & ")}${e.source==="cozi"?' · <span style="color:var(--cal)">Cozi</span>':''}${e.source==="user"?' · <span style="color:var(--louis)">Added</span>':''}</div></div>`).join("")):"";
+  // Edit modal
+  const editEv=S.editId?allEvs().find(e=>e.id===S.editId):null;
+  const editSelM=Array.isArray(S.edit.member)?S.edit.member:S.edit.member?[S.edit.member]:[];
+  const editPills=MEMBERS.filter(m=>m!=="All").map(m=>{
+    const on=editSelM.includes(m);
+    return`<button class="pill${on?' on':''}" data-a="edit-toggle-member" data-m="${m}" style="${on?'background:'+COLORS[m]+';border-color:'+COLORS[m]+';color:#fff':''}" ><span class="dot" style="background:${on?'#fff':COLORS[m]}"></span>${m}</button>`;
+  }).join("");
+  const editHTML=S.showEdit&&editEv?`<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:flex-end">
+    <div style="background:#fff;border-radius:20px 20px 0 0;padding:20px 16px calc(env(safe-area-inset-bottom,0px) + 24px);width:100%;max-width:480px;margin:0 auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div style="font-size:17px;font-weight:700;color:#0f172a">Edit Event</div>
+        <button data-a="close-edit" style="background:#f1f5f9;border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;color:#64748b">✕</button>
+      </div>
+      <input class="finp" placeholder="Event title" id="edit-t" value="${S.edit.title}" style="color:#0f172a">
+      <input class="finp" type="date" id="edit-d" value="${S.edit.date}" style="color:#0f172a;color-scheme:light">
+      <div style="font-size:11px;color:#64748b;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Who</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px">${editPills}</div>
+      <div style="display:flex;gap:8px">
+        <button class="bpri" data-a="save-edit" style="flex:1;padding:12px">Save</button>
+        ${editEv.source!=="cozi"?`<button style="background:#fee2e2;border:1px solid #fecaca;border-radius:8px;color:#dc2626;font-size:13px;padding:10px 14px;cursor:pointer;font-family:inherit;font-weight:600" data-a="delete-event" data-id="${editEv.id}">Delete</button>`:''}
+        <button class="bghost" data-a="close-edit">Cancel</button>
+      </div>
+    </div>
+  </div>`:"";
+
+  const selM=Array.isArray(S.nev.member)?S.nev.member:[S.nev.member];
+  const memberPills=MEMBERS.filter(m=>m!=="All").map(m=>{
+    const on=selM.includes(m);
+    return`<button class="pill${on?' on':''}" data-a="toggle-member" data-m="${m}" style="${on?'background:'+COLORS[m]+';border-color:'+COLORS[m]+';color:#fff':''}" ><span class="dot" style="background:${on?'#fff':COLORS[m]}"></span>${m}</button>`;
+  }).join("");
+  const addHTML=S.showAdd?`<div class="fbox"><div style="font-size:14px;font-weight:700;margin-bottom:10px;color:#0f172a">Add Event</div><input class="finp" placeholder="Event title" id="et" value="${S.nev.title}"><input class="finp" type="date" id="ed" value="${S.nev.date}" style="color:#0f172a"><div style="font-size:11px;color:#64748b;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Who</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">${memberPills}</div><div class="brow"><button class="bpri" data-a="add">Add</button><button class="bghost" data-a="cancel">Cancel</button></div></div>`:`<button class="abtn" data-a="show-add">+ Add Event</button>`;
+  return`<div class="sec">
+    <div class="mnav"><button class="nbtn" data-a="prev">‹</button><div class="mtitle">${MONTHS[mo]} ${y}</div><button class="nbtn" data-a="next">›</button></div>
+    <div class="dhdr">${DAYS.map(d=>`<div class="dh">${d}</div>`).join("")}</div>
+    <div class="grid">${grid}</div>
+    ${selHTML}
+    <div class="slbl">${filter!=="All"?filter+" · ":""}Upcoming (${upc.length})</div>
+    ${upc.map(e=>`<div class="upi" data-a="open-edit" data-id="${e.id}" style="cursor:pointer"><div class="upbar" style="background:${primaryColor(e)}"></div><div style="flex:1"><div class="upt">${e.title}</div><div class="upm">${fmtD(e.date)} · ${getMembers(e).join(" & ")}</div></div><div style="color:#cbd5e1;font-size:18px;padding-left:4px">›</div></div>`).join("")}
+    ${addHTML}
+  </div>${editHTML}`;
+}
+
+function buildHugo(){
+  const done=S.hugo.filter(t=>t.done).length,total=S.hugo.length;
+  return`<div class="sec">
+    <div class="hhdr">
+      <div style="font-size:25px;margin-bottom:3px">🐾</div>
+      <div style="font-size:18px;font-weight:bold;color:#92400e">Hugo</div>
+      <div style="font-size:12px;color:#b45309">Black Lab · ~15 weeks · Cookham</div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--mu);margin-top:9px;margin-bottom:3px"><span>Today's tasks</span><span style="color:${done===total?"#16a34a":"#d97706"}">${done}/${total}</span></div>
+      <div class="pbar"><div class="pfill" style="width:${(done/total)*100}%;background:${done===total?"#16a34a":"#d97706"}"></div></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:9px"><button class="bghost" data-a="reset">Reset day</button></div>
+    ${S.hugo.map(t=>`<button class="tbtn${t.done?" done":""}" data-a="tog" data-id="${t.id}"><span style="font-size:19px;flex-shrink:0">${t.icon}</span><div style="flex:1"><div class="tnm">${t.task}</div><div class="ttm">${t.time}</div></div><div class="chk${t.done?" done":""}">${t.done?"✓":""}</div></button>`).join("")}
+    ${done===total?`<div class="cbanner"><div style="font-size:28px">🐕</div><div style="font-size:14px;font-weight:bold;margin-top:5px;color:#16a34a">Hugo's had a great day!</div><div style="font-size:12px;color:var(--mu);margin-top:2px">All tasks complete</div></div>`:""}
+  </div>`;
+}
+
+function handle(e){
+  const el=e.target.closest("[data-a]");if(!el)return;
+  const a=el.dataset.a;
+  if(a==="tab")     set({tab:el.dataset.tab,sel:null});
+  if(a==="prev")    S.mo===0?set({mo:11,y:S.y-1,sel:null}):set({mo:S.mo-1,sel:null});
+  if(a==="next")    S.mo===11?set({mo:0,y:S.y+1,sel:null}):set({mo:S.mo+1,sel:null});
+  if(a==="day")     set({sel:S.sel===+el.dataset.d?null:+el.dataset.d});
+  if(a==="filter")  set({filter:S.filter===el.dataset.m?"All":el.dataset.m});
+  if(a==="sync")    fetchLive();
+  if(a==="show-add")set({showAdd:true});
+  if(a==="cancel")  set({showAdd:false});
+  if(a==="open-edit"){
+    const ev=allEvs().find(e=>e.id===el.dataset.id);
+    if(!ev)return;
+    const ms=getMembers(ev).filter(m=>m!=="All"&&m!=="Holiday");
+    set({showEdit:true,editId:el.dataset.id,edit:{title:ev.title,date:ev.date,member:ms}});
+  }
+  if(a==="close-edit") set({showEdit:false,editId:null});
+  if(a==="edit-toggle-member"){
+    const m=el.dataset.m;
+    const cur=Array.isArray(S.edit.member)?S.edit.member:[];
+    set({edit:{...S.edit,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]}});
+  }
+  if(a==="save-edit"){
+    const t=document.getElementById("edit-t")?.value.trim();
+    const d=document.getElementById("edit-d")?.value;
+    if(!t||!d)return;
+    const ms=Array.isArray(S.edit.member)?S.edit.member:[];
+    const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;
+    // Update in user events if user-added, otherwise move to user overrides
+    const inUser=S.user.find(e=>e.id===S.editId);
+    if(inUser){
+      set({user:S.user.map(e=>e.id===S.editId?{...e,title:t,date:d,member:mem}:e),showEdit:false,editId:null});
+    } else {
+      // For embedded/cozi events, add override to user array and hide original
+      set({user:[...S.user,{id:S.editId,title:t,date:d,member:mem,source:"edited"}],
+           events:S.events.filter(e=>e.id!==S.editId),showEdit:false,editId:null});
+    }
+  }
+  if(a==="delete-event"){
+    const id=el.dataset.id;
+    set({user:S.user.filter(e=>e.id!==id),events:S.events.filter(e=>e.id!==id),showEdit:false,editId:null});
+  }
+  if(a==="toggle-member"){
+    const m=el.dataset.m;
+    const cur=Array.isArray(S.nev.member)?S.nev.member:[];
+    const updated=cur.includes(m)?cur.filter(x=>x!==m):[...cur,m];
+    set({nev:{...S.nev,member:updated}});
+  }
+  if(a==="add"){
+    const t=document.getElementById("et")?.value.trim(),d=document.getElementById("ed")?.value;
+    const ms=Array.isArray(S.nev.member)?S.nev.member:[];
+    const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;
+    if(t&&d)set({user:[...S.user,{id:"u"+Date.now(),title:t,date:d,member:mem,source:"user"}],showAdd:false,nev:{title:"",member:[],date:""}});
+  }
+  if(a==="tog")  set({hugo:S.hugo.map(t=>t.id===+el.dataset.id?{...t,done:!t.done}:t)});
+  if(a==="reset")set({hugo:HT.map((t,i)=>({...t,id:i,done:false}))});
+}
+
+render();
+// Try live sync in background after initial render
+setTimeout(fetchLive, 500);
+</script>
+</body>
+</html>
