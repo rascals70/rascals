@@ -376,9 +376,19 @@ async function fetchLive(){
       if(!txt||!txt.includes("VCALENDAR"))continue;
       const parsed=parseIcal(txt);
       if(parsed.length>0){(function(){
-        // Merge: keep non-cozi embedded events, add fresh cozi events
-        var keep=S.events.filter(function(e){return e.source!=="cozi";});
-        var merged=keep.concat(parsed);
+        // Drop embedded events whose id starts with "c" (original Cozi imports)
+        // Keep manual/static events (s,h,r,bday,bh,t,cl,cx prefixes)
+        var keep=S.events.filter(function(e){
+          return !/^c\d/.test(e.id) && !/^cx/.test(e.id);
+        });
+        // Deduplicate by date+title
+        var seen={};
+        var merged=keep.concat(parsed).filter(function(e){
+          var key=e.date+'|'+e.title;
+          if(seen[key])return false;
+          seen[key]=true;
+          return true;
+        });
         merged.sort(function(a,b){return a.date.localeCompare(b.date);});
         set({events:merged});
       })();return;}
