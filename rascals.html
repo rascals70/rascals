@@ -91,7 +91,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans'
 
 /* ══ CALENDAR ══ */
 .cal{padding:calc(var(--st)+14px) 14px 24px}
-.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;position:sticky;top:0;z-index:10;background:var(--bg);padding:60px 0 12px}
 .cal-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800}
 .nbtn{background:var(--card2);border:1px solid var(--bd);border-radius:10px;color:var(--tx);font-size:20px;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .pills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
@@ -381,7 +381,8 @@ async function fetchLive(){
 }
 
 function hardRefresh(){
-  if('serviceWorker' in navigator){
+  // SW version: 1780051729
+if('serviceWorker' in navigator){
     navigator.serviceWorker.getRegistrations().then(regs=>{
       Promise.all(regs.map(r=>r.unregister())).then(()=>caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k))).then(()=>window.location.reload(true))));
     });
@@ -635,6 +636,7 @@ render();
 setTimeout(fetchLive,1500);
 </script>
 <script>
+// SW version: 1780051729
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('/sw.js').then(reg=>{
     setInterval(()=>reg.update(),10000);
