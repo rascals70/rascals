@@ -375,7 +375,13 @@ async function fetchLive(){
       let txt=ct.includes("json")?(await r.json()).contents||"":await r.text();
       if(!txt||!txt.includes("VCALENDAR"))continue;
       const parsed=parseIcal(txt);
-      if(parsed.length>0){set({events:parsed});return;}
+      if(parsed.length>0){(function(){
+        // Merge: keep non-cozi embedded events, add fresh cozi events
+        var keep=S.events.filter(function(e){return e.source!=="cozi";});
+        var merged=keep.concat(parsed);
+        merged.sort(function(a,b){return a.date.localeCompare(b.date);});
+        set({events:merged});
+      })();return;}
     }catch(e){continue;}
   }
 }
