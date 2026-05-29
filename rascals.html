@@ -134,11 +134,11 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans'
 .mclose{background:var(--card2);border:1px solid var(--bd);border-radius:50%;width:30px;height:30px;font-size:15px;cursor:pointer;color:var(--mu);display:flex;align-items:center;justify-content:center}
 .del-btn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:8px;color:#ef4444;font-size:13px;padding:10px 13px;cursor:pointer;font-family:inherit;font-weight:600}
 
-@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}
 .modal{animation:slideUp .22s cubic-bezier(.22,1,.36,1)}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}
 .modal-bg{animation:fadeIn .18s ease}
-@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes spin{to{transform:rotate(360deg)}
 .spinning{display:inline-block;animation:spin .8s linear infinite}
 </style>
 </head>
@@ -346,7 +346,7 @@ function bHome(){
   // Strava widget HTML
   const stvConnected = !!localStorage.getItem("stv_refresh");
   let stvWidget = "";
-  if(!stvConnected){{
+  if(!stvConnected){
     stvWidget = `<div style="margin:0 16px;margin-top:16px">
       <button data-a="stv-connect" style="width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border:none;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;font-family:'DM Sans',sans-serif">
         <span style="font-size:22px">🏃</span>
@@ -356,7 +356,7 @@ function bHome(){
         </div>
       </button>
     </div>`;
-  }} else if(stravaData){{
+  } else if(stravaData){
     const r = stravaData.lastRun;
     const raceDate = new Date("2026-09-09");
     const weeksLeft = Math.ceil((raceDate-NOW)/(7*86400000));
@@ -364,34 +364,34 @@ function bHome(){
       <div style="background:linear-gradient(135deg,rgba(252,76,2,.12),rgba(252,76,2,.04));border:1px solid rgba(252,76,2,.25);border-radius:16px;padding:16px 18px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
           <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fc4c02">Strava · Training</div>
-          <div style="font-size:10px;color:var(--mu)">${{weeksLeft}}w to Dragon's Fire</div>
+          <div style="font-size:10px;color:var(--mu)">${weeksLeft}w to Dragon's Fire</div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:${{r?"12px":"0"}}">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:${r?"12px":"0"}">
           <div style="background:rgba(0,0,0,.2);border-radius:10px;padding:10px;text-align:center">
-            <div style="font-size:20px;font-weight:800;font-family:'Syne',sans-serif;color:#fff">${{stravaData.weeklyKm}}</div>
+            <div style="font-size:20px;font-weight:800;font-family:'Syne',sans-serif;color:#fff">${stravaData.weeklyKm}</div>
             <div style="font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-top:2px">km this wk</div>
           </div>
           <div style="background:rgba(0,0,0,.2);border-radius:10px;padding:10px;text-align:center">
-            <div style="font-size:20px;font-weight:800;font-family:'Syne',sans-serif;color:#fff">${{stravaData.weekRunCount}}</div>
+            <div style="font-size:20px;font-weight:800;font-family:'Syne',sans-serif;color:#fff">${stravaData.weekRunCount}</div>
             <div style="font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-top:2px">runs</div>
           </div>
           <div style="background:rgba(0,0,0,.2);border-radius:10px;padding:10px;text-align:center">
-            <div style="font-size:20px;font-weight:800;font-family:'Syne',sans-serif;color:#fff">${{stravaData.monthKm}}</div>
+            <div style="font-size:20px;font-weight:800;font-family:'Syne',sans-serif;color:#fff">${stravaData.monthKm}</div>
             <div style="font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-top:2px">km /28d</div>
           </div>
         </div>
-        ${{r?`<div style="background:rgba(0,0,0,.2);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px">
+        ${r?`<div style="background:rgba(0,0,0,.2);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px">
           <span style="font-size:18px">🏃</span>
           <div style="flex:1">
-            <div style="font-size:13px;font-weight:600;color:#fff">${{r.name}}</div>
-            <div style="font-size:11px;color:var(--mu);margin-top:1px">${{mToKm(r.distance)}}km · ${{secToPace(r.moving_time,r.distance)}}/km · ${{Math.round(r.total_elevation_gain)}}m ↑</div>
+            <div style="font-size:13px;font-weight:600;color:#fff">${r.name}</div>
+            <div style="font-size:11px;color:var(--mu);margin-top:1px">${mToKm(r.distance)}km · ${secToPace(r.moving_time,r.distance)}/km · ${Math.round(r.total_elevation_gain)}m ↑</div>
           </div>
-        </div>`:"" }}
+        </div>`:"" }
       </div>
     </div>`;
-  }} else {{
+  } else {
     stvWidget = `<div style="margin:0 16px;margin-top:16px;background:rgba(252,76,2,.06);border:1px solid rgba(252,76,2,.15);border-radius:14px;padding:14px 16px;font-size:13px;color:var(--mu)">🏃 Loading Strava data…</div>`;
-  }}
+  }
   const upcoming=all.filter(e=>e.date>TD).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,8);
   const avs=["Jason","Kerry","Oliver","Louis","Hugo"].map(m=>{
     const n=all.filter(e=>e.date>=TD&&matchF(e,m)).length;
@@ -484,11 +484,11 @@ function handle(e){
   if(a==="cancel")       set({showAdd:false});
   if(a==="hard-refresh") hardRefresh();
   if(a==="stv-connect") stvConnect();
-  if(a==="toggle-member"){const m=el.dataset.m,cur=Array.isArray(S.nev.member)?S.nev.member:[];set({nev:{...S.nev,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]}});}
-  if(a==="add"){const t=document.getElementById("et")?.value.trim(),d=document.getElementById("ed")?.value;if(!t||!d)return;const ms=Array.isArray(S.nev.member)?S.nev.member:[];const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;set({user:[...S.user,{id:"u"+Date.now(),title:t,date:d,member:mem,source:"user"}],showAdd:false,nev:{title:"",member:[],date:""}});}
-  if(a==="open-edit"){const ev=allEvs().find(e=>e.id===el.dataset.id);if(!ev)return;const ms=getM(ev).filter(m=>m!=="All"&&m!=="Holiday");set({showEdit:true,editId:el.dataset.id,edit:{title:ev.title,date:ev.date,member:ms}});}
+  if(a==="toggle-member"){const m=el.dataset.m,cur=Array.isArray(S.nev.member)?S.nev.member:[];set({nev:{...S.nev,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]});}
+  if(a==="add"){const t=document.getElementById("et")?.value.trim(),d=document.getElementById("ed")?.value;if(!t||!d)return;const ms=Array.isArray(S.nev.member)?S.nev.member:[];const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;set({user:[...S.user,{id:"u"+Date.now(),title:t,date:d,member:mem,source:"user"}],showAdd:false,nev:{title:"",member:[],date:""});}
+  if(a==="open-edit"){const ev=allEvs().find(e=>e.id===el.dataset.id);if(!ev)return;const ms=getM(ev).filter(m=>m!=="All"&&m!=="Holiday");set({showEdit:true,editId:el.dataset.id,edit:{title:ev.title,date:ev.date,member:ms});}
   if(a==="close-edit")   set({showEdit:false,editId:null});
-  if(a==="edit-toggle-member"){const m=el.dataset.m,cur=Array.isArray(S.edit.member)?S.edit.member:[];set({edit:{...S.edit,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]}});}
+  if(a==="edit-toggle-member"){const m=el.dataset.m,cur=Array.isArray(S.edit.member)?S.edit.member:[];set({edit:{...S.edit,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]});}
   if(a==="save-edit"){const t=document.getElementById("edit-t")?.value.trim(),d=document.getElementById("edit-d")?.value;if(!t||!d)return;const ms=Array.isArray(S.edit.member)?S.edit.member:[];const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;const inU=S.user.find(e=>e.id===S.editId);if(inU)set({user:S.user.map(e=>e.id===S.editId?{...e,title:t,date:d,member:mem}:e),showEdit:false,editId:null});else set({user:[...S.user,{id:S.editId,title:t,date:d,member:mem,source:"edited"}],events:S.events.filter(e=>e.id!==S.editId),showEdit:false,editId:null});}
   if(a==="delete-event"){const id=el.dataset.id;set({user:S.user.filter(e=>e.id!==id),events:S.events.filter(e=>e.id!==id),showEdit:false,editId:null});}
 }
@@ -556,8 +556,8 @@ async function stvFetch(){
   if(!tok) return;
   try{
     const [acts, athlete] = await Promise.all([
-      fetch("https://www.strava.com/api/v3/athlete/activities?per_page=10&per_page=10",{headers:{Authorization:`Bearer ${tok}`}}).then(r=>r.json()),
-      fetch("https://www.strava.com/api/v3/athlete",{headers:{Authorization:`Bearer ${tok}`}}).then(r=>r.json())
+      fetch("https://www.strava.com/api/v3/athlete/activities?per_page=10&per_page=10",{headers:{Authorization:`Bearer ${tok}`}).then(r=>r.json()),
+      fetch("https://www.strava.com/api/v3/athlete",{headers:{Authorization:`Bearer ${tok}`}).then(r=>r.json())
     ]);
     // Filter runs only
     const runs = Array.isArray(acts)?acts.filter(a=>a.type==="Run"||a.sport_type==="Run"):[];
