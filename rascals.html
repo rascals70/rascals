@@ -430,13 +430,10 @@ function bSchool(){
 function bRun(){
   return'<div style="padding:calc(var(--st)+16px) 16px 24px">'
     +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;color:var(--tx);margin-bottom:2px">Training</div>'
-    +'<div style="font-size:12px;color:var(--mu);margin-bottom:16px">Dragon\'s Fire Race &middot; 9 Sep 2026</div>'
+    +'<div style="font-size:12px;color:var(--mu);margin-bottom:16px">Dragon&#39;s Fire Race &middot; 9 Sep 2026</div>'
     +STV.chart()
     +'</div>';
-}
-
-function render(){
-  document.getElementById("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():S.tab==="school"?bSchool():S.tab==="run"?bRun():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
+}yId("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():S.tab==="school"?bSchool():S.tab==="run"?bRun():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
   document.getElementById("app").addEventListener("click",handle);
 }
 
