@@ -171,7 +171,14 @@ var STV={
   load:function(){
     // Use cached data if fresh
     if(!STV.stale()&&localStorage.getItem("stv_cache")){
-      try{STV.data=JSON.parse(localStorage.getItem("stv_cache"));if(typeof render==="function")render();return;}catch(e){}
+      try{
+        var cached=JSON.parse(localStorage.getItem("stv_cache"));
+        // Restore Date objects (JSON serialises them as strings)
+        cached.weeks=cached.weeks.map(function(w){return{ws:new Date(w.ws),km:w.km};});
+        STV.data=cached;
+        if(typeof render==="function")render();
+        return;
+      }catch(e){}
     }
     STV.tok().then(function(t){
       if(!t)return;
@@ -359,7 +366,19 @@ function parseIcal(txt){
   return out.sort((a,b)=>a.date.localeCompare(b.date));
 }
 
-function fetchLive(){}
+async function fetchLive(){
+  for(const pFn of PROXIES){
+    try{
+      const r=await Promise.race([fetch(pFn(COZI),{cache:"no-store"}),new Promise((_,rej)=>setTimeout(()=>rej(),8000))]);
+      if(!r.ok)continue;
+      const ct=r.headers.get("content-type")||"";
+      let txt=ct.includes("json")?(await r.json()).contents||"":await r.text();
+      if(!txt||!txt.includes("VCALENDAR"))continue;
+      const parsed=parseIcal(txt);
+      if(parsed.length>0){/* no-op */;return;}
+    }catch(e){continue;}
+  }
+}
 
 function hardRefresh(){
   if('serviceWorker' in navigator){
@@ -613,7 +632,7 @@ function handle(e){
 }
 
 render();
-
+/* Cozi sync disabled */
 </script>
 <script>
 if('serviceWorker' in navigator){
