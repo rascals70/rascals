@@ -145,132 +145,87 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans'
 <body>
 <div id="app"></div>
 <script>
-window.STV=window.STV||{};
 var STV={
-  C:"252665", S:"baa6b378bb17f228dfb918528d8eb68f01065a49",
+  C:"252665",S:"baa6b378bb17f228dfb918528d8eb68f01065a49",
   R:"https://rascals70.github.io/rascals/rascals.html",
   data:null,
   ok:function(){return!!localStorage.getItem("stv_r");},
-  connect:function(){
-    location.href="https://www.strava.com/oauth/authorize?client_id="+STV.C+"&response_type=code&redirect_uri="+encodeURIComponent(STV.R)+"&approval_prompt=force&scope=read,activity:read_all";
-  },
-  exchange:function(code){
-    return fetch("https://www.strava.com/oauth/token",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({client_id:STV.C,client_secret:STV.S,code:code,grant_type:"authorization_code"})}).then(function(r){return r.json();}).then(function(d){if(d.refresh_token){localStorage.setItem("stv_r",d.refresh_token);localStorage.setItem("stv_a",d.access_token);localStorage.setItem("stv_e",String(d.expires_at));}return d.access_token||null;});
-  },
-  tok:function(){
-    var exp=parseInt(localStorage.getItem("stv_e")||"0");
-    var ref=localStorage.getItem("stv_r");
-    if(!ref)return Promise.resolve(null);
-    if(Date.now()/1000<exp-300)return Promise.resolve(localStorage.getItem("stv_a"));
-    return fetch("https://www.strava.com/oauth/token",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({client_id:STV.C,client_secret:STV.S,refresh_token:ref,grant_type:"refresh_token"})}).then(function(r){return r.json();}).then(function(d){if(d.access_token){localStorage.setItem("stv_a",d.access_token);localStorage.setItem("stv_e",String(d.expires_at));localStorage.setItem("stv_r",d.refresh_token||ref);}return d.access_token||null;});
-  },
+  connect:function(){location.href="https://www.strava.com/oauth/authorize?client_id="+STV.C+"&response_type=code&redirect_uri="+encodeURIComponent(STV.R)+"&approval_prompt=force&scope=read,activity:read_all";},
+  exchange:function(code){return fetch("https://www.strava.com/oauth/token",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({client_id:STV.C,client_secret:STV.S,code:code,grant_type:"authorization_code"})}).then(function(r){return r.json();}).then(function(d){if(d.refresh_token){localStorage.setItem("stv_r",d.refresh_token);localStorage.setItem("stv_a",d.access_token);localStorage.setItem("stv_e",String(d.expires_at));}return d.access_token||null;});},
+  tok:function(){var exp=parseInt(localStorage.getItem("stv_e")||"0");var ref=localStorage.getItem("stv_r");if(!ref)return Promise.resolve(null);if(Date.now()/1000<exp-300)return Promise.resolve(localStorage.getItem("stv_a"));return fetch("https://www.strava.com/oauth/token",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({client_id:STV.C,client_secret:STV.S,refresh_token:ref,grant_type:"refresh_token"})}).then(function(r){return r.json();}).then(function(d){if(d.access_token){localStorage.setItem("stv_a",d.access_token);localStorage.setItem("stv_e",String(d.expires_at));localStorage.setItem("stv_r",d.refresh_token||ref);}return d.access_token||null;});},
+  km:function(m){return(m/1000).toFixed(1);},
+  pace:function(s,m){var p=s/m*1000;var mn=Math.floor(p/60);var sc=Math.round(p%60);return mn+":"+(sc<10?"0":"")+sc;},
   load:function(){
     STV.tok().then(function(t){
       if(!t)return;
-      // Fetch last 12 months — need multiple pages
       var after=Math.floor((Date.now()-365*86400000)/1000);
-      var url="https://www.strava.com/api/v3/athlete/activities?per_page=200&after="+after;
-      fetch(url,{headers:{Authorization:"Bearer "+t}}).then(function(r){return r.json();}).then(function(acts){
+      fetch("https://www.strava.com/api/v3/athlete/activities?per_page=200&after="+after,{headers:{Authorization:"Bearer "+t}})
+      .then(function(r){return r.json();})
+      .then(function(acts){
         if(!Array.isArray(acts))return;
         var runs=acts.filter(function(a){return a.type==="Run"||a.sport_type==="Run";});
-        // Bucket into 52 weekly slots
-        var now=new Date(); now.setHours(0,0,0,0);
+        var now=new Date();now.setHours(0,0,0,0);
         var weeks=[];
         for(var i=51;i>=0;i--){
           var ws=new Date(now);
-          ws.setDate(ws.getDate()-(now.getDay()||7)+1-i*7);
-          var we=new Date(ws); we.setDate(we.getDate()+6);
-          var km=runs.filter(function(r){
-            var d=new Date(r.start_date_local);
-            return d>=ws&&d<=we;
-          }).reduce(function(s,r){return s+r.distance;},0)/1000;
-          weeks.push({ws:ws,km:parseFloat(km.toFixed(1))});
+          ws.setDate(ws.getDate()-((now.getDay()+6)%7)-i*7);
+          var we=new Date(ws);we.setDate(we.getDate()+6);
+          var km=runs.filter(function(r){var d=new Date(r.start_date_local);return d>=ws&&d<=we;}).reduce(function(s,r){return s+r.distance;},0)/1000;
+          weeks.push({ws:new Date(ws),km:parseFloat(km.toFixed(1))});
         }
         var total=(runs.reduce(function(s,r){return s+r.distance;},0)/1000).toFixed(0);
         var maxKm=Math.max.apply(null,weeks.map(function(w){return w.km;}));
-        STV.data={weeks:weeks,total:total,maxKm:maxKm,count:runs.length};
+        STV.data={weeks:weeks,total:total,maxKm:maxKm||1,count:runs.length};
         if(typeof render==="function")render();
-      });
+      }).catch(function(e){console.error("STV load",e);});
     });
   },
   chart:function(){
-    {
-      var W=320,H=120,pad=8;
-      if(!STV.ok()){
-        return'<div class="section"><button class="stv-btn" data-a="stv-connect">'
-          +'<span style="font-size:22px">&#127939;</span>'
-          +'<div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#fff">Connect Strava</div>'
-          +'<div style="font-size:11px;color:rgba(255,255,255,.7)">12-month training chart</div></div></button></div>';
-      }
-      if(!STV.data){
-        return'<div class="section"><div style="border:1px solid rgba(252,76,2,.2);border-radius:14px;padding:16px;font-size:13px;color:#5a5a7a">&#127939; Loading chart...</div></div>';
-      }
-      var d=STV.data;
-      var max=d.maxKm||1;
-      var ws=d.weeks;
-      var n=ws.length;
-      var bw=(W-pad*2)/n;
-
-      // Build area path
-      var pts=ws.map(function(w,i){
-        var x=pad+i*bw+bw/2;
-        var y=H-pad-(w.km/max)*(H-pad*2);
-        return{x:x,y:y,km:w.km};
-      });
-
-      var area="M"+pts[0].x+","+(H-pad);
-      pts.forEach(function(p){area+=" L"+p.x.toFixed(1)+","+p.y.toFixed(1);});
-      area+=" L"+pts[pts.length-1].x+","+(H-pad)+" Z";
-
-      var line="M"+pts[0].x.toFixed(1)+","+pts[0].y.toFixed(1);
-      pts.slice(1).forEach(function(p){line+=" L"+p.x.toFixed(1)+","+p.y.toFixed(1);});
-
-      // Month labels — show first week of each month
-      var labels="";
-      var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-      var lastM=-1;
-      pts.forEach(function(p,i){
-        var m=ws[i].ws.getMonth();
-        if(m!==lastM){
-          labels+='<text x="'+p.x.toFixed(1)+'" y="'+(H+2)+'" fill="#5a5a7a" font-size="8" text-anchor="middle">'+months[m]+'</text>';
-          lastM=m;
-        }
-      });
-
-      // Race marker — find the week containing Sep 9
-      var raceIdx=-1;
-      var raceD=new Date("2026-09-09");
-      ws.forEach(function(w,i){var we=new Date(w.ws);we.setDate(we.getDate()+6);if(raceD>=w.ws&&raceD<=we)raceIdx=i;});
-      var raceMarker="";
-      if(raceIdx>=0){
-        var rx=pts[raceIdx]?pts[raceIdx].x:0;
-        raceMarker='<line x1="'+rx+'" y1="'+pad+'" x2="'+rx+'" y2="'+(H-pad)+'" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="3,2"/>'
-          +'<text x="'+rx+'" y="'+(pad-1)+'" fill="#22c55e" font-size="7" text-anchor="middle">Race</text>';
-      }
-
-      var now2=new Date();now2.setHours(0,0,0,0);
-      var daysLeft=Math.ceil((raceD-now2)/(86400000));
-
-      return'<div class="section">'
-        +'<div class="stv-box">'
-        +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">'
-        +'<div><div style="font-size:22px;font-weight:800;font-family:'Syne',sans-serif;color:#fff">'+d.total+'<span style="font-size:13px;color:#fc4c02;margin-left:3px">km</span></div>'
-        +'<div style="font-size:10px;color:#5a5a7a;margin-top:1px">Last 12 months &middot; '+d.count+' runs</div></div>'
-        +'<div style="text-align:right"><div style="font-size:14px;font-weight:700;color:#22c55e">'+daysLeft+'d</div>'
-        +'<div style="font-size:9px;color:#5a5a7a;text-transform:uppercase;letter-spacing:1px">to race</div></div>'
-        +'</div>'
-        +'<svg viewBox="0 0 '+W+' '+(H+10)+'" style="width:100%;display:block">'
-        +'<defs><linearGradient id="og" x1="0" y1="0" x2="0" y2="1">'
-        +'<stop offset="0%" stop-color="#fc4c02" stop-opacity="0.35"/>'
-        +'<stop offset="100%" stop-color="#fc4c02" stop-opacity="0.03"/>'
-        +'</linearGradient></defs>'
-        +'<path d="'+area+'" fill="url(#og)"/>'
-        +'<path d="'+line+'" fill="none" stroke="#fc4c02" stroke-width="1.5" stroke-linejoin="round"/>'
-        +raceMarker
-        +labels
-        +'</svg>'
-        +'</div></div>';
+    var P="padding:16px 18px";
+    var BOX="background:linear-gradient(135deg,rgba(252,76,2,.14),rgba(252,76,2,.04));border:1px solid rgba(252,76,2,.28);border-radius:16px;"+P;
+    if(!STV.ok()){
+      return'<div style="padding:0 16px 0;margin-top:16px">'
+        +'<button data-a="stv-connect" style="width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border:none;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer">'
+        +'<span style="font-size:22px">&#127939;</span>'
+        +'<div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#fff;font-family:DM Sans,sans-serif">Connect Strava</div>'
+        +'<div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px;font-family:DM Sans,sans-serif">12-month training chart</div></div>'
+        +'</button></div>';
     }
+    if(!STV.data){
+      return'<div style="padding:0 16px;margin-top:16px"><div style="'+BOX+'"><span style="font-size:13px;color:#888">&#127939; Loading Strava data...</span></div></div>';
+    }
+    var d=STV.data;
+    var W=300,H=100,pad=6;
+    var max=d.maxKm;
+    var ws=d.weeks;
+    var bw=(W-pad*2)/ws.length;
+    var pts=ws.map(function(w,i){return{x:pad+i*bw+bw/2,y:H-pad-(w.km/max)*(H-pad*2),km:w.km};});
+    var area="M"+pts[0].x.toFixed(1)+","+(H-pad);
+    pts.forEach(function(p){area+=" L"+p.x.toFixed(1)+","+p.y.toFixed(1);});
+    area+=" L"+pts[pts.length-1].x.toFixed(1)+","+(H-pad)+" Z";
+    var line="M"+pts[0].x.toFixed(1)+","+pts[0].y.toFixed(1);
+    pts.slice(1).forEach(function(p){line+=" L"+p.x.toFixed(1)+","+p.y.toFixed(1);});
+    var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var labels="";var lastM=-1;
+    pts.forEach(function(p,i){var m=ws[i].ws.getMonth();if(m!==lastM){labels+='<text x="'+p.x.toFixed(1)+'" y="'+(H+8)+'" fill="#666" font-size="8" text-anchor="middle">'+months[m]+'</text>';lastM=m;}});
+    var race=new Date("2026-09-09");var now2=new Date();now2.setHours(0,0,0,0);
+    var dLeft=Math.ceil((race-now2)/86400000);
+    var rM="";
+    ws.forEach(function(w,i){var we=new Date(w.ws);we.setDate(we.getDate()+6);if(race>=w.ws&&race<=we&&pts[i]){rM='<line x1="'+pts[i].x.toFixed(1)+'" y1="'+pad+'" x2="'+pts[i].x.toFixed(1)+'" y2="'+(H-pad)+'" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="3,2"/><text x="'+pts[i].x.toFixed(1)+'" y="'+(pad-1)+'" fill="#22c55e" font-size="7" text-anchor="middle">Race</text>';}});
+    return'<div style="padding:0 16px;margin-top:16px"><div style="'+BOX+'">'
+      +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">'
+      +'<div><div style="font-size:24px;font-weight:800;color:#fff;font-family:Syne,sans-serif">'+d.total+'<span style="font-size:13px;color:#fc4c02;margin-left:4px">km</span></div>'
+      +'<div style="font-size:10px;color:#666;margin-top:2px">Last 12 months &middot; '+d.count+' runs</div></div>'
+      +'<div style="text-align:right"><div style="font-size:16px;font-weight:800;color:#22c55e">'+dLeft+'d</div>'
+      +'<div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px">to race</div></div>'
+      +'</div>'
+      +'<svg viewBox="0 0 '+W+' '+(H+12)+'" style="width:100%;display:block;overflow:visible">'
+      +'<defs><linearGradient id="og" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fc4c02" stop-opacity="0.4"/><stop offset="100%" stop-color="#fc4c02" stop-opacity="0.03"/></linearGradient></defs>'
+      +'<path d="'+area+'" fill="url(#og)"/>'
+      +'<path d="'+line+'" fill="none" stroke="#fc4c02" stroke-width="1.5" stroke-linejoin="round"/>'
+      +rM+labels
+      +'</svg>'
+      +'</div></div>';
   }
 };
 </script>
