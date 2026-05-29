@@ -171,7 +171,14 @@ var STV={
   load:function(){
     // Use cached data if fresh
     if(!STV.stale()&&localStorage.getItem("stv_cache")){
-      try{STV.data=JSON.parse(localStorage.getItem("stv_cache"));if(typeof render==="function")render();return;}catch(e){}
+      try{
+        var cached=JSON.parse(localStorage.getItem("stv_cache"));
+        // Restore Date objects (JSON serialises them as strings)
+        cached.weeks=cached.weeks.map(function(w){return{ws:new Date(w.ws),km:w.km};});
+        STV.data=cached;
+        if(typeof render==="function")render();
+        return;
+      }catch(e){}
     }
     STV.tok().then(function(t){
       if(!t)return;
