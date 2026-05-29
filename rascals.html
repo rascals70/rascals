@@ -2,256 +2,181 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Rascal">
-<meta name="theme-color" content="#0a0a0f">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f172a'/><path d='M50 78 Q47 86 44 93' stroke='%2315803d' stroke-width='3.5' fill='none' stroke-linecap='round'/><path d='M50 12 C65 20, 75 36, 73 52 C71 66, 61 76, 50 78 C39 76, 29 66, 27 52 C25 36, 35 20, 50 12Z' fill='%2316a34a'/><path d='M50 12 Q50 45 50 78' stroke='rgba(255,255,255,.28)' stroke-width='1.5' fill='none'/><path d='M50 28 Q41 34 33 35' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 28 Q59 34 67 35' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 42 Q40 48 32 48' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 42 Q60 48 68 48' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 56 Q42 61 36 60' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 56 Q58 61 64 60' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 12 C43 19, 33 31, 30 45' stroke='rgba(255,255,255,.22)' stroke-width='2.5' fill='none' stroke-linecap='round'/><circle cx='22' cy='93' r='4' fill='%232563eb'/><circle cx='34' cy='93' r='4' fill='%23db2777'/><circle cx='50' cy='93' r='4' fill='%2322c55e'/><circle cx='66' cy='93' r='4' fill='%237c3aed'/><circle cx='78' cy='93' r='4' fill='%23d97706'/></svg>">
+<meta name="theme-color" content="#040408">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f172a'/><path d='M50 78 Q47 86 44 93' stroke='%2315803d' stroke-width='3.5' fill='none' stroke-linecap='round'/><path d='M50 12 C65 20, 75 36, 73 52 C71 66, 61 76, 50 78 C39 76, 29 66, 27 52 C25 36, 35 20, 50 12Z' fill='%2316a34a'/><path d='M50 12 Q50 45 50 78' stroke='rgba(255,255,255,.28)' stroke-width='1.5' fill='none'/><path d='M50 28 Q41 34 33 35' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 28 Q59 34 67 35' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 42 Q40 48 32 48' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 42 Q60 48 68 48' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 56 Q42 61 36 60' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 56 Q58 61 64 60' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 12 C43 19, 33 31, 30 45' stroke='rgba(255,255,255,.22)' stroke-width='2.5' fill='none' stroke-linecap='round'/><circle cx='22' cy='93' r='4' fill='%232563eb'/><circle cx='34' cy='93' r='4' fill='%23ec4899'/><circle cx='50' cy='93' r='4' fill='%2322c55e'/><circle cx='66' cy='93' r='4' fill='%23a855f7'/><circle cx='78' cy='93' r='4' fill='%23f59e0b'/></svg>">
 <title>Rascal</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#0a0a0f;
-  --card:#13131a;
-  --card2:#1a1a24;
-  --bd:rgba(255,255,255,.07);
-  --tx:#f0f0f8;
-  --mu:#6b6b8a;
-  --mu2:#4a4a6a;
-  --jason:#3b82f6;
-  --kerry:#ec4899;
-  --oliver:#22c55e;
-  --louis:#a855f7;
-  --hugo:#f59e0b;
-  --all:#06b6d4;
-  --holiday:#475569;
-  --accent:#22c55e;
-  --st:env(safe-area-inset-top,0px);
-  --sb:env(safe-area-inset-bottom,0px);
+  --bg:#040408; --card:#0e0e16; --card2:#16161f; --bd:rgba(255,255,255,.07);
+  --tx:#eeeef8; --mu:#5a5a7a; --mu2:#3a3a5a;
+  --jason:#3b82f6; --kerry:#ec4899; --oliver:#22c55e; --louis:#a855f7; --hugo:#f59e0b;
+  --all:#06b6d4; --holiday:#334155; --accent:#22c55e;
+  --st:env(safe-area-inset-top,0px); --sb:env(safe-area-inset-bottom,0px);
 }
 html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;overflow:hidden}
-#app{height:100%;display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative}
+#app{height:100%;display:flex;flex-direction:column;max-width:480px;margin:0 auto}
 
-/* ── BOTTOM NAV ── */
-.nav{
-  display:flex;flex-shrink:0;
-  background:rgba(13,13,20,.95);
-  backdrop-filter:blur(20px);
-  border-top:1px solid var(--bd);
-  padding:8px 0 calc(var(--sb) + 8px);
-}
-.nav-btn{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-  background:none;border:none;cursor:pointer;padding:6px 0;
-  font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;
-  color:var(--mu);letter-spacing:.5px;text-transform:uppercase;
-  transition:color .2s;
-}
-.nav-btn.on{color:var(--accent)}
-.nav-icon{font-size:20px;line-height:1}
-
-/* ── SCROLLABLE BODY ── */
+/* BODY */
 .body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 
-/* ── HOME PAGE ── */
+/* BOTTOM NAV */
+.nav{display:flex;flex-shrink:0;background:rgba(4,4,8,.97);backdrop-filter:blur(24px);border-top:1px solid var(--bd);padding:6px 0 calc(var(--sb) + 6px)}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:7px 0;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:600;color:var(--mu);letter-spacing:1px;text-transform:uppercase;transition:color .2s}
+.nb.on{color:var(--accent)}
+.ni{font-size:22px;line-height:1}
+
+/* ══ LANDING ══ */
+.land{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100%;padding:calc(var(--st) + 40px) 32px calc(40px);
+  background:radial-gradient(ellipse at 50% 30%, rgba(34,197,94,.06) 0%, transparent 65%);
+}
+.land-logo{margin-bottom:28px}
+.land-wordmark{font-family:'Syne',sans-serif;font-size:48px;font-weight:800;letter-spacing:-3px;color:#fff;line-height:1;text-align:center;margin-bottom:6px}
+.land-tag{font-size:12px;color:var(--mu);letter-spacing:3px;text-transform:uppercase;text-align:center;margin-bottom:48px}
+.land-btns{width:100%;display:flex;flex-direction:column;gap:10px;margin-bottom:40px}
+.land-btn{
+  width:100%;padding:16px 24px;border-radius:16px;border:1px solid var(--bd);
+  background:var(--card);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;
+  color:var(--tx);cursor:pointer;display:flex;align-items:center;gap:14px;
+  transition:all .15s;letter-spacing:.2px;
+}
+.land-btn:active{background:var(--card2);transform:scale(.98)}
+.land-btn.primary{background:var(--accent);border-color:var(--accent);color:#000}
+.land-btn.primary:active{background:#16a34a}
+.land-btn-icon{font-size:22px;flex-shrink:0}
+.land-btn-text{text-align:left}
+.land-btn-sub{font-size:11px;opacity:.6;font-weight:400;margin-top:1px}
+.land-update{background:none;border:none;color:var(--mu);font-size:11px;letter-spacing:2px;text-transform:uppercase;font-family:'DM Sans',sans-serif;cursor:pointer;padding:8px;display:flex;align-items:center;gap:6px}
+.land-dots{display:flex;gap:7px;justify-content:center;margin-bottom:36px}
+.land-dot{width:8px;height:8px;border-radius:50%}
+
+/* ══ HOME ══ */
 .home{padding:0 0 24px}
-.home-hero{
-  background:linear-gradient(160deg,#0d1f12 0%,#0a0a0f 60%);
-  padding:calc(var(--st) + 20px) 20px 24px;
-  position:relative;overflow:hidden;
-}
-.home-hero::before{
-  content:'';position:absolute;top:-60px;right:-60px;
-  width:220px;height:220px;border-radius:50%;
-  background:radial-gradient(circle,rgba(34,197,94,.12) 0%,transparent 70%);
-}
-.home-date{font-size:11px;letter-spacing:3px;color:var(--mu);text-transform:uppercase;margin-bottom:6px;font-family:'DM Sans',sans-serif}
-.home-title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1}
-.home-sub{font-size:13px;color:var(--mu);margin-top:4px}
-.update-btn{
-  position:absolute;top:calc(var(--st) + 18px);right:16px;
-  background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);
-  border-radius:20px;color:#22c55e;font-size:11px;font-weight:600;
-  padding:5px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;
-}
-
-/* Today strip */
-.today-strip{padding:20px 16px 0}
-.strip-label{font-family:'Syne',sans-serif;font-size:11px;letter-spacing:3px;color:var(--mu);text-transform:uppercase;margin-bottom:10px}
-.today-empty{font-size:14px;color:var(--mu2);font-style:italic;padding:8px 0}
-.today-card{
-  background:var(--card2);border-radius:14px;padding:14px 16px;
-  margin-bottom:8px;display:flex;align-items:center;gap:12px;
-  border:1px solid var(--bd);
-}
-.today-bar{width:4px;border-radius:2px;align-self:stretch;min-height:32px;flex-shrink:0}
-.today-title{font-size:15px;font-weight:600;color:var(--tx)}
-.today-who{font-size:11px;color:var(--mu);margin-top:2px}
-
-/* Member avatars */
-.avatars{display:flex;gap:8px;padding:20px 16px 0;flex-wrap:wrap}
-.avatar{
-  flex:1;min-width:60px;background:var(--card);border-radius:14px;
-  padding:12px 8px;text-align:center;border:1px solid var(--bd);
-  cursor:pointer;transition:all .2s;
-}
-.avatar.on{border-color:var(--ac);background:var(--card2)}
-.av-dot{width:28px;height:28px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:13px}
-.av-name{font-size:10px;font-weight:600;color:var(--mu);letter-spacing:.5px;text-transform:uppercase}
-.av-count{font-size:16px;font-weight:700;color:var(--tx);margin-bottom:2px}
-
-/* Next up */
-.next-up{padding:20px 16px 0}
-.next-card{
-  background:var(--card);border-radius:14px;padding:14px 16px;
-  margin-bottom:8px;display:flex;gap:12px;align-items:center;
-  border:1px solid var(--bd);cursor:pointer;transition:background .15s;
-}
+.hero{background:linear-gradient(160deg,#0a1a0d 0%,#040408 55%);padding:calc(var(--st)+20px) 20px 24px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(34,197,94,.1) 0%,transparent 70%);pointer-events:none}
+.hero-date{font-size:10px;letter-spacing:3px;color:var(--mu);text-transform:uppercase;margin-bottom:5px}
+.hero-title{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1.1}
+.hero-sub{font-size:12px;color:var(--mu);margin-top:5px}
+.section{padding:20px 16px 0}
+.sec-label{font-family:'Syne',sans-serif;font-size:10px;letter-spacing:3px;color:var(--mu);text-transform:uppercase;margin-bottom:10px;font-weight:700}
+.today-card{background:var(--card2);border-radius:14px;padding:13px 15px;margin-bottom:7px;display:flex;align-items:center;gap:11px;border:1px solid var(--bd);cursor:pointer}
+.tbar{width:4px;border-radius:2px;align-self:stretch;min-height:30px;flex-shrink:0}
+.ttitle{font-size:15px;font-weight:600;color:var(--tx)}
+.twho{font-size:11px;color:var(--mu);margin-top:2px}
+.today-empty{font-size:14px;color:var(--mu2);font-style:italic;padding:4px 0 8px}
+.avatars{display:flex;gap:6px;flex-wrap:wrap;padding:20px 16px 0}
+.av{flex:1;min-width:55px;background:var(--card);border-radius:14px;padding:11px 6px;text-align:center;border:1px solid var(--bd);cursor:pointer;transition:all .2s}
+.av-e{font-size:11px;margin-bottom:4px}
+.av-n{font-size:18px;font-weight:700;font-family:'Syne',sans-serif;margin-bottom:2px}
+.av-l{font-size:9px;font-weight:600;color:var(--mu);letter-spacing:.5px;text-transform:uppercase}
+.next-card{display:flex;gap:11px;align-items:center;background:var(--card);border-radius:13px;padding:12px 14px;margin-bottom:7px;border:1px solid var(--bd);cursor:pointer;transition:background .15s}
 .next-card:active{background:var(--card2)}
-.next-date-box{
-  background:var(--card2);border-radius:10px;padding:6px 10px;
-  text-align:center;flex-shrink:0;min-width:44px;border:1px solid var(--bd);
-}
-.next-day{font-size:18px;font-weight:700;color:var(--tx);line-height:1;font-family:'Syne',sans-serif}
-.next-mon{font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-top:1px}
+.date-box{background:var(--card2);border-radius:9px;padding:6px 9px;text-align:center;flex-shrink:0;min-width:42px;border:1px solid var(--bd)}
+.date-d{font-size:18px;font-weight:800;font-family:'Syne',sans-serif;line-height:1;color:var(--tx)}
+.date-m{font-size:8px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-top:1px}
 .next-title{font-size:14px;font-weight:600;color:var(--tx)}
 .next-who{font-size:11px;color:var(--mu);margin-top:2px;display:flex;align-items:center;gap:4px}
-.who-dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.wdot{width:5px;height:5px;border-radius:50%;display:inline-block;flex-shrink:0}
+.arr{color:var(--mu2);font-size:18px;margin-left:auto}
 
-/* ── CALENDAR PAGE ── */
-.cal-page{padding:calc(var(--st) + 16px) 14px 24px}
-.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.cal-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--tx)}
-.nbtn{background:var(--card2);border:1px solid var(--bd);border-radius:10px;color:var(--tx);font-size:20px;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit}
-
-/* Filter pills */
-.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
-.fpill{display:flex;align-items:center;gap:4px;background:var(--card);border:1.5px solid var(--bd);border-radius:20px;padding:4px 10px;cursor:pointer;color:var(--mu);font-size:11px;font-weight:600;font-family:inherit;transition:all .15s;letter-spacing:.3px}
-.fpill.on{color:#fff}
-.fdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-
-/* Calendar grid */
+/* ══ CALENDAR ══ */
+.cal{padding:calc(var(--st)+14px) 14px 24px}
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800}
+.nbtn{background:var(--card2);border:1px solid var(--bd);border-radius:10px;color:var(--tx);font-size:20px;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.pills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.pill{display:flex;align-items:center;gap:3px;background:var(--card);border:1.5px solid var(--bd);border-radius:20px;padding:4px 9px;cursor:pointer;color:var(--mu);font-size:11px;font-weight:600;font-family:inherit;transition:all .15s}
+.pill.on{color:#fff}
+.pdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
 .dhdr{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
-.dh{text-align:center;font-size:10px;color:var(--mu);font-weight:600;padding:3px 0;letter-spacing:.5px}
-.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cd{
-  background:var(--card);border:1px solid var(--bd);border-radius:8px;
-  padding:5px 2px;cursor:pointer;color:var(--tx);font-size:13px;font-weight:500;
-  min-height:44px;display:flex;flex-direction:column;align-items:center;gap:2px;
-  font-family:inherit;transition:all .15s;
-}
-.cd.tod{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.4);color:#22c55e}
+.dh{text-align:center;font-size:10px;color:var(--mu);font-weight:600;padding:3px 0}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cd{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:4px 2px;cursor:pointer;color:var(--tx);font-size:13px;font-weight:500;min-height:44px;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:inherit;transition:all .15s}
+.cd.tod{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.35);color:#22c55e}
 .cd.sel{background:#22c55e;color:#000;border-color:#22c55e}
 .cd.emp{background:transparent;border:none;cursor:default}
-.dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center}
 .evd{width:5px;height:5px;border-radius:50%}
-
-/* Selected day */
-.sel-panel{margin-top:16px}
-.panel-label{font-family:'Syne',sans-serif;font-size:11px;color:var(--mu);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;font-weight:700}
-.evc{background:var(--card);border-radius:12px;padding:12px 14px;margin-bottom:7px;border-left:3px solid var(--mu);cursor:pointer;transition:background .15s}
+.dots{display:flex;gap:1px;flex-wrap:wrap;justify-content:center}
+.slabel{font-family:'Syne',sans-serif;font-size:10px;letter-spacing:2px;color:var(--mu);text-transform:uppercase;margin:18px 0 10px;font-weight:700}
+.evc{background:var(--card);border-radius:11px;padding:11px 13px;margin-bottom:6px;border-left:3px solid var(--mu);cursor:pointer;transition:background .15s}
 .evc:active{background:var(--card2)}
-.evt{font-weight:600;font-size:15px;color:var(--tx)}
-.evm{font-size:11px;color:var(--mu);margin-top:3px;display:flex;align-items:center;gap:6px}
-
-/* Upcoming */
-.upc-list{margin-top:20px}
-.upi{
-  display:flex;align-items:center;gap:12px;background:var(--card);
-  border-radius:12px;padding:12px 14px;margin-bottom:7px;cursor:pointer;
-  border:1px solid var(--bd);transition:background .15s;
-}
+.evt{font-weight:600;font-size:15px}
+.evm{font-size:11px;color:var(--mu);margin-top:3px;display:flex;align-items:center;gap:5px}
+.upi{display:flex;gap:11px;align-items:center;background:var(--card);border-radius:11px;padding:11px 13px;margin-bottom:6px;border:1px solid var(--bd);cursor:pointer;transition:background .15s}
 .upi:active{background:var(--card2)}
-.upbar{width:4px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:32px}
-.upt{font-size:14px;font-weight:600;color:var(--tx)}
-.upm{font-size:11px;color:var(--mu);margin-top:2px}
-.arr{color:var(--mu2);font-size:16px;margin-left:auto;padding-left:4px}
-
-/* Add button */
-.add-btn{
-  background:var(--accent);border:none;border-radius:12px;color:#000;
-  font-size:15px;padding:14px;cursor:pointer;font-family:'DM Sans',sans-serif;
-  font-weight:700;width:100%;margin-top:18px;letter-spacing:.3px;
-}
-
-/* Add form */
-.fbox{margin-top:18px;background:var(--card);border-radius:14px;padding:16px;border:1px solid var(--bd)}
-.flabel{font-size:11px;color:var(--mu);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
-.finp{
-  width:100%;background:var(--card2);border:1px solid var(--bd);
-  border-radius:8px;color:var(--tx);font-size:14px;padding:10px 12px;
-  font-family:'DM Sans',sans-serif;margin-bottom:12px;color-scheme:dark;
-}
+.upbar{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:30px}
+.upt{font-size:14px;font-weight:600}
+.upm{font-size:11px;color:var(--mu);margin-top:1px}
+.add-btn{background:var(--accent);border:none;border-radius:12px;color:#000;font-size:15px;padding:14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;width:100%;margin-top:16px}
+.fbox{margin-top:16px;background:var(--card);border-radius:14px;padding:16px;border:1px solid var(--bd)}
+.flabel{font-size:10px;color:var(--mu);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.finp{width:100%;background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:14px;padding:10px 12px;font-family:'DM Sans',sans-serif;margin-bottom:12px;color-scheme:dark}
 .mpills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
 .brow{display:flex;gap:8px}
-.bpri{background:var(--accent);border:none;border-radius:8px;color:#000;font-size:13px;padding:10px 18px;cursor:pointer;font-family:inherit;font-weight:700;flex:1}
-.bghost{background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--mu);font-size:13px;padding:10px 14px;cursor:pointer;font-family:inherit}
+.bpri{background:var(--accent);border:none;border-radius:8px;color:#000;font-size:13px;padding:10px 16px;cursor:pointer;font-family:inherit;font-weight:700;flex:1}
+.bgh{background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--mu);font-size:13px;padding:10px 13px;cursor:pointer;font-family:inherit}
 
-/* ── EDIT MODAL ── */
-.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:100;display:flex;align-items:flex-end;backdrop-filter:blur(4px)}
-.modal{background:var(--card);border-radius:24px 24px 0 0;padding:24px 18px calc(var(--sb) + 28px);width:100%;max-width:480px;margin:0 auto;border-top:1px solid var(--bd)}
-.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.modal-title{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;color:var(--tx)}
-.modal-close{background:var(--card2);border:1px solid var(--bd);border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;color:var(--mu);display:flex;align-items:center;justify-content:center}
-.del-btn{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);border-radius:8px;color:#ef4444;font-size:13px;padding:10px 14px;cursor:pointer;font-family:inherit;font-weight:600}
+/* MODAL */
+.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:100;display:flex;align-items:flex-end;backdrop-filter:blur(6px)}
+.modal{background:var(--card);border-radius:24px 24px 0 0;padding:22px 18px calc(var(--sb)+26px);width:100%;max-width:480px;margin:0 auto;border-top:1px solid var(--bd)}
+.mhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.mtitle{font-family:'Syne',sans-serif;font-size:19px;font-weight:800}
+.mclose{background:var(--card2);border:1px solid var(--bd);border-radius:50%;width:30px;height:30px;font-size:15px;cursor:pointer;color:var(--mu);display:flex;align-items:center;justify-content:center}
+.del-btn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:8px;color:#ef4444;font-size:13px;padding:10px 13px;cursor:pointer;font-family:inherit;font-weight:600}
 
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal{animation:slideUp .25s cubic-bezier(.32,0,.67,0)}
+@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal{animation:slideUp .22s cubic-bezier(.22,1,.36,1)}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal-bg{animation:fadeIn .2s ease}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.pulsing{animation:pulse 1s infinite}
+.modal-bg{animation:fadeIn .18s ease}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinning{display:inline-block;animation:spin .8s linear infinite}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
 (function(){
-  const m={name:"Rascal",short_name:"Rascal",start_url:".",display:"standalone",background_color:"#0a0a0f",theme_color:"#0a0a0f",icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f172a'/><path d='M50 78 Q47 86 44 93' stroke='%2315803d' stroke-width='3.5' fill='none' stroke-linecap='round'/><path d='M50 12 C65 20, 75 36, 73 52 C71 66, 61 76, 50 78 C39 76, 29 66, 27 52 C25 36, 35 20, 50 12Z' fill='%2316a34a'/><path d='M50 12 Q50 45 50 78' stroke='rgba(255,255,255,.28)' stroke-width='1.5' fill='none'/><path d='M50 28 Q41 34 33 35' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 28 Q59 34 67 35' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 42 Q40 48 32 48' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 42 Q60 48 68 48' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 56 Q42 61 36 60' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 56 Q58 61 64 60' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 12 C43 19, 33 31, 30 45' stroke='rgba(255,255,255,.22)' stroke-width='2.5' fill='none' stroke-linecap='round'/><circle cx='22' cy='93' r='4' fill='%232563eb'/><circle cx='34' cy='93' r='4' fill='%23db2777'/><circle cx='50' cy='93' r='4' fill='%2322c55e'/><circle cx='66' cy='93' r='4' fill='%237c3aed'/><circle cx='78' cy='93' r='4' fill='%23d97706'/></svg>",sizes:"512x512",type:"image/svg+xml"}]};
+  const ico="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f172a'/><path d='M50 78 Q47 86 44 93' stroke='%2315803d' stroke-width='3.5' fill='none' stroke-linecap='round'/><path d='M50 12 C65 20, 75 36, 73 52 C71 66, 61 76, 50 78 C39 76, 29 66, 27 52 C25 36, 35 20, 50 12Z' fill='%2316a34a'/><path d='M50 12 Q50 45 50 78' stroke='rgba(255,255,255,.28)' stroke-width='1.5' fill='none'/><path d='M50 28 Q41 34 33 35' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 28 Q59 34 67 35' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 42 Q40 48 32 48' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 42 Q60 48 68 48' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 56 Q42 61 36 60' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 56 Q58 61 64 60' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 12 C43 19, 33 31, 30 45' stroke='rgba(255,255,255,.22)' stroke-width='2.5' fill='none' stroke-linecap='round'/><circle cx='22' cy='93' r='4' fill='%232563eb'/><circle cx='34' cy='93' r='4' fill='%23ec4899'/><circle cx='50' cy='93' r='4' fill='%2322c55e'/><circle cx='66' cy='93' r='4' fill='%23a855f7'/><circle cx='78' cy='93' r='4' fill='%23f59e0b'/></svg>";
+  const m={name:"Rascal",short_name:"Rascal",start_url:".",display:"standalone",background_color:"#040408",theme_color:"#040408",icons:[{src:ico,sizes:"512x512",type:"image/svg+xml"}]};
   const l=document.createElement("link");l.rel="manifest";l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));document.head.appendChild(l);
 })();
 
-const COZI_URL="https://rest.cozi.com/api/ext/1103/e3a95b83-d61c-4cd5-b910-8b119c0ebc8e/icalendar/feed/feed.ics";
+const COZI="https://rest.cozi.com/api/ext/1103/e3a95b83-d61c-4cd5-b910-8b119c0ebc8e/icalendar/feed/feed.ics";
 const PROXIES=[u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,u=>`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`];
-const C={Jason:"#3b82f6",Kerry:"#ec4899",Oliver:"#22c55e",Louis:"#a855f7",Hugo:"#f59e0b",All:"#06b6d4",Holiday:"#475569"};
-const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
-const MONTHS_S=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-const MEMBERS=["Jason","Kerry","Oliver","Louis","Hugo"];
+const C={Jason:"#3b82f6",Kerry:"#ec4899",Oliver:"#22c55e",Louis:"#a855f7",Hugo:"#f59e0b",All:"#06b6d4",Holiday:"#334155"};
+const MO=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const MS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const DA=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const MB=["Jason","Kerry","Oliver","Louis","Hugo"];
 
-const EMBEDDED=[{"id": "c1", "title": "Paula Parrot 50th 🎉", "date": "2026-05-29", "member": "Kerry"}, {"id": "c2", "title": "Haircut ✂️", "date": "2026-05-30", "member": "Kerry"}, {"id": "cl1", "title": "Champions League Final 🏆⚽ 3pm", "date": "2026-05-30", "member": ["Jason", "Oliver"]}, {"id": "s1", "title": "Arsenal Trophy Parade 🏆", "date": "2026-05-31", "member": ["Jason", "Oliver"]}, {"id": "c3", "title": "Matilda home after art club", "date": "2026-06-01", "member": ["Kerry", "Louis"]}, {"id": "c4", "title": "Oliver: Chemistry Paper 1 📝 (9am, SPH R2)", "date": "2026-06-02", "member": "Oliver"}, {"id": "cx1", "title": "Oliver: Maths Pure 1 📝 (1:30pm, SPH M4)", "date": "2026-06-03", "member": "Oliver"}, {"id": "c5", "title": "Oliver: Economics Paper 3 📝 (9am, SPH P1)", "date": "2026-06-04", "member": "Oliver"}, {"id": "c6", "title": "Call vets – Hugo flea treatment 🐶", "date": "2026-06-04", "member": ["Kerry", "Hugo"]}, {"id": "c7", "title": "Leafy meningitis vaccine 💉", "date": "2026-06-05", "member": ["Kerry", "Oliver"]}, {"id": "c8", "title": "Louis & Kerry – Harry Potter Studio Tour ⚡", "date": "2026-06-06", "member": ["Kerry", "Louis"]}, {"id": "c9", "title": "Oliver: Chemistry Paper 2 📝 (9am, HALL C5)", "date": "2026-06-09", "member": "Oliver"}, {"id": "c10", "title": "Oliver: Maths Pure 2 📝 (1:30pm, SPH M4)", "date": "2026-06-11", "member": "Oliver"}, {"id": "c11", "title": "Mum & Dad in France 🇫🇷", "date": "2026-06-11", "member": "All"}, {"id": "c12", "title": "Louis arts & culture performance 🎭", "date": "2026-06-12", "member": "Louis"}, {"id": "h1", "title": "Crepe Farm Barns 🏡 Check-in from 4pm", "date": "2026-06-12", "member": ["Jason", "Kerry"]}, {"id": "c13", "title": "Will & Jess Wedding 💍", "date": "2026-06-13", "member": "All"}, {"id": "h2", "title": "Crepe Farm Barns 🏡 (Bridport, Will & Jess wedding)", "date": "2026-06-13", "member": ["Jason", "Kerry"]}, {"id": "h3", "title": "Crepe Farm Barns 🏡 Checkout by 10am", "date": "2026-06-14", "member": ["Jason", "Kerry"]}, {"id": "c14", "title": "Oliver: Chemistry Paper 3 📝 (9am, SPH Q10)", "date": "2026-06-15", "member": "Oliver"}, {"id": "c15", "title": "Kerry at Butcher's wine shop 🍷", "date": "2026-06-18", "member": "Kerry"}, {"id": "c16", "title": "Oliver: Maths Stats & Mechanics 📝 (1:30pm, SPH M4)", "date": "2026-06-18", "member": "Oliver"}, {"id": "s3", "title": "King's Birthday 👑", "date": "2026-06-20", "member": "Holiday"}, {"id": "s4", "title": "Father's Day 🎉", "date": "2026-06-21", "member": "Holiday"}, {"id": "c17", "title": "Leafy, Mum & Dad day out", "date": "2026-07-03", "member": "All"}, {"id": "c18", "title": "HT Fest 🎪", "date": "2026-07-04", "member": "All"}, {"id": "s5", "title": "Churchill Airbnb 🛁 Check-in after 4pm", "date": "2026-07-09", "member": "All"}, {"id": "s6", "title": "Churchill Airbnb 🏡 (Axminster, sleeps 15)", "date": "2026-07-10", "member": "All"}, {"id": "r1", "title": "Ollie's Birthday 🎂", "date": "2026-07-10", "member": "Oliver"}, {"id": "s7", "title": "Churchill Airbnb 🛁 Checkout by 10am", "date": "2026-07-12", "member": "All"}, {"id": "c19", "title": "Mum & Dad in France 🇫🇷", "date": "2026-07-16", "member": "All"}, {"id": "c20", "title": "Emma & Declan engagement party 🥂", "date": "2026-07-25", "member": "All"}, {"id": "r2", "title": "Will & Lou Anniversary", "date": "2026-07-25", "member": "All"}, {"id": "r3", "title": "Defender MOT Due 🚗", "date": "2026-08-02", "member": "Jason"}, {"id": "r4", "title": "Grandad's Birthday 🎂", "date": "2026-08-12", "member": "All"}, {"id": "c21", "title": "Leafy in Swanage 🏖️", "date": "2026-08-21", "member": "Oliver"}, {"id": "c22", "title": "Leafy in Spain ☀️", "date": "2026-08-31", "member": "Oliver"}, {"id": "c23", "title": "Dragon's Fire Race 🏃", "date": "2026-09-09", "member": "Jason"}, {"id": "r5", "title": "Max's Birthday 🎂", "date": "2026-09-19", "member": "All"}, {"id": "r6", "title": "Flick's Birthday 🎂", "date": "2026-09-28", "member": "All"}, {"id": "r7", "title": "Lou's Birthday 🎂", "date": "2026-10-02", "member": "All"}, {"id": "r8", "title": "Mum's Birthday 🎂", "date": "2026-10-06", "member": "All"}, {"id": "r9", "title": "Grace's Birthday 🎂", "date": "2026-11-17", "member": "All"}, {"id": "c24", "title": "Xmas Singalong London 🎄", "date": "2026-12-10", "member": "All"}, {"id": "r10", "title": "Wedding Anniversary 💑", "date": "2026-12-15", "member": ["Jason", "Kerry"]}, {"id": "r11", "title": "Mandy's Birthday 🎂", "date": "2027-02-17", "member": "All"}, {"id": "r12", "title": "Will's Birthday 🎂", "date": "2027-03-16", "member": "All"}, {"id": "r13", "title": "Monty's Birthday 🎂", "date": "2027-03-23", "member": "All"}];
+const EMBEDDED=[{"id": "bh-may", "title": "Early May Bank Holiday", "date": "2026-05-04", "member": "Holiday"}, {"id": "bh-spring", "title": "Spring Bank Holiday", "date": "2026-05-25", "member": "Holiday"}, {"id": "c1", "title": "Paula Parrot 50th 🎉", "date": "2026-05-29", "member": "Kerry"}, {"id": "c2", "title": "Haircut ✂️", "date": "2026-05-30", "member": "Kerry"}, {"id": "cl1", "title": "Champions League Final 🏆⚽ 3pm", "date": "2026-05-30", "member": ["Jason", "Oliver"]}, {"id": "bday-granny", "title": "🎂 Granny Seaside's Birthday", "date": "2026-05-31", "member": "All"}, {"id": "s1", "title": "Arsenal Trophy Parade 🏆", "date": "2026-05-31", "member": ["Jason", "Oliver"]}, {"id": "c3", "title": "Matilda home after art club", "date": "2026-06-01", "member": ["Kerry", "Louis"]}, {"id": "c4", "title": "Oliver: Chemistry Paper 1 📝 (9am, SPH R2)", "date": "2026-06-02", "member": "Oliver"}, {"id": "cx1", "title": "Oliver: Maths Pure 1 📝 (1:30pm, SPH M4)", "date": "2026-06-03", "member": "Oliver"}, {"id": "c5", "title": "Oliver: Economics Paper 3 📝 (9am, SPH P1)", "date": "2026-06-04", "member": "Oliver"}, {"id": "c6", "title": "Call vets – Hugo flea treatment 🐶", "date": "2026-06-04", "member": ["Kerry", "Hugo"]}, {"id": "c7", "title": "Leafy meningitis vaccine 💉", "date": "2026-06-05", "member": ["Kerry", "Oliver"]}, {"id": "c8", "title": "Louis & Kerry – Harry Potter Studio Tour ⚡", "date": "2026-06-06", "member": ["Kerry", "Louis"]}, {"id": "c9", "title": "Oliver: Chemistry Paper 2 📝 (9am, HALL C5)", "date": "2026-06-09", "member": "Oliver"}, {"id": "c10", "title": "Oliver: Maths Pure 2 📝 (1:30pm, SPH M4)", "date": "2026-06-11", "member": "Oliver"}, {"id": "c11", "title": "Mum & Dad in France 🇫🇷", "date": "2026-06-11", "member": "All"}, {"id": "c12", "title": "Louis arts & culture performance 🎭", "date": "2026-06-12", "member": "Louis"}, {"id": "h1", "title": "Crepe Farm Barns 🏡 Check-in from 4pm", "date": "2026-06-12", "member": ["Jason", "Kerry"]}, {"id": "c13", "title": "Will & Jess Wedding 💍", "date": "2026-06-13", "member": "All"}, {"id": "h2", "title": "Crepe Farm Barns 🏡 (Bridport, Will & Jess wedding)", "date": "2026-06-13", "member": ["Jason", "Kerry"]}, {"id": "h3", "title": "Crepe Farm Barns 🏡 Checkout by 10am", "date": "2026-06-14", "member": ["Jason", "Kerry"]}, {"id": "c14", "title": "Oliver: Chemistry Paper 3 📝 (9am, SPH Q10)", "date": "2026-06-15", "member": "Oliver"}, {"id": "c15", "title": "Kerry at Butcher's wine shop 🍷", "date": "2026-06-18", "member": "Kerry"}, {"id": "c16", "title": "Oliver: Maths Stats & Mechanics 📝 (1:30pm, SPH M4)", "date": "2026-06-18", "member": "Oliver"}, {"id": "s3", "title": "King's Birthday 👑", "date": "2026-06-20", "member": "Holiday"}, {"id": "s4", "title": "Father's Day 🎉", "date": "2026-06-21", "member": "Holiday"}, {"id": "c17", "title": "Leafy, Mum & Dad day out", "date": "2026-07-03", "member": "All"}, {"id": "c18", "title": "HT Fest 🎪", "date": "2026-07-04", "member": "All"}, {"id": "s5", "title": "Churchill Airbnb 🛁 Check-in after 4pm", "date": "2026-07-09", "member": "All"}, {"id": "bday-oliver", "title": "🎂 Oliver's Birthday", "date": "2026-07-10", "member": "Oliver"}, {"id": "s6", "title": "Churchill Airbnb 🏡 (Axminster, sleeps 15)", "date": "2026-07-10", "member": "All"}, {"id": "s7", "title": "Churchill Airbnb 🛁 Checkout by 10am", "date": "2026-07-12", "member": "All"}, {"id": "c19", "title": "Mum & Dad in France 🇫🇷", "date": "2026-07-16", "member": "All"}, {"id": "c20", "title": "Emma & Declan engagement party 🥂", "date": "2026-07-25", "member": "All"}, {"id": "r2", "title": "Will & Lou Anniversary", "date": "2026-07-25", "member": "All"}, {"id": "r3", "title": "Defender MOT Due 🚗", "date": "2026-08-02", "member": "Jason"}, {"id": "bday-grandad", "title": "🎂 Grandad Seaside's Birthday", "date": "2026-08-12", "member": "All"}, {"id": "c21", "title": "Leafy in Swanage 🏖️", "date": "2026-08-21", "member": "Oliver"}, {"id": "bh-summer", "title": "Summer Bank Holiday", "date": "2026-08-31", "member": "Holiday"}, {"id": "c22", "title": "Leafy in Spain ☀️", "date": "2026-08-31", "member": "Oliver"}, {"id": "c23", "title": "Dragon's Fire Race 🏃", "date": "2026-09-09", "member": "Jason"}, {"id": "r5", "title": "Max's Birthday 🎂", "date": "2026-09-19", "member": "All"}, {"id": "r6", "title": "Flick's Birthday 🎂", "date": "2026-09-28", "member": "All"}, {"id": "bday-louis", "title": "🎂 Louis's Birthday", "date": "2026-10-02", "member": "Louis"}, {"id": "r9", "title": "Grace's Birthday 🎂", "date": "2026-11-17", "member": "All"}, {"id": "c24", "title": "Xmas Singalong London 🎄", "date": "2026-12-10", "member": "All"}, {"id": "r10", "title": "Wedding Anniversary 💑", "date": "2026-12-15", "member": ["Jason", "Kerry"]}, {"id": "bh-xmas", "title": "Christmas Day 🎄", "date": "2026-12-25", "member": "Holiday"}, {"id": "bh-boxing", "title": "Boxing Day 🎁", "date": "2026-12-28", "member": "Holiday"}, {"id": "bh-ny27", "title": "New Year's Day", "date": "2027-01-01", "member": "Holiday"}, {"id": "bday-mandy", "title": "🎂 Auntie Mandy's Birthday", "date": "2027-02-18", "member": "All"}, {"id": "r12", "title": "Will's Birthday 🎂", "date": "2027-03-16", "member": "All"}, {"id": "r13", "title": "Monty's Birthday 🎂", "date": "2027-03-23", "member": "All"}, {"id": "bh-gf27", "title": "Good Friday", "date": "2027-03-26", "member": "Holiday"}, {"id": "bh-em27", "title": "Easter Monday", "date": "2027-03-29", "member": "Holiday"}, {"id": "bday-jason", "title": "🎂 Jason's Birthday", "date": "2027-04-21", "member": "Jason"}, {"id": "bday-kerry", "title": "🎂 Kerry's Birthday", "date": "2027-04-30", "member": "Kerry"}, {"id": "bh-may27", "title": "Early May Bank Holiday", "date": "2027-05-03", "member": "Holiday"}, {"id": "bh-spring27", "title": "Spring Bank Holiday", "date": "2027-05-31", "member": "Holiday"}, {"id": "bh-summer27", "title": "Summer Bank Holiday", "date": "2027-08-30", "member": "Holiday"}];
 
 const NOW=new Date();NOW.setHours(0,0,0,0);
 function fmt(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
-const TODAY=fmt(NOW);
+const TD=fmt(NOW);
 
-let S={
-  tab:"home",
-  y:NOW.getFullYear(),mo:NOW.getMonth(),sel:null,
-  events:[...EMBEDDED],user:[],
-  filter:"All",
-  showAdd:false,showEdit:false,editId:null,
-  nev:{title:"",member:[],date:""},
-  edit:{title:"",member:[],date:""},
-  sync:"embedded",lastSync:null,liveCount:0
-};
+let S={tab:"land",y:NOW.getFullYear(),mo:NOW.getMonth(),sel:null,events:[...EMBEDDED],user:[],filter:"All",showAdd:false,showEdit:false,editId:null,nev:{title:"",member:[],date:""},edit:{title:"",member:[],date:""},sync:"embedded"};
 
-function set(p){Object.assign(S,p);render()}
-function allEvs(){return[...S.events,...S.user]}
-function col(m){return C[m]||C.All}
-function getMembers(e){if(Array.isArray(e.member))return e.member;if(e.member==="All")return["All"];return[e.member]}
-function primaryColor(e){const ms=getMembers(e);const f=ms.find(m=>m!=="All"&&m!=="Holiday");return C[f||ms[0]]||C.All}
-function matchesFilter(e,f){if(f==="All")return true;const ms=getMembers(e);return ms.includes(f)||ms.includes("All")}
-function fmtD(ds){const d=new Date(ds+"T12:00:00");return d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"})}
+const set=p=>{Object.assign(S,p);render()};
+const allEvs=()=>[...S.events,...S.user];
+const col=m=>C[m]||C.All;
+const getM=e=>Array.isArray(e.member)?e.member:e.member==="All"?["All"]:[e.member];
+const primCol=e=>{const ms=getM(e);const f=ms.find(m=>m!=="All"&&m!=="Holiday");return C[f||ms[0]]||C.All};
+const matchF=(e,f)=>{if(f==="All")return true;const ms=getM(e);return ms.includes(f)||ms.includes("All")};
+const fmtD=ds=>new Date(ds+"T12:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
 
-// iCal parser
 function parseDT(v){if(!v)return null;const r=v.includes(":")?v.split(":").pop():v;const s=r.replace(/[TZ\-:]/g,"");if(s.length<8)return null;const d=new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8));return isNaN(d.getTime())?null:d}
-function nextY(base){const d=new Date(base);d.setFullYear(NOW.getFullYear());if(d<NOW)d.setFullYear(NOW.getFullYear()+1);return d}
+function nextY(b){const d=new Date(b);d.setFullYear(NOW.getFullYear());if(d<NOW)d.setFullYear(NOW.getFullYear()+1);return d}
 function mapM(s){const l=s.toLowerCase();if(/^(jason\/kerry|kerry\/jason):/.test(l))return"Kerry";if(/^(jase|jason):/.test(l))return"Jason";if(/^kerry:/.test(l))return"Kerry";if(/^(ollie\/jason|jason\/ollie):/.test(l))return"Oliver";if(/\blouis\b/.test(l))return"Louis";if(/\bhugo\b/.test(l))return"Hugo";if(/\bleafy\b/.test(l))return"Oliver";return"All"}
 function cTitle(s){return s.replace(/^(all|jason\/kerry|kerry\/jason|ollie\/jason|jason|kerry|ollie):\s*/i,"").replace(/\\,/g,",").replace(/\\n/g," ").trim()}
 function parseIcal(txt){
@@ -272,251 +197,169 @@ function parseIcal(txt){
 }
 
 async function fetchLive(){
-  set({sync:"loading"});
   for(const pFn of PROXIES){
     try{
-      const r=await Promise.race([fetch(pFn(COZI_URL),{cache:"no-store"}),new Promise((_,rej)=>setTimeout(()=>rej(),8000))]);
+      const r=await Promise.race([fetch(pFn(COZI),{cache:"no-store"}),new Promise((_,rej)=>setTimeout(()=>rej(),8000))]);
       if(!r.ok)continue;
       const ct=r.headers.get("content-type")||"";
       let txt=ct.includes("json")?(await r.json()).contents||"":await r.text();
       if(!txt||!txt.includes("VCALENDAR"))continue;
       const parsed=parseIcal(txt);
-      if(parsed.length>0){set({events:parsed,sync:"live",lastSync:new Date(),liveCount:parsed.length});return;}
+      if(parsed.length>0){set({events:parsed});return;}
     }catch(e){continue;}
   }
-  set({sync:"embedded"});
 }
 
 function hardRefresh(){
   if('serviceWorker' in navigator){
     navigator.serviceWorker.getRegistrations().then(regs=>{
-      Promise.all(regs.map(r=>r.unregister())).then(()=>{
-        caches.keys().then(keys=>{
-          Promise.all(keys.map(k=>caches.delete(k))).then(()=>window.location.reload(true));
-        });
-      });
+      Promise.all(regs.map(r=>r.unregister())).then(()=>caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k))).then(()=>window.location.reload(true))));
     });
-  }else{window.location.reload(true);}
+  }else window.location.reload(true);
 }
 
-function getDaysIn(y,m){return new Date(y,m+1,0).getDate()}
-function getFirstDay(y,m){const d=new Date(y,m,1).getDay();return d===0?6:d-1}
+const diM=(y,m)=>new Date(y,m+1,0).getDate();
+const fd=(y,m)=>{const d=new Date(y,m,1).getDay();return d===0?6:d-1};
 
-// ── RENDER ──
 function render(){
-  document.getElementById("app").innerHTML=buildPage();
+  document.getElementById("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
   document.getElementById("app").addEventListener("click",handle);
 }
 
-function buildPage(){
-  const bodyHTML = S.tab==="home" ? buildHome() : buildCal();
-  return `
-    <div class="body">${bodyHTML}</div>
-    ${buildNav()}
-    ${S.showEdit ? buildEditModal() : ""}
-  `;
-}
-
-function buildNav(){
-  return `<nav class="nav">
-    <button class="nav-btn${S.tab==="home"?" on":""}" data-a="tab" data-tab="home">
-      <span class="nav-icon">🏠</span>Home
-    </button>
-    <button class="nav-btn${S.tab==="calendar"?" on":""}" data-a="tab" data-tab="calendar">
-      <span class="nav-icon">📅</span>Calendar
-    </button>
-    <button class="nav-btn" data-a="hard-refresh">
-      <span class="nav-icon${S.sync==="loading"?" pulsing":""}">↻</span>Update
-    </button>
-  </nav>`;
-}
-
-function buildHome(){
-  const all=allEvs();
-  const todayEvs=all.filter(e=>e.date===TODAY);
-  const upcoming=all.filter(e=>e.date>TODAY).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,8);
-  const memberCounts=MEMBERS.map(m=>({
-    name:m,color:C[m],
-    count:all.filter(e=>e.date>=TODAY&&matchesFilter(e,m)).length
-  }));
-
-  const todayHTML=todayEvs.length===0
-    ?`<div class="today-empty">Nothing on today 🌿</div>`
-    :todayEvs.map(e=>`
-      <div class="today-card" data-a="open-edit" data-id="${e.id}" style="cursor:pointer">
-        <div class="today-bar" style="background:${primaryColor(e)}"></div>
-        <div style="flex:1">
-          <div class="today-title">${e.title}</div>
-          <div class="today-who">${getMembers(e).join(" & ")}</div>
+// ── LANDING ──────────────────────────────────────────────────────────────────
+function bLand(){
+  const today=allEvs().filter(e=>e.date===TD).length;
+  const soon=allEvs().filter(e=>e.date>TD).length;
+  return`<div class="land">
+    <div class="land-logo">
+      <svg viewBox="0 0 80 80" width="80" height="80" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40 72 Q37 79 34 80" stroke="#15803d" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M40 10 C53 17, 61 31, 59 45 C57 57, 49 65, 40 67 C31 65, 23 57, 21 45 C19 31, 27 17, 40 10Z" fill="#16a34a"/>
+        <path d="M40 10 Q40 38 40 67" stroke="rgba(255,255,255,.25)" stroke-width="1.2" fill="none"/>
+        <path d="M40 23 Q33 28 27 29" stroke="rgba(255,255,255,.15)" stroke-width=".8" fill="none"/>
+        <path d="M40 23 Q47 28 53 29" stroke="rgba(255,255,255,.15)" stroke-width=".8" fill="none"/>
+        <path d="M40 36 Q32 41 26 41" stroke="rgba(255,255,255,.15)" stroke-width=".8" fill="none"/>
+        <path d="M40 36 Q48 41 54 41" stroke="rgba(255,255,255,.15)" stroke-width=".8" fill="none"/>
+        <path d="M40 10 C35 16, 26 26, 24 38" stroke="rgba(255,255,255,.18)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="land-wordmark">Rascal</div>
+    <div class="land-tag">The Leaf Family</div>
+    <div class="land-dots">
+      <div class="land-dot" style="background:#3b82f6"></div>
+      <div class="land-dot" style="background:#ec4899"></div>
+      <div class="land-dot" style="background:#22c55e"></div>
+      <div class="land-dot" style="background:#a855f7"></div>
+      <div class="land-dot" style="background:#f59e0b"></div>
+    </div>
+    <div class="land-btns">
+      <button class="land-btn primary" data-a="tab" data-tab="home">
+        <span class="land-btn-icon">🏠</span>
+        <div class="land-btn-text">
+          <div>Today</div>
+          <div class="land-btn-sub">${today>0?today+" event"+(today>1?"s":"")+" today":"Nothing on today"}</div>
         </div>
-      </div>`).join("");
+      </button>
+      <button class="land-btn" data-a="tab" data-tab="home">
+        <span class="land-btn-icon">📋</span>
+        <div class="land-btn-text">
+          <div>Family home</div>
+          <div class="land-btn-sub">Overview &amp; coming up</div>
+        </div>
+      </button>
+      <button class="land-btn" data-a="tab" data-tab="calendar">
+        <span class="land-btn-icon">📅</span>
+        <div class="land-btn-text">
+          <div>Calendar</div>
+          <div class="land-btn-sub">${soon} upcoming events</div>
+        </div>
+      </button>
+    </div>
+    <button class="land-update" data-a="hard-refresh">↻ &nbsp;Update app</button>
+  </div>`;
+}
 
-  const upcomingHTML=upcoming.map(e=>{
+// ── HOME ──────────────────────────────────────────────────────────────────────
+function bHome(){
+  const all=allEvs();
+  const todayEvs=all.filter(e=>e.date===TD);
+  const upcoming=all.filter(e=>e.date>TD).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,8);
+  const avs=["Jason","Kerry","Oliver","Louis","Hugo"].map(m=>{
+    const n=all.filter(e=>e.date>=TD&&matchF(e,m)).length;
+    const emoji=m==="Hugo"?"🐾":m==="Jason"?"🏃":m==="Kerry"?"🌸":m==="Oliver"?"📚":"⭐";
+    return`<div class="av" data-a="goto-cal" data-m="${m}">
+      <div class="av-e">${emoji}</div>
+      <div class="av-n" style="color:${C[m]}">${n}</div>
+      <div class="av-l">${m}</div>
+    </div>`;
+  }).join("");
+  const todayHTML=todayEvs.length?todayEvs.map(e=>`<div class="today-card" data-a="open-edit" data-id="${e.id}">
+    <div class="tbar" style="background:${primCol(e)}"></div>
+    <div style="flex:1"><div class="ttitle">${e.title}</div><div class="twho">${getM(e).join(" & ")}</div></div>
+  </div>`).join(""):`<div class="today-empty">Nothing on today 🌿</div>`;
+  const upcHTML=upcoming.map(e=>{
     const d=new Date(e.date+"T12:00:00");
-    const ms=getMembers(e);
-    const whoDots=ms.filter(m=>m!=="All"&&m!=="Holiday").map(m=>`<span class="who-dot" style="background:${C[m]||C.All}"></span>`).join("");
+    const ms=getM(e).filter(m=>m!=="All"&&m!=="Holiday");
     return`<div class="next-card" data-a="open-edit" data-id="${e.id}">
-      <div class="next-date-box">
-        <div class="next-day">${d.getDate()}</div>
-        <div class="next-mon">${MONTHS_S[d.getMonth()]}</div>
-      </div>
+      <div class="date-box"><div class="date-d">${d.getDate()}</div><div class="date-m">${MS[d.getMonth()]}</div></div>
       <div style="flex:1">
         <div class="next-title">${e.title}</div>
-        <div class="next-who">${whoDots}<span>${ms.includes("All")?"Everyone":ms.join(" & ")}</span></div>
+        <div class="next-who">${ms.map(m=>`<span class="wdot" style="background:${C[m]||C.All}"></span>`).join("")}<span>${getM(e).includes("All")?"Everyone":getM(e).join(" & ")}</span></div>
       </div>
       <div class="arr">›</div>
     </div>`;
   }).join("");
-
-  const avatarHTML=memberCounts.map(m=>`
-    <div class="avatar" data-a="goto-cal" data-m="${m.name}" style="--ac:${m.color}">
-      <div class="av-dot" style="background:${m.color}20;color:${m.color}">
-        ${m.name==="Hugo"?"🐾":m.name[0]}
-      </div>
-      <div class="av-count" style="color:${m.color}">${m.count}</div>
-      <div class="av-name">${m.name}</div>
-    </div>`).join("");
-
   return`<div class="home">
-    <div class="home-hero">
-      <div class="home-date">${NOW.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</div>
-      <div class="home-title">The Leaf<br>Family</div>
-      <div class="home-sub">Cookham · 5 Rascals + Hugo 🐾</div>
+    <div class="hero">
+      <div class="hero-date">${NOW.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"})}</div>
+      <div class="hero-title">The Leaf<br>Family</div>
+      <div class="hero-sub">Cookham · 5 Rascals + Hugo 🐾</div>
     </div>
-    <div class="today-strip">
-      <div class="strip-label">Today</div>
-      ${todayHTML}
-    </div>
-    <div class="avatars">${avatarHTML}</div>
-    <div class="next-up">
-      <div class="strip-label" style="margin-top:0">Coming up</div>
-      ${upcomingHTML}
-    </div>
+    <div class="section"><div class="sec-label">Today</div>${todayHTML}</div>
+    <div class="avatars">${avs}</div>
+    <div class="section"><div class="sec-label">Coming up</div>${upcHTML}</div>
   </div>`;
 }
 
-function buildCal(){
+// ── CALENDAR ──────────────────────────────────────────────────────────────────
+function bCal(){
   const{y,mo,sel,filter}=S;
   const all=allEvs();
-  const di=getDaysIn(y,mo),fd=getFirstDay(y,mo);
-  const isCurM=mo===NOW.getMonth()&&y===NOW.getFullYear();
-
-  function dEvs(day){
-    const ds=y+"-"+String(mo+1).padStart(2,"0")+"-"+String(day).padStart(2,"0");
-    return all.filter(e=>e.date===ds&&(filter==="All"||e.member===filter||e.member==="All"||e.member==="Holiday"||matchesFilter(e,filter)));
-  }
-
+  const di=diM(y,mo),first=fd(y,mo);
+  const isCur=mo===NOW.getMonth()&&y===NOW.getFullYear();
+  const dEvs=day=>{const ds=y+"-"+String(mo+1).padStart(2,"0")+"-"+String(day).padStart(2,"0");return all.filter(e=>e.date===ds&&(matchF(e,filter)||getM(e).includes("Holiday")));};
   const selStr=sel?y+"-"+String(mo+1).padStart(2,"0")+"-"+String(sel).padStart(2,"0"):null;
   const selEvs=selStr?all.filter(e=>e.date===selStr):[];
-  const upcoming=all.filter(e=>e.date>=TODAY&&matchesFilter(e,filter)).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,10);
-
-  const pills=["All",...MEMBERS].map(n=>{
-    const on=filter===n;const c=C[n]||C.All;
-    return`<button class="fpill${on?" on":""}" data-a="filter" data-m="${n}" style="${on?`border-color:${c};background:${c}20;color:${c}`:""}"><span class="fdot" style="background:${c}"></span>${n}</button>`;
-  }).join("");
-
-  let grid=Array.from({length:fd},()=>'<div class="cd emp"></div>').join("");
-  grid+=Array.from({length:di},(_,i)=>{
-    const day=i+1,isT=isCurM&&day===NOW.getDate(),isSel=day===sel;
-    const de=dEvs(day);
-    return`<button class="cd${isT?" tod":""}${isSel?" sel":""}" data-a="day" data-d="${day}">
-      <span style="font-weight:${isT?"700":"500"}">${day}</span>
-      <div class="dots">${de.slice(0,4).map(e=>`<div class="evd" style="background:${primaryColor(e)}"></div>`).join("")}</div>
-    </button>`;
-  }).join("");
-
-  const selHTML=sel?`
-    <div class="sel-panel">
-      <div class="panel-label">${sel} ${MONTHS[mo]}</div>
-      ${selEvs.length===0?'<div style="color:var(--mu2);font-size:14px;font-style:italic">Nothing on this day</div>':
-        selEvs.map(e=>`<div class="evc" data-a="open-edit" data-id="${e.id}" style="border-left-color:${primaryColor(e)}">
-          <div class="evt">${e.title}</div>
-          <div class="evm">
-            ${getMembers(e).filter(m=>m!=="All"&&m!=="Holiday").map(m=>`<span class="who-dot" style="background:${C[m]||C.All}"></span>`).join("")}
-            <span>${getMembers(e).includes("All")?"Everyone":getMembers(e).join(" & ")}</span>
-          </div>
-        </div>`).join("")}
-    </div>`:"";
-
-  const upcHTML=`<div class="upc-list">
-    <div class="panel-label">${filter!=="All"?filter+" · ":""}Upcoming</div>
-    ${upcoming.map(e=>{
-      const d=new Date(e.date+"T12:00:00");
-      return`<div class="upi" data-a="open-edit" data-id="${e.id}">
-        <div class="upbar" style="background:${primaryColor(e)}"></div>
-        <div style="flex:1">
-          <div class="upt">${e.title}</div>
-          <div class="upm">${d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"})} · ${getMembers(e).includes("All")?"Everyone":getMembers(e).join(" & ")}</div>
-        </div>
-        <div class="arr">›</div>
-      </div>`;
-    }).join("")}
-  </div>`;
-
-  const selM=Array.isArray(S.nev.member)?S.nev.member:[];
-  const newPills=MEMBERS.map(m=>{
-    const on=selM.includes(m);
-    return`<button class="fpill${on?" on":""}" data-a="toggle-member" data-m="${m}" style="${on?`border-color:${C[m]};background:${C[m]}30;color:${C[m]}`:""}"><span class="fdot" style="background:${C[m]}"></span>${m}</button>`;
-  }).join("");
-
-  const addHTML=S.showAdd?`<div class="fbox">
-    <div style="font-size:16px;font-family:'Syne',sans-serif;font-weight:800;color:var(--tx);margin-bottom:14px">Add Event</div>
-    <div class="flabel">Title</div>
-    <input class="finp" placeholder="Event title" id="et" value="${S.nev.title}">
-    <div class="flabel">Date</div>
-    <input class="finp" type="date" id="ed" value="${S.nev.date}">
-    <div class="flabel">Who</div>
-    <div class="mpills">${newPills}</div>
-    <div class="brow">
-      <button class="bpri" data-a="add">Add event</button>
-      <button class="bghost" data-a="cancel">Cancel</button>
-    </div>
-  </div>`:`<button class="add-btn" data-a="show-add">+ Add Event</button>`;
-
-  return`<div class="cal-page">
-    <div class="cal-hdr">
-      <button class="nbtn" data-a="prev">‹</button>
-      <div class="cal-title">${MONTHS[mo]} ${y}</div>
-      <button class="nbtn" data-a="next">›</button>
-    </div>
-    <div class="filter-row">${pills}</div>
-    <div class="dhdr">${DAYS.map(d=>`<div class="dh">${d}</div>`).join("")}</div>
-    <div class="grid">${grid}</div>
-    ${selHTML}
-    ${upcHTML}
-    ${addHTML}
-  </div>`;
+  const upc=all.filter(e=>e.date>=TD&&matchF(e,filter)).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,10);
+  const pills=["All",...MB].map(n=>{const on=filter===n;const c=C[n]||C.All;return`<button class="pill${on?" on":""}" data-a="filter" data-m="${n}" style="${on?`border-color:${c};background:${c}18;color:${c}`:""}"><span class="pdot" style="background:${c}"></span>${n}</button>`;}).join("");
+  let grid=Array.from({length:first},()=>'<div class="cd emp"></div>').join("");
+  grid+=Array.from({length:di},(_,i)=>{const day=i+1,isT=isCur&&day===NOW.getDate(),isSel=day===sel;const de=dEvs(day);return`<button class="cd${isT?" tod":""}${isSel?" sel":""}" data-a="day" data-d="${day}"><span style="font-weight:${isT?"700":"400"}">${day}</span><div class="dots">${de.slice(0,4).map(e=>`<div class="evd" style="background:${primCol(e)}"></div>`).join("")}</div></button>`;}).join("");
+  const selHTML=sel?`<div class="slabel">${sel} ${MO[mo]}</div>${selEvs.length?selEvs.map(e=>`<div class="evc" data-a="open-edit" data-id="${e.id}" style="border-left-color:${primCol(e)}"><div class="evt">${e.title}</div><div class="evm">${getM(e).filter(m=>m!=="All"&&m!=="Holiday").map(m=>`<span class="wdot" style="background:${C[m]||C.All}"></span>`).join("")}<span>${getM(e).includes("All")?"Everyone":getM(e).join(" & ")}</span></div></div>`).join(""):`<div style="color:var(--mu2);font-size:13px;font-style:italic">Nothing on this day</div>`}`:"";
+  const selMb=Array.isArray(S.nev.member)?S.nev.member:[];
+  const nPills=MB.map(m=>{const on=selMb.includes(m);return`<button class="pill${on?" on":""}" data-a="toggle-member" data-m="${m}" style="${on?`border-color:${C[m]};background:${C[m]}20;color:${C[m]}`:""}"><span class="pdot" style="background:${C[m]}"></span>${m}</button>`;}).join("");
+  const addHTML=S.showAdd?`<div class="fbox"><div style="font-size:16px;font-family:'Syne',sans-serif;font-weight:800;margin-bottom:14px">Add Event</div><div class="flabel">Title</div><input class="finp" placeholder="Event title" id="et" value="${S.nev.title}"><div class="flabel">Date</div><input class="finp" type="date" id="ed" value="${S.nev.date}"><div class="flabel">Who</div><div class="mpills">${nPills}</div><div class="brow"><button class="bpri" data-a="add">Add</button><button class="bgh" data-a="cancel">Cancel</button></div></div>`:`<button class="add-btn" data-a="show-add">+ Add Event</button>`;
+  return`<div class="cal"><div class="cal-hdr"><button class="nbtn" data-a="prev">‹</button><div class="cal-title">${MO[mo]} ${y}</div><button class="nbtn" data-a="next">›</button></div><div class="pills">${pills}</div><div class="dhdr">${DA.map(d=>`<div class="dh">${d}</div>`).join("")}</div><div class="grid">${grid}</div>${selHTML}<div class="slabel">${filter!=="All"?filter+" · ":""}Upcoming</div>${upc.map(e=>{const d=new Date(e.date+"T12:00:00");return`<div class="upi" data-a="open-edit" data-id="${e.id}"><div class="upbar" style="background:${primCol(e)}"></div><div style="flex:1"><div class="upt">${e.title}</div><div class="upm">${d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"})} · ${getM(e).includes("All")?"Everyone":getM(e).join(" & ")}</div></div><div class="arr">›</div></div>`;}).join("")}${addHTML}</div>`;
 }
 
-function buildEditModal(){
-  const ev=allEvs().find(e=>e.id===S.editId);
-  if(!ev)return"";
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function bModal(){
+  const ev=allEvs().find(e=>e.id===S.editId);if(!ev)return"";
   const ms=Array.isArray(S.edit.member)?S.edit.member:[];
-  const pills=MEMBERS.map(m=>{
-    const on=ms.includes(m);
-    return`<button class="fpill${on?" on":""}" data-a="edit-toggle-member" data-m="${m}" style="${on?`border-color:${C[m]};background:${C[m]}30;color:${C[m]}`:""}"><span class="fdot" style="background:${C[m]}"></span>${m}</button>`;
-  }).join("");
-  return`<div class="modal-bg" data-a="close-edit">
-    <div class="modal" onclick="event.stopPropagation()">
-      <div class="modal-hdr">
-        <div class="modal-title">Edit Event</div>
-        <button class="modal-close" data-a="close-edit">✕</button>
-      </div>
-      <div class="flabel">Title</div>
-      <input class="finp" id="edit-t" value="${ev.title.replace(/"/g,'&quot;')}">
-      <div class="flabel">Date</div>
-      <input class="finp" type="date" id="edit-d" value="${S.edit.date}" style="color-scheme:dark">
-      <div class="flabel">Who</div>
-      <div class="mpills" style="margin-bottom:16px">${pills}</div>
-      <div class="brow">
-        <button class="bpri" data-a="save-edit">Save</button>
-        ${ev.source!=="cozi"?`<button class="del-btn" data-a="delete-event" data-id="${ev.id}">Delete</button>`:""}
-        <button class="bghost" data-a="close-edit">Cancel</button>
-      </div>
-    </div>
-  </div>`;
+  const pills=MB.map(m=>{const on=ms.includes(m);return`<button class="pill${on?" on":""}" data-a="edit-toggle-member" data-m="${m}" style="${on?`border-color:${C[m]};background:${C[m]}20;color:${C[m]}`:""}"><span class="pdot" style="background:${C[m]}"></span>${m}</button>`;}).join("");
+  return`<div class="modal-bg" data-a="close-edit"><div class="modal" onclick="event.stopPropagation()"><div class="mhdr"><div class="mtitle">Edit Event</div><button class="mclose" data-a="close-edit">✕</button></div><div class="flabel">Title</div><input class="finp" id="edit-t" value="${ev.title.replace(/"/g,'&quot;')}"><div class="flabel">Date</div><input class="finp" type="date" id="edit-d" value="${S.edit.date}" style="color-scheme:dark"><div class="flabel">Who</div><div class="mpills" style="margin-bottom:14px">${pills}</div><div class="brow"><button class="bpri" data-a="save-edit">Save</button>${ev.source!=="cozi"?`<button class="del-btn" data-a="delete-event" data-id="${ev.id}">Delete</button>`:""}<button class="bgh" data-a="close-edit">Cancel</button></div></div></div>`;
 }
 
+// ── NAV ───────────────────────────────────────────────────────────────────────
+function bNav(){
+  return`<nav class="nav">
+    <button class="nb${S.tab==="land"?" on":""}" data-a="tab" data-tab="land"><span class="ni">🌿</span>Rascal</button>
+    <button class="nb${S.tab==="home"?" on":""}" data-a="tab" data-tab="home"><span class="ni">🏠</span>Home</button>
+    <button class="nb${S.tab==="calendar"?" on":""}" data-a="tab" data-tab="calendar"><span class="ni">📅</span>Calendar</button>
+    <button class="nb" data-a="hard-refresh"><span class="ni">↻</span>Update</button>
+  </nav>`;
+}
+
+// ── HANDLE ────────────────────────────────────────────────────────────────────
 function handle(e){
   const el=e.target.closest("[data-a]");if(!el)return;
   const a=el.dataset.a;
@@ -529,53 +372,23 @@ function handle(e){
   if(a==="show-add")     set({showAdd:true});
   if(a==="cancel")       set({showAdd:false});
   if(a==="hard-refresh") hardRefresh();
-  if(a==="toggle-member"){
-    const m=el.dataset.m,cur=Array.isArray(S.nev.member)?S.nev.member:[];
-    set({nev:{...S.nev,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]}});
-  }
-  if(a==="add"){
-    const t=document.getElementById("et")?.value.trim(),d=document.getElementById("ed")?.value;
-    if(!t||!d)return;
-    const ms=Array.isArray(S.nev.member)?S.nev.member:[];
-    const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;
-    set({user:[...S.user,{id:"u"+Date.now(),title:t,date:d,member:mem,source:"user"}],showAdd:false,nev:{title:"",member:[],date:""}});
-  }
-  if(a==="open-edit"){
-    const ev=allEvs().find(e=>e.id===el.dataset.id);if(!ev)return;
-    const ms=getMembers(ev).filter(m=>m!=="All"&&m!=="Holiday");
-    set({showEdit:true,editId:el.dataset.id,edit:{title:ev.title,date:ev.date,member:ms}});
-  }
+  if(a==="toggle-member"){const m=el.dataset.m,cur=Array.isArray(S.nev.member)?S.nev.member:[];set({nev:{...S.nev,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]}});}
+  if(a==="add"){const t=document.getElementById("et")?.value.trim(),d=document.getElementById("ed")?.value;if(!t||!d)return;const ms=Array.isArray(S.nev.member)?S.nev.member:[];const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;set({user:[...S.user,{id:"u"+Date.now(),title:t,date:d,member:mem,source:"user"}],showAdd:false,nev:{title:"",member:[],date:""}});}
+  if(a==="open-edit"){const ev=allEvs().find(e=>e.id===el.dataset.id);if(!ev)return;const ms=getM(ev).filter(m=>m!=="All"&&m!=="Holiday");set({showEdit:true,editId:el.dataset.id,edit:{title:ev.title,date:ev.date,member:ms}});}
   if(a==="close-edit")   set({showEdit:false,editId:null});
-  if(a==="edit-toggle-member"){
-    const m=el.dataset.m,cur=Array.isArray(S.edit.member)?S.edit.member:[];
-    set({edit:{...S.edit,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]}});
-  }
-  if(a==="save-edit"){
-    const t=document.getElementById("edit-t")?.value.trim(),d=document.getElementById("edit-d")?.value;
-    if(!t||!d)return;
-    const ms=Array.isArray(S.edit.member)?S.edit.member:[];
-    const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;
-    const inUser=S.user.find(e=>e.id===S.editId);
-    if(inUser){set({user:S.user.map(e=>e.id===S.editId?{...e,title:t,date:d,member:mem}:e),showEdit:false,editId:null});}
-    else{set({user:[...S.user,{id:S.editId,title:t,date:d,member:mem,source:"edited"}],events:S.events.filter(e=>e.id!==S.editId),showEdit:false,editId:null});}
-  }
-  if(a==="delete-event"){
-    const id=el.dataset.id;
-    set({user:S.user.filter(e=>e.id!==id),events:S.events.filter(e=>e.id!==id),showEdit:false,editId:null});
-  }
+  if(a==="edit-toggle-member"){const m=el.dataset.m,cur=Array.isArray(S.edit.member)?S.edit.member:[];set({edit:{...S.edit,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]}});}
+  if(a==="save-edit"){const t=document.getElementById("edit-t")?.value.trim(),d=document.getElementById("edit-d")?.value;if(!t||!d)return;const ms=Array.isArray(S.edit.member)?S.edit.member:[];const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;const inU=S.user.find(e=>e.id===S.editId);if(inU)set({user:S.user.map(e=>e.id===S.editId?{...e,title:t,date:d,member:mem}:e),showEdit:false,editId:null});else set({user:[...S.user,{id:S.editId,title:t,date:d,member:mem,source:"edited"}],events:S.events.filter(e=>e.id!==S.editId),showEdit:false,editId:null});}
+  if(a==="delete-event"){const id=el.dataset.id;set({user:S.user.filter(e=>e.id!==id),events:S.events.filter(e=>e.id!==id),showEdit:false,editId:null});}
 }
 
 render();
-setTimeout(fetchLive,1000);
+setTimeout(fetchLive,1500);
 </script>
 <script>
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('/sw.js').then(reg=>{
     setInterval(()=>reg.update(),10000);
-    reg.addEventListener('updatefound',()=>{
-      const n=reg.installing;
-      n.addEventListener('statechange',()=>{if(n.state==='activated')window.location.reload(true);});
-    });
+    reg.addEventListener('updatefound',()=>{const n=reg.installing;n.addEventListener('statechange',()=>{if(n.state==='activated')window.location.reload(true);});});
   });
   navigator.serviceWorker.addEventListener('controllerchange',()=>window.location.reload(true));
 }
