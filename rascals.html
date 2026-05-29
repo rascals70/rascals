@@ -427,11 +427,10 @@ function bSchool(){
   </div>`;
 }
 
-
 function bRun(){
   return'<div style="padding:calc(var(--st)+16px) 16px 24px">'
-    +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:2px">Training</div>'
-    +'<div style="font-size:12px;color:var(--mu);margin-bottom:16px">Dragon's Fire Race · 9 Sep 2026</div>'
+    +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;color:var(--tx);margin-bottom:2px">Training</div>'
+    +'<div style="font-size:12px;color:var(--mu);margin-bottom:16px">Dragon\'s Fire Race &middot; 9 Sep 2026</div>'
     +STV.chart()
     +'</div>';
 }
@@ -482,18 +481,15 @@ function bLand(){
           <div class="land-btn-sub">Overview &amp; coming up</div>
         </div>
       </button>
+      <button class="land-btn" data-a="tab" data-tab="run">
+        <span class="land-btn-icon">🏃</span>
+        <div class="land-btn-text"><div>Training</div><div class="land-btn-sub">12-month Strava chart</div></div>
+      </button>
       <button class="land-btn" data-a="tab" data-tab="calendar">
         <span class="land-btn-icon">📅</span>
         <div class="land-btn-text">
           <div>Calendar</div>
           <div class="land-btn-sub">${soon} upcoming events</div>
-        </div>
-      </button>
-      <button class="land-btn" data-a="tab" data-tab="run">
-        <span class="land-btn-icon">🏃</span>
-        <div class="land-btn-text">
-          <div>Training</div>
-          <div class="land-btn-sub">12-month Strava chart</div>
         </div>
       </button>
     </div>
@@ -595,7 +591,7 @@ function bNav(){
     <button class="nb${S.tab==="home"?" on":""}" data-a="tab" data-tab="home"><span class="ni">🏠</span>Home</button>
     <button class="nb${S.tab==="calendar"?" on":""}" data-a="tab" data-tab="calendar"><span class="ni">📅</span>Calendar</button>
     <button class="nb${S.tab==="school"?" on":""}" data-a="tab" data-tab="school"><span class="ni">🏫</span>School</button>
-    <button class="nb${S.tab==="run"?" on":""}" data-a="tab" data-tab="run"><span class="ni">🏃</span>Run</button>
+    <button class="nb${S.tab==\"run\"?\" on\":\"\"}" data-a="tab" data-tab="run"><span class="ni">🏃</span>Run</button>
     <button class="nb" data-a="hard-refresh"><span class="ni">↻</span>Update</button>
   </nav>`;
 }
