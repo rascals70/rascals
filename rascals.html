@@ -153,6 +153,9 @@ var STV={
   connect:function(){
     location.href="https://www.strava.com/oauth/authorize?client_id="+STV.C+"&response_type=code&redirect_uri="+encodeURIComponent(STV.R)+"&approval_prompt=force&scope=read,activity:read_all";
   },
+  exchange:function(code){
+    return fetch("https://www.strava.com/oauth/token",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({client_id:STV.C,client_secret:STV.S,code:code,grant_type:"authorization_code"})}).then(function(r){return r.json();}).then(function(d){if(d.refresh_token){localStorage.setItem("stv_r",d.refresh_token);localStorage.setItem("stv_a",d.access_token);localStorage.setItem("stv_e",String(d.expires_at));}return d.access_token||null;});
+  },
   tok:function(){
     var exp=parseInt(localStorage.getItem("stv_e")||"0");
     var ref=localStorage.getItem("stv_r");
@@ -160,39 +163,117 @@ var STV={
     if(Date.now()/1000<exp-300)return Promise.resolve(localStorage.getItem("stv_a"));
     return fetch("https://www.strava.com/oauth/token",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({client_id:STV.C,client_secret:STV.S,refresh_token:ref,grant_type:"refresh_token"})}).then(function(r){return r.json();}).then(function(d){if(d.access_token){localStorage.setItem("stv_a",d.access_token);localStorage.setItem("stv_e",String(d.expires_at));localStorage.setItem("stv_r",d.refresh_token||ref);}return d.access_token||null;});
   },
-  exchange:function(code){
-    return fetch("https://www.strava.com/oauth/token",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({client_id:STV.C,client_secret:STV.S,code:code,grant_type:"authorization_code"})}).then(function(r){return r.json();}).then(function(d){if(d.refresh_token){localStorage.setItem("stv_r",d.refresh_token);localStorage.setItem("stv_a",d.access_token);localStorage.setItem("stv_e",String(d.expires_at));}return d.access_token||null;});
-  },
-  km:function(m){return(m/1000).toFixed(1);},
-  pace:function(s,m){var p=s/m*1000;var mn=Math.floor(p/60);var sc=Math.round(p%60);return mn+":"+(sc<10?"0":"")+sc;},
   load:function(){
     STV.tok().then(function(t){
       if(!t)return;
-      fetch("https://www.strava.com/api/v3/athlete/activities?per_page=10",{headers:{Authorization:"Bearer "+t}}).then(function(r){return r.json();}).then(function(acts){
+      // Fetch last 12 months — need multiple pages
+      var after=Math.floor((Date.now()-365*86400000)/1000);
+      var url="https://www.strava.com/api/v3/athlete/activities?per_page=200&after="+after;
+      fetch(url,{headers:{Authorization:"Bearer "+t}}).then(function(r){return r.json();}).then(function(acts){
         if(!Array.isArray(acts))return;
         var runs=acts.filter(function(a){return a.type==="Run"||a.sport_type==="Run";});
-        var ws=new Date();ws.setHours(0,0,0,0);ws.setDate(ws.getDate()-((ws.getDay()+6)%7));
-        var wr=runs.filter(function(r){return new Date(r.start_date_local)>=ws;});
-        var ma=new Date(Date.now()-28*86400000);
-        var mr=runs.filter(function(r){return new Date(r.start_date_local)>=ma;});
-        STV.data={lr:runs[0]||null,wk:(wr.reduce(function(s,r){return s+r.distance;},0)/1000).toFixed(1),wc:wr.length,mk:(mr.reduce(function(s,r){return s+r.distance;},0)/1000).toFixed(1)};
+        // Bucket into 52 weekly slots
+        var now=new Date(); now.setHours(0,0,0,0);
+        var weeks=[];
+        for(var i=51;i>=0;i--){
+          var ws=new Date(now);
+          ws.setDate(ws.getDate()-(now.getDay()||7)+1-i*7);
+          var we=new Date(ws); we.setDate(we.getDate()+6);
+          var km=runs.filter(function(r){
+            var d=new Date(r.start_date_local);
+            return d>=ws&&d<=we;
+          }).reduce(function(s,r){return s+r.distance;},0)/1000;
+          weeks.push({ws:ws,km:parseFloat(km.toFixed(1))});
+        }
+        var total=(runs.reduce(function(s,r){return s+r.distance;},0)/1000).toFixed(0);
+        var maxKm=Math.max.apply(null,weeks.map(function(w){return w.km;}));
+        STV.data={weeks:weeks,total:total,maxKm:maxKm,count:runs.length};
         if(typeof render==="function")render();
       });
     });
   },
-  html:function(){
+  chart:function(){
     try{
-      var race=new Date("2026-09-09");var now=new Date();now.setHours(0,0,0,0);
-      var wks=Math.ceil((race-now)/(7*86400000));
-      if(!STV.ok()){return'<div class="section"><button class="stv-btn" data-a="stv-connect"><span style="font-size:22px">&#127939;</span><div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#fff">Connect Strava</div><div style="font-size:11px;color:rgba(255,255,255,.7)">Pull your Garmin runs in</div></div></button></div>';}
-      if(!STV.data){return'<div class="section"><div style="border:1px solid rgba(252,76,2,.2);border-radius:12px;padding:12px 14px;font-size:13px;color:#5a5a7a">&#127939; Loading Strava...</div></div>';}
-      var d=STV.data;var run=d.lr;var rh="";
-      if(run){rh='<div class="stv-run"><span style="font-size:18px">&#127939;</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:#fff">'+run.name+'</div><div style="font-size:11px;color:#5a5a7a;margin-top:1px">'+STV.km(run.distance)+'km &middot; '+STV.pace(run.moving_time,run.distance)+'/km &middot; '+Math.round(run.total_elevation_gain)+'m</div></div></div>';}
-      return'<div class="section"><div class="stv-box"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fc4c02">Strava</div><div style="font-size:10px;color:#5a5a7a">'+wks+'w to race</div></div><div class="stv-grid"><div class="stv-stat"><div class="stv-n">'+d.wk+'</div><div class="stv-l">km wk</div></div><div class="stv-stat"><div class="stv-n">'+d.wc+'</div><div class="stv-l">runs</div></div><div class="stv-stat"><div class="stv-n">'+d.mk+'</div><div class="stv-l">km/28d</div></div></div>'+rh+'</div></div>';
-    }catch(e){return"";}
+      var W=320,H=120,pad=8;
+      if(!STV.ok()){
+        return'<div class="section"><button class="stv-btn" data-a="stv-connect">'
+          +'<span style="font-size:22px">&#127939;</span>'
+          +'<div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#fff">Connect Strava</div>'
+          +'<div style="font-size:11px;color:rgba(255,255,255,.7)">12-month training chart</div></div></button></div>';
+      }
+      if(!STV.data){
+        return'<div class="section"><div style="border:1px solid rgba(252,76,2,.2);border-radius:14px;padding:16px;font-size:13px;color:#5a5a7a">&#127939; Loading chart...</div></div>';
+      }
+      var d=STV.data;
+      var max=d.maxKm||1;
+      var ws=d.weeks;
+      var n=ws.length;
+      var bw=(W-pad*2)/n;
+
+      // Build area path
+      var pts=ws.map(function(w,i){
+        var x=pad+i*bw+bw/2;
+        var y=H-pad-(w.km/max)*(H-pad*2);
+        return{x:x,y:y,km:w.km};
+      });
+
+      var area="M"+pts[0].x+","+(H-pad);
+      pts.forEach(function(p){area+=" L"+p.x.toFixed(1)+","+p.y.toFixed(1);});
+      area+=" L"+pts[pts.length-1].x+","+(H-pad)+" Z";
+
+      var line="M"+pts[0].x.toFixed(1)+","+pts[0].y.toFixed(1);
+      pts.slice(1).forEach(function(p){line+=" L"+p.x.toFixed(1)+","+p.y.toFixed(1);});
+
+      // Month labels — show first week of each month
+      var labels="";
+      var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      var lastM=-1;
+      pts.forEach(function(p,i){
+        var m=ws[i].ws.getMonth();
+        if(m!==lastM){
+          labels+='<text x="'+p.x.toFixed(1)+'" y="'+(H+2)+'" fill="#5a5a7a" font-size="8" text-anchor="middle">'+months[m]+'</text>';
+          lastM=m;
+        }
+      });
+
+      // Race marker — find the week containing Sep 9
+      var raceIdx=-1;
+      var raceD=new Date("2026-09-09");
+      ws.forEach(function(w,i){var we=new Date(w.ws);we.setDate(we.getDate()+6);if(raceD>=w.ws&&raceD<=we)raceIdx=i;});
+      var raceMarker="";
+      if(raceIdx>=0){
+        var rx=pts[raceIdx]?pts[raceIdx].x:0;
+        raceMarker='<line x1="'+rx+'" y1="'+pad+'" x2="'+rx+'" y2="'+(H-pad)+'" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="3,2"/>'
+          +'<text x="'+rx+'" y="'+(pad-1)+'" fill="#22c55e" font-size="7" text-anchor="middle">Race</text>';
+      }
+
+      var now2=new Date();now2.setHours(0,0,0,0);
+      var daysLeft=Math.ceil((raceD-now2)/(86400000));
+
+      return'<div class="section">'
+        +'<div class="stv-box">'
+        +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">'
+        +'<div><div style="font-size:22px;font-weight:800;font-family:'Syne',sans-serif;color:#fff">'+d.total+'<span style="font-size:13px;color:#fc4c02;margin-left:3px">km</span></div>'
+        +'<div style="font-size:10px;color:#5a5a7a;margin-top:1px">Last 12 months &middot; '+d.count+' runs</div></div>'
+        +'<div style="text-align:right"><div style="font-size:14px;font-weight:700;color:#22c55e">'+daysLeft+'d</div>'
+        +'<div style="font-size:9px;color:#5a5a7a;text-transform:uppercase;letter-spacing:1px">to race</div></div>'
+        +'</div>'
+        +'<svg viewBox="0 0 '+W+' '+(H+10)+'" style="width:100%;display:block">'
+        +'<defs><linearGradient id="og" x1="0" y1="0" x2="0" y2="1">'
+        +'<stop offset="0%" stop-color="#fc4c02" stop-opacity="0.35"/>'
+        +'<stop offset="100%" stop-color="#fc4c02" stop-opacity="0.03"/>'
+        +'</linearGradient></defs>'
+        +'<path d="'+area+'" fill="url(#og)"/>'
+        +'<path d="'+line+'" fill="none" stroke="#fc4c02" stroke-width="1.5" stroke-linejoin="round"/>'
+        +raceMarker
+        +labels
+        +'</svg>'
+        +'</div></div>';
+    }catch(e){console.error(e);return"";}
   }
 };
 </script>
+
 
 <script>
 (function(){
@@ -427,7 +508,7 @@ function bHome(){
     </div>
     <div class="section"><div class="sec-label">Today</div>${todayHTML}</div>
     <div class="avatars">${avs}</div>
-    ${(typeof STV!=="undefined"?STV.html():"")}
+    ${(typeof STV!=="undefined"?STV.chart():"")}
     <div class="section"><div class="sec-label">Coming up</div>${upcHTML}</div>
   </div>`;
 }
