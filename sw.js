@@ -1,13 +1,13 @@
-self.addEventListener('install', e => self.skipWaiting());
-self.addEventListener('activate', e => {
+// Unregister all service workers and clear all caches
+self.addEventListener('install', function(e){ self.skipWaiting(); });
+self.addEventListener('activate', function(e){
   e.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))))
-    .then(() => self.clients.claim())
+    caches.keys().then(function(keys){
+      return Promise.all(keys.map(function(k){ return caches.delete(k); }));
+    }).then(function(){ return self.clients.claim(); })
   );
 });
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    fetch(e.request, {cache: 'no-store', headers: {'Cache-Control': 'no-cache'}})
-    .catch(() => caches.match(e.request))
-  );
+self.addEventListener('fetch', function(e){
+  // No caching - always go to network
+  e.respondWith(fetch(e.request));
 });
