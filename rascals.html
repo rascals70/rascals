@@ -145,6 +145,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans'
 <body>
 <div id="app"></div>
 <script>
+window.STV=window.STV||{};
 var STV={
   C:"252665", S:"baa6b378bb17f228dfb918528d8eb68f01065a49",
   R:"https://rascals70.github.io/rascals/rascals.html",
@@ -193,7 +194,7 @@ var STV={
     });
   },
   chart:function(){
-    try{
+    {
       var W=320,H=120,pad=8;
       if(!STV.ok()){
         return'<div class="section"><button class="stv-btn" data-a="stv-connect">'
@@ -269,7 +270,7 @@ var STV={
         +labels
         +'</svg>'
         +'</div></div>';
-    }catch(e){console.error(e);return"";}
+    }
   }
 };
 </script>
@@ -508,7 +509,7 @@ function bHome(){
     </div>
     <div class="section"><div class="sec-label">Today</div>${todayHTML}</div>
     <div class="avatars">${avs}</div>
-    ${(typeof STV!=="undefined"?STV.chart():"")}
+    ${STV.chart()}
     <div class="section"><div class="sec-label">Coming up</div>${upcHTML}</div>
   </div>`;
 }
