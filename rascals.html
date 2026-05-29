@@ -316,75 +316,17 @@ var STV={
 
 <script>
 (function(){
-  const ico="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f172a'/><path d='M50 78 Q47 86 44 93' stroke='%2315803d' stroke-width='3.5' fill='none' stroke-linecap='round'/><path d='M50 12 C65 20, 75 36, 73 52 C71 66, 61 76, 50 78 C39 76, 29 66, 27 52 C25 36, 35 20, 50 12Z' fill='%2316a34a'/><path d='M50 12 Q50 45 50 78' stroke='rgba(255,255,255,.28)' stroke-width='1.5' fill='none'/><path d='M50 28 Q41 34 33 35' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 28 Q59 34 67 35' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 42 Q40 48 32 48' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 42 Q60 48 68 48' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 56 Q42 61 36 60' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 56 Q58 61 64 60' stroke='rgba(255,255,255,.18)' stroke-width='1' fill='none'/><path d='M50 12 C43 19, 33 31, 30 45' stroke='rgba(255,255,255,.22)' stroke-width='2.5' fill='none' stroke-linecap='round'/><circle cx='22' cy='93' r='4' fill='%232563eb'/><circle cx='34' cy='93' r='4' fill='%23ec4899'/><circle cx='50' cy='93' r='4' fill='%2322c55e'/><circle cx='66' cy='93' r='4' fill='%23a855f7'/><circle cx='78' cy='93' r='4' fill='%23f59e0b'/></svg>";
-  const m={name:"Rascal",short_name:"Rascal",start_url:".",display:"standalone",background_color:"#040408",theme_color:"#040408",icons:[{src:ico,sizes:"512x512",type:"image/svg+xml"}]};
-  const l=document.createElement("link");l.rel="manifest";l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));document.head.appendChild(l);
-})();
-
-const COZI="https://rest.cozi.com/api/ext/1103/e3a95b83-d61c-4cd5-b910-8b119c0ebc8e/icalendar/feed/feed.ics";
-const PROXIES=[u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,u=>`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`];
-const C={Jason:"#3b82f6",Kerry:"#ec4899",Oliver:"#22c55e",Louis:"#a855f7",Hugo:"#f59e0b",All:"#06b6d4",Holiday:"#334155"};
-const MO=["January","February","March","April","May","June","July","August","September","October","November","December"];
-const MS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const DA=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-const MB=["Jason","Kerry","Oliver","Louis","Hugo"];
-
-const EMBEDDED=[{"id": "t1", "title": "🏫 Term 5 starts", "date": "2026-04-13", "member": "Louis"}, {"id": "bh-may", "title": "Early May Bank Holiday", "date": "2026-05-04", "member": "Holiday"}, {"id": "t2", "title": "🏖️ May half term starts", "date": "2026-05-22", "member": "Louis"}, {"id": "bh-spring", "title": "Spring Bank Holiday", "date": "2026-05-25", "member": "Holiday"}, {"id": "c1", "title": "Paula Parrot 50th 🎉", "date": "2026-05-29", "member": "Kerry"}, {"id": "c2", "title": "Haircut ✂️", "date": "2026-05-30", "member": "Kerry"}, {"id": "cl1", "title": "Champions League Final 🏆⚽ 3pm", "date": "2026-05-30", "member": ["Jason", "Oliver"]}, {"id": "bday-granny", "title": "🎂 Granny Seaside's Birthday", "date": "2026-05-31", "member": "All"}, {"id": "s1", "title": "Arsenal Trophy Parade 🏆", "date": "2026-05-31", "member": ["Jason", "Oliver"]}, {"id": "c3", "title": "Matilda home after art club", "date": "2026-06-01", "member": ["Kerry", "Louis"]}, {"id": "t3", "title": "🏫 Term 6 starts", "date": "2026-06-01", "member": "Louis"}, {"id": "c4", "title": "Oliver: Chemistry Paper 1 📝 (9am, SPH R2)", "date": "2026-06-02", "member": "Oliver"}, {"id": "cx1", "title": "Oliver: Maths Pure 1 📝 (1:30pm, SPH M4)", "date": "2026-06-03", "member": "Oliver"}, {"id": "c5", "title": "Oliver: Economics Paper 3 📝 (9am, SPH P1)", "date": "2026-06-04", "member": "Oliver"}, {"id": "c6", "title": "Call vets – Hugo flea treatment 🐶", "date": "2026-06-04", "member": ["Kerry", "Hugo"]}, {"id": "c7", "title": "Leafy meningitis vaccine 💉", "date": "2026-06-05", "member": ["Kerry", "Oliver"]}, {"id": "c8", "title": "Louis & Kerry – Harry Potter Studio Tour ⚡", "date": "2026-06-06", "member": ["Kerry", "Louis"]}, {"id": "c9", "title": "Oliver: Chemistry Paper 2 📝 (9am, HALL C5)", "date": "2026-06-09", "member": "Oliver"}, {"id": "c10", "title": "Oliver: Maths Pure 2 📝 (1:30pm, SPH M4)", "date": "2026-06-11", "member": "Oliver"}, {"id": "c11", "title": "Mum & Dad in France 🇫🇷", "date": "2026-06-11", "member": "All"}, {"id": "c12", "title": "Louis arts & culture performance 🎭", "date": "2026-06-12", "member": "Louis"}, {"id": "h1", "title": "Crepe Farm Barns 🏡 Check-in from 4pm", "date": "2026-06-12", "member": ["Jason", "Kerry"]}, {"id": "c13", "title": "Will & Jess Wedding 💍", "date": "2026-06-13", "member": "All"}, {"id": "h2", "title": "Crepe Farm Barns 🏡 (Bridport, Will & Jess wedding)", "date": "2026-06-13", "member": ["Jason", "Kerry"]}, {"id": "h3", "title": "Crepe Farm Barns 🏡 Checkout by 10am", "date": "2026-06-14", "member": ["Jason", "Kerry"]}, {"id": "c14", "title": "Oliver: Chemistry Paper 3 📝 (9am, SPH Q10)", "date": "2026-06-15", "member": "Oliver"}, {"id": "c15", "title": "Kerry at Butcher's wine shop 🍷", "date": "2026-06-18", "member": "Kerry"}, {"id": "c16", "title": "Oliver: Maths Stats & Mechanics 📝 (1:30pm, SPH M4)", "date": "2026-06-18", "member": "Oliver"}, {"id": "s3", "title": "King's Birthday 👑", "date": "2026-06-20", "member": "Holiday"}, {"id": "s4", "title": "Father's Day 🎉", "date": "2026-06-21", "member": "Holiday"}, {"id": "c17", "title": "Leafy, Mum & Dad day out", "date": "2026-07-03", "member": "All"}, {"id": "c18", "title": "HT Fest 🎪", "date": "2026-07-04", "member": "All"}, {"id": "s5", "title": "Churchill Airbnb 🛁 Check-in after 4pm", "date": "2026-07-09", "member": "All"}, {"id": "bday-oliver", "title": "🎂 Oliver's Birthday", "date": "2026-07-10", "member": "Oliver"}, {"id": "s6", "title": "Churchill Airbnb 🏡 (Axminster, sleeps 15)", "date": "2026-07-10", "member": "All"}, {"id": "s7", "title": "Churchill Airbnb 🛁 Checkout by 10am", "date": "2026-07-12", "member": "All"}, {"id": "c19", "title": "Mum & Dad in France 🇫🇷", "date": "2026-07-16", "member": "All"}, {"id": "t4", "title": "🏖️ Summer holidays start", "date": "2026-07-16", "member": "Louis"}, {"id": "c20", "title": "Emma & Declan engagement party 🥂", "date": "2026-07-25", "member": "All"}, {"id": "r2", "title": "Will & Lou Anniversary", "date": "2026-07-25", "member": "All"}, {"id": "r3", "title": "Defender MOT Due 🚗", "date": "2026-08-02", "member": "Jason"}, {"id": "bday-grandad", "title": "🎂 Grandad Seaside's Birthday", "date": "2026-08-12", "member": "All"}, {"id": "c21", "title": "Leafy in Swanage 🏖️", "date": "2026-08-21", "member": "Oliver"}, {"id": "bh-summer", "title": "Summer Bank Holiday", "date": "2026-08-31", "member": "Holiday"}, {"id": "c22", "title": "Leafy in Spain ☀️", "date": "2026-08-31", "member": "Oliver"}, {"id": "t5", "title": "🏫 Back to school — Term 1", "date": "2026-09-02", "member": "Louis"}, {"id": "c23", "title": "Dragon's Fire Race 🏃", "date": "2026-09-09", "member": "Jason"}, {"id": "r5", "title": "Max's Birthday 🎂", "date": "2026-09-19", "member": "All"}, {"id": "r6", "title": "Flick's Birthday 🎂", "date": "2026-09-28", "member": "All"}, {"id": "bday-louis", "title": "🎂 Louis's Birthday", "date": "2026-10-02", "member": "Louis"}, {"id": "t6", "title": "🏖️ October half term starts", "date": "2026-10-23", "member": "Louis"}, {"id": "t7", "title": "🏫 Term 2 starts", "date": "2026-11-02", "member": "Louis"}, {"id": "r9", "title": "Grace's Birthday 🎂", "date": "2026-11-17", "member": "All"}, {"id": "c24", "title": "Xmas Singalong London 🎄", "date": "2026-12-10", "member": "All"}, {"id": "r10", "title": "Wedding Anniversary 💑", "date": "2026-12-15", "member": ["Jason", "Kerry"]}, {"id": "t8", "title": "🎄 Christmas holidays start", "date": "2026-12-18", "member": "Louis"}, {"id": "bh-xmas", "title": "Christmas Day 🎄", "date": "2026-12-25", "member": "Holiday"}, {"id": "bh-boxing", "title": "Boxing Day 🎁", "date": "2026-12-28", "member": "Holiday"}, {"id": "bh-ny27", "title": "New Year's Day", "date": "2027-01-01", "member": "Holiday"}, {"id": "t9", "title": "🏫 Spring term starts", "date": "2027-01-04", "member": "Louis"}, {"id": "bday-mandy", "title": "🎂 Auntie Mandy's Birthday", "date": "2027-02-18", "member": "All"}, {"id": "r12", "title": "Will's Birthday 🎂", "date": "2027-03-16", "member": "All"}, {"id": "r13", "title": "Monty's Birthday 🎂", "date": "2027-03-23", "member": "All"}, {"id": "bh-gf27", "title": "Good Friday", "date": "2027-03-26", "member": "Holiday"}, {"id": "bh-em27", "title": "Easter Monday", "date": "2027-03-29", "member": "Holiday"}, {"id": "bday-jason", "title": "🎂 Jason's Birthday", "date": "2027-04-21", "member": "Jason"}, {"id": "bday-kerry", "title": "🎂 Kerry's Birthday", "date": "2027-04-30", "member": "Kerry"}, {"id": "bh-may27", "title": "Early May Bank Holiday", "date": "2027-05-03", "member": "Holiday"}, {"id": "bh-spring27", "title": "Spring Bank Holiday", "date": "2027-05-31", "member": "Holiday"}, {"id": "bh-summer27", "title": "Summer Bank Holiday", "date": "2027-08-30", "member": "Holiday"}];
-
-const NOW=new Date();NOW.setHours(0,0,0,0);
-function fmt(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
-const TD=fmt(NOW);
-
-let S={tab:"land",y:NOW.getFullYear(),mo:NOW.getMonth(),sel:null,events:[...EMBEDDED],user:[],filter:"All",showAdd:false,showEdit:false,editId:null,nev:{title:"",member:[],date:""},edit:{title:"",member:[],date:""},sync:"embedded"};
-
-const set=p=>{Object.assign(S,p);render()};
-const allEvs=()=>[...S.events,...S.user];
-const col=m=>C[m]||C.All;
-const getM=e=>Array.isArray(e.member)?e.member:e.member==="All"?["All"]:[e.member];
-const primCol=e=>{const ms=getM(e);const f=ms.find(m=>m!=="All"&&m!=="Holiday");return C[f||ms[0]]||C.All};
-const matchF=(e,f)=>{if(f==="All")return true;const ms=getM(e);return ms.includes(f)||ms.includes("All")};
-const fmtD=ds=>new Date(ds+"T12:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
-
-function parseDT(v){if(!v)return null;const r=v.includes(":")?v.split(":").pop():v;const s=r.replace(/[TZ\-:]/g,"");if(s.length<8)return null;const d=new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8));return isNaN(d.getTime())?null:d}
-function nextY(b){const d=new Date(b);d.setFullYear(NOW.getFullYear());if(d<NOW)d.setFullYear(NOW.getFullYear()+1);return d}
-function mapM(s){const l=s.toLowerCase();if(/^(jason\/kerry|kerry\/jason):/.test(l))return"Kerry";if(/^(jase|jason):/.test(l))return"Jason";if(/^kerry:/.test(l))return"Kerry";if(/^(ollie\/jason|jason\/ollie):/.test(l))return"Oliver";if(/\blouis\b/.test(l))return"Louis";if(/\bhugo\b/.test(l))return"Hugo";if(/\bleafy\b/.test(l))return"Oliver";return"All"}
-function cTitle(s){return s.replace(/^(all|jason\/kerry|kerry\/jason|ollie\/jason|jason|kerry|ollie):\s*/i,"").replace(/\\,/g,",").replace(/\\n/g," ").trim()}
-function parseIcal(txt){
-  const un=txt.replace(/\r\n[ \t]/g,"").replace(/\n[ \t]/g,"");
-  const bl=un.split("BEGIN:VEVENT").slice(1);const out=[];const seen=new Set();
-  for(const b of bl){
-    const p={};
-    for(const ln of b.split("END:VEVENT")[0].split(/\r?\n/)){const ci=ln.indexOf(":");if(ci<0)continue;const k=ln.slice(0,ci).split(";")[0].toUpperCase();if(!p[k])p[k]=ln.slice(ci+1);}
-    if(!p.SUMMARY||!p.DTSTART)continue;
-    const rr=p.RRULE||"";let base=parseDT(p.DTSTART);if(!base)continue;
-    let dt=rr.includes("FREQ=YEARLY")?nextY(base):base;if(!dt||dt<NOW)continue;
-    if(p.EXDATE){const ex=parseDT(p.EXDATE);if(ex&&fmt(ex)===fmt(dt))continue;}
-    const ds=fmt(dt),title=cTitle(p.SUMMARY),key=ds+title;
-    if(seen.has(key))continue;seen.add(key);
-    out.push({id:p.UID||"c"+Math.random().toString(36).slice(2),title,date:ds,member:mapM(p.SUMMARY),source:"cozi"});
-  }
-  return out.sort((a,b)=>a.date.localeCompare(b.date));
-}
-
-async function fetchLive(){
-  for(const pFn of PROXIES){
-    try{
-      const r=await Promise.race([fetch(pFn(COZI),{cache:"no-store"}),new Promise((_,rej)=>setTimeout(()=>rej(),8000))]);
-      if(!r.ok)continue;
-      const ct=r.headers.get("content-type")||"";
-      let txt=ct.includes("json")?(await r.json()).contents||"":await r.text();
-      if(!txt||!txt.includes("VCALENDAR"))continue;
-      const parsed=parseIcal(txt);
-      if(parsed.length>0){(function(){
-        // Drop embedded events whose id starts with "c" (original Cozi imports)
-        // Keep manual/static events (s,h,r,bday,bh,t,cl,cx prefixes)
-        var keep=S.events.filter(function(e){
-          return !/^c\d/.test(e.id) && !/^cx/.test(e.id);
+        // IDs of embedded Cozi events to drop when live data arrives
+        var coziIds={};
+        S.events.forEach(function(e){
+          var id=String(e.id);
+          if(id[0]==="c"&&id!=="cl1") coziIds[id]=true;
         });
-        // Deduplicate by date+title
+        var keep=S.events.filter(function(e){ return !coziIds[e.id]; });
+        // Deduplicate merged list by date+title
         var seen={};
         var merged=keep.concat(parsed).filter(function(e){
-          var key=e.date+'|'+e.title;
+          var key=e.date+String(e.title).substring(0,20);
           if(seen[key])return false;
           seen[key]=true;
           return true;
