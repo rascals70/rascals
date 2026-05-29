@@ -343,6 +343,55 @@ function bHome(){
   const raceDate=new Date("2026-09-09T00:00:00");
   const daysToRace=Math.ceil((raceDate-NOW)/(1000*60*60*24));
   const todayEvs=all.filter(e=>e.date===TD);
+  // Strava widget HTML
+  const stvConnected = !!localStorage.getItem("stv_refresh");
+  let stvWidget = "";
+  if(!stvConnected){{
+    stvWidget = `<div style="margin:0 16px;margin-top:16px">
+      <button data-a="stv-connect" style="width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border:none;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;font-family:'DM Sans',sans-serif">
+        <span style="font-size:22px">🏃</span>
+        <div style="text-align:left">
+          <div style="font-size:14px;font-weight:700;color:#fff">Connect Strava</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:1px">Pull your Garmin run data into Rascal</div>
+        </div>
+      </button>
+    </div>`;
+  }} else if(stravaData){{
+    const r = stravaData.lastRun;
+    const raceDate = new Date("2026-09-09");
+    const weeksLeft = Math.ceil((raceDate-NOW)/(7*86400000));
+    stvWidget = `<div style="margin:0 16px;margin-top:16px">
+      <div style="background:linear-gradient(135deg,rgba(252,76,2,.12),rgba(252,76,2,.04));border:1px solid rgba(252,76,2,.25);border-radius:16px;padding:16px 18px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fc4c02">Strava · Training</div>
+          <div style="font-size:10px;color:var(--mu)">${{weeksLeft}}w to Dragon's Fire</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:${{r?"12px":"0"}}">
+          <div style="background:rgba(0,0,0,.2);border-radius:10px;padding:10px;text-align:center">
+            <div style="font-size:20px;font-weight:800;font-family:'Syne',sans-serif;color:#fff">${{stravaData.weeklyKm}}</div>
+            <div style="font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-top:2px">km this wk</div>
+          </div>
+          <div style="background:rgba(0,0,0,.2);border-radius:10px;padding:10px;text-align:center">
+            <div style="font-size:20px;font-weight:800;font-family:'Syne',sans-serif;color:#fff">${{stravaData.weekRunCount}}</div>
+            <div style="font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-top:2px">runs</div>
+          </div>
+          <div style="background:rgba(0,0,0,.2);border-radius:10px;padding:10px;text-align:center">
+            <div style="font-size:20px;font-weight:800;font-family:'Syne',sans-serif;color:#fff">${{stravaData.monthKm}}</div>
+            <div style="font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-top:2px">km /28d</div>
+          </div>
+        </div>
+        ${{r?`<div style="background:rgba(0,0,0,.2);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px">
+          <span style="font-size:18px">🏃</span>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:#fff">${{r.name}}</div>
+            <div style="font-size:11px;color:var(--mu);margin-top:1px">${{mToKm(r.distance)}}km · ${{secToPace(r.moving_time,r.distance)}}/km · ${{Math.round(r.total_elevation_gain)}}m ↑</div>
+          </div>
+        </div>`:"" }}
+      </div>
+    </div>`;
+  }} else {{
+    stvWidget = `<div style="margin:0 16px;margin-top:16px;background:rgba(252,76,2,.06);border:1px solid rgba(252,76,2,.15);border-radius:14px;padding:14px 16px;font-size:13px;color:var(--mu)">🏃 Loading Strava data…</div>`;
+  }}
   const upcoming=all.filter(e=>e.date>TD).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,8);
   const avs=["Jason","Kerry","Oliver","Louis","Hugo"].map(m=>{
     const n=all.filter(e=>e.date>=TD&&matchF(e,m)).length;
@@ -377,6 +426,7 @@ function bHome(){
     </div>
     <div class="section"><div class="sec-label">Today</div>${todayHTML}</div>
     <div class="avatars">${avs}</div>
+    ${stvWidget}
     <div class="section"><div class="sec-label">Coming up</div>${upcHTML}</div>
   </div>`;
 }
@@ -433,6 +483,7 @@ function handle(e){
   if(a==="show-add")     set({showAdd:true});
   if(a==="cancel")       set({showAdd:false});
   if(a==="hard-refresh") hardRefresh();
+  if(a==="stv-connect") stvConnect();
   if(a==="toggle-member"){const m=el.dataset.m,cur=Array.isArray(S.nev.member)?S.nev.member:[];set({nev:{...S.nev,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]}});}
   if(a==="add"){const t=document.getElementById("et")?.value.trim(),d=document.getElementById("ed")?.value;if(!t||!d)return;const ms=Array.isArray(S.nev.member)?S.nev.member:[];const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;set({user:[...S.user,{id:"u"+Date.now(),title:t,date:d,member:mem,source:"user"}],showAdd:false,nev:{title:"",member:[],date:""}});}
   if(a==="open-edit"){const ev=allEvs().find(e=>e.id===el.dataset.id);if(!ev)return;const ms=getM(ev).filter(m=>m!=="All"&&m!=="Holiday");set({showEdit:true,editId:el.dataset.id,edit:{title:ev.title,date:ev.date,member:ms}});}
@@ -444,6 +495,100 @@ function handle(e){
 
 render();
 setTimeout(fetchLive,1500);
+
+// ── STRAVA ────────────────────────────────────────────────────────────────────
+const STV_CLIENT_ID = "252665";
+const STV_SECRET    = "baa6b378bb17f228dfb918528d8eb68f01065a49";
+const STV_REDIRECT  = "https://rascals70.github.io/rascals/rascals.html";
+const STV_SCOPE     = "read,activity:read_all";
+
+let stravaData = null; // {athlete, lastRun, weeklyKm, ytdKm}
+
+function stvConnect(){
+  const url = `https://www.strava.com/oauth/authorize?client_id=${STV_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(STV_REDIRECT)}&approval_prompt=force&scope=${STV_SCOPE}`;
+  window.location.href = url;
+}
+
+async function stvExchangeCode(code){
+  const r = await fetch("https://www.strava.com/oauth/token",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({client_id:STV_CLIENT_ID,client_secret:STV_SECRET,code,grant_type:"authorization_code"})
+  });
+  const d = await r.json();
+  if(d.refresh_token){
+    localStorage.setItem("stv_refresh", d.refresh_token);
+    localStorage.setItem("stv_access",  d.access_token);
+    localStorage.setItem("stv_expiry",  d.expires_at);
+    localStorage.setItem("stv_athlete_id", d.athlete?.id||"");
+    return d.access_token;
+  }
+  return null;
+}
+
+async function stvGetToken(){
+  const expiry  = +localStorage.getItem("stv_expiry")||0;
+  const refresh = localStorage.getItem("stv_refresh");
+  if(!refresh) return null;
+  if(Date.now()/1000 < expiry - 300) return localStorage.getItem("stv_access");
+  // Refresh
+  const r = await fetch("https://www.strava.com/oauth/token",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({client_id:STV_CLIENT_ID,client_secret:STV_SECRET,refresh_token:refresh,grant_type:"refresh_token"})
+  });
+  const d = await r.json();
+  if(d.access_token){
+    localStorage.setItem("stv_access",  d.access_token);
+    localStorage.setItem("stv_expiry",  d.expires_at);
+    localStorage.setItem("stv_refresh", d.refresh_token||refresh);
+    return d.access_token;
+  }
+  return null;
+}
+
+function mToKm(m){return(m/1000).toFixed(1)}
+function secToPace(s,m){const spm=s/m*1000;const min=Math.floor(spm/60);const sec=Math.round(spm%60);return`${min}:${String(sec).padStart(2,"0")}`}
+function mToFt(m){return Math.round(m*3.281)}
+
+async function stvFetch(){
+  const tok = await stvGetToken();
+  if(!tok) return;
+  try{
+    const [acts, athlete] = await Promise.all([
+      fetch("https://www.strava.com/api/v3/athlete/activities?per_page=10&per_page=10",{headers:{Authorization:`Bearer ${tok}`}}).then(r=>r.json()),
+      fetch("https://www.strava.com/api/v3/athlete",{headers:{Authorization:`Bearer ${tok}`}}).then(r=>r.json())
+    ]);
+    // Filter runs only
+    const runs = Array.isArray(acts)?acts.filter(a=>a.type==="Run"||a.sport_type==="Run"):[];
+    const lastRun = runs[0]||null;
+    // This week's km
+    const weekStart = new Date();weekStart.setHours(0,0,0,0);
+    weekStart.setDate(weekStart.getDate()-weekStart.getDay()+1);
+    const weekRuns = runs.filter(r=>new Date(r.start_date_local)>=weekStart);
+    const weeklyKm = weekRuns.reduce((s,r)=>s+r.distance,0)/1000;
+    // Last 4 weeks
+    const monthAgo = new Date(Date.now()-28*86400000);
+    const monthRuns = runs.filter(r=>new Date(r.start_date_local)>=monthAgo);
+    const monthKm = monthRuns.reduce((s,r)=>s+r.distance,0)/1000;
+    stravaData = {athlete,lastRun,weeklyKm:weeklyKm.toFixed(1),monthKm:monthKm.toFixed(1),weekRunCount:weekRuns.length};
+    render();
+  }catch(e){console.error("Strava fetch error",e);}
+}
+
+// Check for OAuth callback code in URL
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+  if(code){
+    // Clean URL
+    window.history.replaceState({},"",window.location.pathname);
+    stvExchangeCode(code).then(tok=>{if(tok)stvFetch();});
+  } else if(localStorage.getItem("stv_refresh")){
+    stvFetch();
+  }
+})();
+
 </script>
 <script>
 if('serviceWorker' in navigator){
