@@ -43,20 +43,15 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans'
 .land-logo{margin-bottom:28px}
 .land-wordmark{font-family:'Syne',sans-serif;font-size:48px;font-weight:800;letter-spacing:-3px;color:#fff;line-height:1;text-align:center;margin-bottom:6px}
 .land-tag{font-size:12px;color:var(--mu);letter-spacing:3px;text-transform:uppercase;text-align:center;margin-bottom:48px}
-.land-btns{width:100%;display:flex;flex-direction:column;gap:10px;margin-bottom:40px}
-.land-btn{
-  width:100%;padding:16px 24px;border-radius:16px;border:1px solid var(--bd);
-  background:var(--card);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;
-  color:var(--tx);cursor:pointer;display:flex;align-items:center;gap:14px;
-  transition:all .15s;letter-spacing:.2px;
-}
-.land-btn:active{background:var(--card2);transform:scale(.98)}
-.land-btn.primary{background:var(--accent);border-color:var(--accent);color:#000}
-.land-btn.primary:active{background:#16a34a}
-.land-btn-icon{font-size:22px;flex-shrink:0}
-.land-btn-text{text-align:left}
-.land-btn-sub{font-size:11px;opacity:.6;font-weight:400;margin-top:1px}
-.land-update{background:none;border:none;color:var(--mu);font-size:11px;letter-spacing:2px;text-transform:uppercase;font-family:'DM Sans',sans-serif;cursor:pointer;padding:8px;display:flex;align-items:center;gap:6px}
+
+
+
+
+
+
+
+
+
 .land-dots{display:flex;gap:7px;justify-content:center;margin-bottom:36px}
 .land-dot{width:8px;height:8px;border-radius:50%}
 
@@ -436,16 +431,44 @@ function bSchool(){
 
 function bRun(){
   try{
-    var chart = (typeof STV!=="undefined") ? STV.chart() : '<p style="color:#fc4c02">STV not defined</p>';
+    var chart=(typeof STV!=="undefined")?STV.chart():'<p style="color:#fc4c02">STV not defined</p>';
+
+    // Last activity card
+    var lastAct="";
+    if(typeof STV!=="undefined"&&STV.data&&STV.data.lr){
+      var r=STV.data.lr;
+      var rd=new Date(r.start_date_local);
+      var dateStr=rd.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
+      var dist=STV.km(r.distance);
+      var pace=STV.pace(r.moving_time,r.distance);
+      var elev=Math.round(r.total_elevation_gain);
+      var hrs=Math.floor(r.moving_time/3600);
+      var mins=Math.floor((r.moving_time%3600)/60);
+      var timeStr=hrs>0?hrs+"h "+mins+"m":mins+"m";
+      lastAct='<div style="background:rgba(252,76,2,.08);border:1px solid rgba(252,76,2,.2);border-radius:14px;padding:14px 16px;margin-top:14px">'
+        +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fc4c02;margin-bottom:10px">Last Activity</div>'
+        +'<div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">'+r.name+'</div>'
+        +'<div style="font-size:11px;color:#888;margin-bottom:12px">'+dateStr+'</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px">'
+        +'<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff;font-family:Syne,sans-serif">'+dist+'</div><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:2px">km</div></div>'
+        +'<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff;font-family:Syne,sans-serif">'+pace+'</div><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:2px">/km</div></div>'
+        +'<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff;font-family:Syne,sans-serif">'+elev+'</div><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:2px">m &#8593;</div></div>'
+        +'<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff;font-family:Syne,sans-serif">'+timeStr+'</div><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:2px">time</div></div>'
+        +'</div>'
+        +'</div>';
+    }
+
     return '<div style="padding:0 16px 24px"><div style="height:110px"></div>'
       +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;color:var(--tx);margin-bottom:2px">Training</div>'
       +'<div style="font-size:12px;color:var(--mu);margin-bottom:16px">Dragon&#39;s Fire Race &middot; 9 Sep 2026</div>'
       +chart
+      +lastAct
       +'</div>';
   }catch(err){
     return '<div style="padding:80px 16px 24px;color:#ef4444;font-size:13px">Error: '+err.message+'</div>';
   }
 }
+
 
 function bInfo(){
   var sec=function(title,color,items){
