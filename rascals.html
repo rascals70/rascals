@@ -156,21 +156,21 @@ var STV={
     return fetch("https://www.strava.com/oauth/token",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({client_id:STV.C,client_secret:STV.S,refresh_token:ref,grant_type:"refresh_token"})}).then(function(r){return r.json();}).then(function(d){if(d.access_token){localStorage.setItem("stv_a",d.access_token);localStorage.setItem("stv_e",String(d.expires_at));localStorage.setItem("stv_r",d.refresh_token||ref);}return d.access_token||null;});
   },
   fetchPage:function(tok,after,page){
-    return fetch("https://www.strava.com/api/v3/athlete/activities?per_page=200&after="+after+"&page="+page,{headers:{Authorization:"Bearer "+tok}}).then(function(r){return r.json();});
+    var url="https://www.strava.com/api/v3/athlete/activities?per_page=200&after="+after+"&page="+page;
+    return fetch(url,{headers:{Authorization:"Bearer "+tok}}).then(function(r){return r.json();});
   },
   stale:function(){
-    if(Date.now()-parseInt(localStorage.getItem("stv_ts")||"0")>86400000)return true;
-    // Also stale if cache missing ctlHistory (new field)
-    try{var c=JSON.parse(localStorage.getItem("stv_cache")||"{}");if(!c.ctlHistory)return true;}catch(e){return true;}
-    return false;
+    var ts=parseInt(localStorage.getItem("stv_ts")||"0");
+    return Date.now()-ts > 86400000; // stale after 24h
   },
-  load:load:function(){
+  load:function(){
+    // Use cached data if fresh
     if(!STV.stale()&&localStorage.getItem("stv_cache")){
       try{
-        var c=JSON.parse(localStorage.getItem("stv_cache"));
-        c.weeks=c.weeks.map(function(w){return{ws:new Date(w.ws),km:w.km};});
-        if(c.ctlHistory)c.ctlHistory=c.ctlHistory.map(function(d){return{date:new Date(d.date),ctl:d.ctl,atl:d.atl,tsb:d.tsb};});
-        STV.data=c;
+        var cached=JSON.parse(localStorage.getItem("stv_cache"));
+        // Restore Date objects (JSON serialises them as strings)
+        cached.weeks=cached.weeks.map(function(w){return{ws:new Date(w.ws),km:w.km};});
+        STV.data=cached;
         if(typeof render==="function")render();
         return;
       }catch(e){}
@@ -178,71 +178,135 @@ var STV={
     STV.tok().then(function(t){
       if(!t)return;
       var after=Math.floor((Date.now()-366*86400000)/1000);
-      Promise.all([STV.fetchPage(t,after,1),STV.fetchPage(t,after,2),STV.fetchPage(t,after,3)])
-      .then(function(pages){
-        var all=[];pages.forEach(function(p){if(Array.isArray(p))all=all.concat(p);});
+      // Fetch up to 3 pages to get full year
+      Promise.all([
+        STV.fetchPage(t,after,1),
+        STV.fetchPage(t,after,2),
+        STV.fetchPage(t,after,3)
+      ]).then(function(pages){
+        var all=[];
+        pages.forEach(function(p){if(Array.isArray(p))all=all.concat(p);});
         var runs=all.filter(function(a){return a.type==="Run"||a.sport_type==="Run";});
-        runs.sort(function(a,b){return b.start_date_local.localeCompare(a.start_date_local);});
+        // Build 52 weekly buckets — Monday to Sunday
         var now=new Date();now.setHours(0,0,0,0);
-        var dayOfWeek=(now.getDay()+6)%7;
+        // Find the most recent Monday
+        var dayOfWeek=(now.getDay()+6)%7; // 0=Mon
         var thisMonday=new Date(now);thisMonday.setDate(now.getDate()-dayOfWeek);
         var weeks=[];
         for(var i=51;i>=0;i--){
           var ws=new Date(thisMonday);ws.setDate(thisMonday.getDate()-i*7);
           var we=new Date(ws);we.setDate(ws.getDate()+6);we.setHours(23,59,59);
-          var km=runs.filter(function(r){var d=new Date(r.start_date_local);return d>=ws&&d<=we;}).reduce(function(s,r){return s+r.distance/1000;},0);
+          var km=runs.filter(function(r){
+            var d=new Date(r.start_date_local);
+            return d>=ws&&d<=we;
+          }).reduce(function(s,r){return s+r.distance;},0)/1000;
           weeks.push({ws:new Date(ws),km:parseFloat(km.toFixed(1))});
         }
         var total=(runs.reduce(function(s,r){return s+r.distance;},0)/1000).toFixed(0);
         var maxKm=Math.max.apply(null,weeks.map(function(w){return w.km;}).concat([STV.TARGET_KM+10]));
-        var ctlHistory=STV.calcCTL(runs);
-        var curCTL=ctlHistory[ctlHistory.length-1].ctl;
-        var curTSB=ctlHistory[ctlHistory.length-1].tsb;
-        STV.data={weeks:weeks,total:total,maxKm:maxKm,count:runs.length,lr:runs[0]||null,ctlHistory:ctlHistory,curCTL:Math.round(curCTL),curTSB:Math.round(curTSB)};
-        try{STV.data.ctlV=2;localStorage.setItem("stv_cache",JSON.stringify(STV.data));localStorage.setItem("stv_ts",String(Date.now()));}catch(e){}
+        STV.data={weeks:weeks,total:total,maxKm:maxKm,count:runs.length};
+        // Cache for 24h
+        try{localStorage.setItem("stv_cache",JSON.stringify(STV.data));localStorage.setItem("stv_ts",String(Date.now()));}catch(e){}
         if(typeof render==="function")render();
       }).catch(function(e){console.error("STV",e);});
     });
   },
-  km:function(m){return(m/1000).toFixed(1);},
-  pace:function(s,m){var p=s/m*1000;var mn=Math.floor(p/60);var sc=Math.round(p%60);return mn+":"+(sc<10?"0":"")+sc;},
   chart:function(){
     if(!STV.ok()){
-      return'<div style="padding:0 0 0 0"><button data-a="stv-connect" style="width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border:none;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer"><span style="font-size:22px">&#127939;</span><div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#fff;font-family:DM Sans,sans-serif">Connect Strava</div><div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px;font-family:DM Sans,sans-serif">12-month training chart</div></div></button></div>';
+      return'<div style="padding:0 16px;margin-top:16px">'
+        +'<button data-a="stv-connect" style="width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border:none;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer">'
+        +'<span style="font-size:22px">&#127939;</span>'
+        +'<div style="text-align:left">'
+        +'<div style="font-size:14px;font-weight:700;color:#fff;font-family:DM Sans,sans-serif">Connect Strava</div>'
+        +'<div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px;font-family:DM Sans,sans-serif">12-month training chart</div>'
+        +'</div></button></div>';
     }
-    if(!STV.data){return'<div style="border:1px solid rgba(252,76,2,.2);border-radius:14px;padding:14px;font-size:13px;color:#888">&#127939; Loading...</div>';}
+    if(!STV.data){
+      return'<div style="padding:0 16px;margin-top:16px"><div style="background:rgba(252,76,2,.08);border:1px solid rgba(252,76,2,.2);border-radius:14px;padding:14px 16px"><span style="font-size:13px;color:#888">&#127939; Loading...</span></div></div>';
+    }
     var d=STV.data;
     var YPAD=24,XPAD=28,RPAD=8,TPAD=16,BPAD=20;
-    var W=320,H=130;var cw=W-XPAD-RPAD;var ch=H-TPAD-BPAD;
-    var max=d.maxKm;var ws=d.weeks;var n=ws.length;var bw=cw/n;
+    var W=320,H=130;
+    var cw=W-XPAD-RPAD; var ch=H-TPAD-BPAD;
+    var max=d.maxKm;
+    var ws=d.weeks; var n=ws.length;
+    var bw=cw/n;
+    // Points
     var pts=ws.map(function(w,i){return{x:XPAD+i*bw+bw/2,y:TPAD+ch-(w.km/max)*ch,km:w.km};});
-    var area="M"+(XPAD)+","+(TPAD+ch);pts.forEach(function(p){area+=" L"+p.x.toFixed(1)+","+p.y.toFixed(1);});area+=" L"+(XPAD+cw)+","+(TPAD+ch)+" Z";
-    var line="M"+pts[0].x.toFixed(1)+","+pts[0].y.toFixed(1);pts.slice(1).forEach(function(p){line+=" L"+p.x.toFixed(1)+","+p.y.toFixed(1);});
+    // Area path
+    var area="M"+(XPAD)+","+(TPAD+ch);
+    pts.forEach(function(p){area+=" L"+p.x.toFixed(1)+","+p.y.toFixed(1);});
+    area+=" L"+(XPAD+cw)+","+(TPAD+ch)+" Z";
+    // Line path
+    var line="M"+pts[0].x.toFixed(1)+","+pts[0].y.toFixed(1);
+    pts.slice(1).forEach(function(p){line+=" L"+p.x.toFixed(1)+","+p.y.toFixed(1);});
+    // Month labels
     var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     var labels="";var lastM=-1;
-    pts.forEach(function(p,i){var m=ws[i].ws.getMonth();if(m!==lastM){labels+='<text x="'+p.x.toFixed(1)+'" y="'+(TPAD+ch+BPAD-2)+'" fill="#555" font-size="8" text-anchor="middle">'+months[m]+'</text>';lastM=m;}});
+    pts.forEach(function(p,i){
+      var m=ws[i].ws.getMonth();
+      if(m!==lastM){
+        labels+='<text x="'+p.x.toFixed(1)+'" y="'+(TPAD+ch+BPAD-2)+'" fill="#555" font-size="8" text-anchor="middle">'+months[m]+'</text>';
+        lastM=m;
+      }
+    });
+    // Y-axis labels (0, target, max)
     var ySteps=[0,40,80,Math.round(max)];
     var yAxis="";
-    ySteps.forEach(function(v){if(v>max)return;var y=TPAD+ch-(v/max)*ch;yAxis+='<line x1="'+XPAD+'" y1="'+y.toFixed(1)+'" x2="'+(XPAD+cw)+'" y2="'+y.toFixed(1)+'" stroke="rgba(255,255,255,.06)" stroke-width="1"/><text x="'+(XPAD-3)+'" y="'+(y+3).toFixed(1)+'" fill="#555" font-size="7" text-anchor="end">'+v+'</text>';});
+    ySteps.forEach(function(v){
+      if(v>max)return;
+      var y=TPAD+ch-(v/max)*ch;
+      yAxis+='<line x1="'+XPAD+'" y1="'+y.toFixed(1)+'" x2="'+(XPAD+cw)+'" y2="'+y.toFixed(1)+'" stroke="rgba(255,255,255,.06)" stroke-width="1"/>';
+      yAxis+='<text x="'+(XPAD-3)+'" y="'+(y+3).toFixed(1)+'" fill="#555" font-size="7" text-anchor="end">'+v+'</text>';
+    });
+    // Target line at 80km
     var targetY=TPAD+ch-(STV.TARGET_KM/max)*ch;
-    var targetLine='<line x1="'+XPAD+'" y1="'+targetY.toFixed(1)+'" x2="'+(XPAD+cw)+'" y2="'+targetY.toFixed(1)+'" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,3" opacity="0.7"/><text x="'+(XPAD+cw+2)+'" y="'+(targetY+3).toFixed(1)+'" fill="#22c55e" font-size="7">80</text>';
+    var targetLine='<line x1="'+XPAD+'" y1="'+targetY.toFixed(1)+'" x2="'+(XPAD+cw)+'" y2="'+targetY.toFixed(1)+'" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,3" opacity="0.7"/>'
+      +'<text x="'+(XPAD+cw+2)+'" y="'+(targetY+3).toFixed(1)+'" fill="#22c55e" font-size="7">80</text>';
+    // Race marker
     var race=new Date("2026-09-09");var now2=new Date();now2.setHours(0,0,0,0);
     var dLeft=Math.ceil((race-now2)/86400000);
     var raceM="";
-    ws.forEach(function(w,i){var we=new Date(w.ws);we.setDate(we.getDate()+6);if(race>=w.ws&&race<=we&&pts[i]){raceM='<line x1="'+pts[i].x.toFixed(1)+'" y1="'+TPAD+'" x2="'+pts[i].x.toFixed(1)+'" y2="'+(TPAD+ch)+'" stroke="#22c55e" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/><text x="'+pts[i].x.toFixed(1)+'" y="'+(TPAD-3)+'" fill="#22c55e" font-size="6.5" text-anchor="middle">Race</text>';}});
+    ws.forEach(function(w,i){
+      var we=new Date(w.ws);we.setDate(we.getDate()+6);
+      if(race>=w.ws&&race<=we&&pts[i]){
+        raceM='<line x1="'+pts[i].x.toFixed(1)+'" y1="'+TPAD+'" x2="'+pts[i].x.toFixed(1)+'" y2="'+(TPAD+ch)+'" stroke="#22c55e" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>'
+          +'<text x="'+pts[i].x.toFixed(1)+'" y="'+(TPAD-3)+'" fill="#22c55e" font-size="6.5" text-anchor="middle">Race</text>';
+      }
+    });
     var BOX="background:linear-gradient(135deg,rgba(252,76,2,.14),rgba(252,76,2,.04));border:1px solid rgba(252,76,2,.25);border-radius:16px;padding:14px 16px";
-    return'<div style="'+BOX+'">'
-      +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px"><div><div style="font-size:22px;font-weight:800;color:#fff;font-family:Syne,sans-serif;line-height:1">'+d.total+'<span style="font-size:12px;color:#fc4c02;margin-left:3px">km</span></div><div style="font-size:10px;color:#666;margin-top:2px">12 months &middot; '+d.count+' runs</div></div><div style="text-align:right"><div style="font-size:15px;font-weight:800;color:#22c55e;line-height:1">'+dLeft+'d</div><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:1px">to race</div></div></div>'
-      +'<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;display:block;overflow:visible"><defs><linearGradient id="og" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fc4c02" stop-opacity="0.45"/><stop offset="100%" stop-color="#fc4c02" stop-opacity="0.02"/></linearGradient></defs>'
-      +yAxis+targetLine+'<path d="'+area+'" fill="url(#og)"/><path d="'+line+'" fill="none" stroke="#fc4c02" stroke-width="1.8" stroke-linejoin="round"/>'+raceM+labels
+    return'<div style="padding:0 16px;margin-top:16px"><div style="'+BOX+'">'
+      +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">'
+      +'<div>'
+      +'<div style="font-size:22px;font-weight:800;color:#fff;font-family:Syne,sans-serif;line-height:1">'+d.total+'<span style="font-size:12px;color:#fc4c02;margin-left:3px">km</span></div>'
+      +'<div style="font-size:10px;color:#666;margin-top:2px">12 months &middot; '+d.count+' runs</div>'
+      +'</div>'
+      +'<div style="text-align:right">'
+      +'<div style="font-size:15px;font-weight:800;color:#22c55e;line-height:1">'+dLeft+'d</div>'
+      +'<div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:1px">to race</div>'
+      +'</div>'
+      +'</div>'
+      +'<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;display:block;overflow:visible">'
+      +'<defs><linearGradient id="og" x1="0" y1="0" x2="0" y2="1">'
+      +'<stop offset="0%" stop-color="#fc4c02" stop-opacity="0.45"/>'
+      +'<stop offset="100%" stop-color="#fc4c02" stop-opacity="0.02"/>'
+      +'</linearGradient></defs>'
+      +yAxis
+      +targetLine
+      +'<path d="'+area+'" fill="url(#og)"/>'
+      +'<path d="'+line+'" fill="none" stroke="#fc4c02" stroke-width="1.8" stroke-linejoin="round"/>'
+      +raceM
+      +labels
       +'</svg>'
-      +'<div style="font-size:9px;color:#444;margin-top:4px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:1px;background:#22c55e;border-top:1px dashed #22c55e"></span><span>80km weekly target</span><span style="margin-left:8px;color:#333">&middot; Refreshes daily</span></div>'
-      +'</div>';
+      +'<div style="font-size:9px;color:#444;margin-top:4px;display:flex;align-items:center;gap:6px">'
+      +'<span style="display:inline-block;width:16px;height:1px;background:#22c55e;border-top:1px dashed #22c55e"></span>'
+      +'<span>80km weekly target</span>'
+      +'<span style="margin-left:8px;color:#333">&middot; Refreshes daily</span>'
+      +'</div>'
+      +'</div></div>';
   }
 };
-
 </script>
-
 
 
 <script>
@@ -367,8 +431,9 @@ function bSchool(){
 
 function bRun(){
   try{
-    var chart=(typeof STV!=="undefined")?STV.chart():'';
-    var fitness='';
+    var chart=(typeof STV!=="undefined")?STV.chart():'<p style="color:#fc4c02">STV not defined</p>';
+
+    // Last activity card
     var lastAct="";
     if(typeof STV!=="undefined"&&STV.data&&STV.data.lr){
       var r=STV.data.lr;
@@ -381,28 +446,28 @@ function bRun(){
       var mins=Math.floor((r.moving_time%3600)/60);
       var timeStr=hrs>0?hrs+"h "+mins+"m":mins+"m";
       lastAct='<div style="background:rgba(252,76,2,.08);border:1px solid rgba(252,76,2,.2);border-radius:14px;padding:14px 16px;margin-top:14px">'
-        +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fc4c02;margin-bottom:8px">Last Activity</div>'
-        +'<div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:4px">'+r.name+'</div>'
+        +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fc4c02;margin-bottom:10px">Last Activity</div>'
+        +'<div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">'+r.name+'</div>'
         +'<div style="font-size:11px;color:#888;margin-bottom:12px">'+dateStr+'</div>'
         +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px">'
         +'<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff;font-family:Syne,sans-serif">'+dist+'</div><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:2px">km</div></div>'
         +'<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff;font-family:Syne,sans-serif">'+pace+'</div><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:2px">/km</div></div>'
         +'<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff;font-family:Syne,sans-serif">'+elev+'</div><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:2px">m &#8593;</div></div>'
         +'<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff;font-family:Syne,sans-serif">'+timeStr+'</div><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:2px">time</div></div>'
-        +'</div></div>';
+        +'</div>'
+        +'</div>';
     }
+
     return '<div style="padding:0 16px 24px"><div style="height:110px"></div>'
       +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;color:var(--tx);margin-bottom:2px">Training</div>'
       +'<div style="font-size:12px;color:var(--mu);margin-bottom:16px">Dragon&#39;s Fire Race &middot; 9 Sep 2026</div>'
       +chart
-      +fitness
       +lastAct
       +'</div>';
   }catch(err){
     return '<div style="padding:80px 16px 24px;color:#ef4444;font-size:13px">Error: '+err.message+'</div>';
   }
 }
-
 
 
 function bInfo(){
@@ -433,7 +498,7 @@ function bInfo(){
       ["Insurance Renewal","3 Jul 2026"],
       ["Insurer","One Click Direct"],
       ["Claims No.","0203 738 7300"],
-      ["Claims Web","portal.oneclickdirect.co.uk"],
+      ["Policy Login","portal.oneclickdirect.co.uk"],
       ["Policy No.","9586766"]
     ])
 
@@ -489,16 +554,13 @@ function bLand(){
   var now=new Date();now.setHours(0,0,0,0);
   var daysToRace=Math.ceil((raceDate-now)/(1000*60*60*24));
   var msg=daysToRace===0?"Race day! \uD83D\uDD25":daysToRace===1?"Tomorrow!":daysToRace<7?"This week!":daysToRace<30?"Nearly there \uD83D\uDD25":"Keep training \uD83D\uDCAA";
-
   function badge(emoji,name,member,color,bg){
     return '<div style="text-align:center;cursor:pointer" data-a="goto-cal" data-m="'+member+'">'
       +'<div style="width:56px;height:56px;border-radius:50%;background:'+bg+';border:2px solid '+color+';display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto">'+emoji+'</div>'
       +'<div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:5px;letter-spacing:1px;text-transform:uppercase;font-weight:600">'+name+'</div>'
       +'</div>';
   }
-
   return '<div style="display:flex;flex-direction:column;align-items:center;min-height:100%;padding:220px 24px 40px;background:radial-gradient(ellipse at 50% 25%,rgba(34,197,94,.07) 0%,transparent 65%)">'
-
     +'<svg viewBox="0 0 80 80" width="64" height="64" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:10px">'
     +'<path d="M40 72 Q37 79 34 80" stroke="#15803d" stroke-width="3" fill="none" stroke-linecap="round"/>'
     +'<path d="M40 10 C53 17,61 31,59 45 C57 57,49 65,40 67 C31 65,23 57,21 45 C19 31,27 17,40 10Z" fill="#16a34a"/>'
@@ -509,10 +571,8 @@ function bLand(){
     +'<path d="M40 36 Q48 41 54 41" stroke="rgba(255,255,255,.15)" stroke-width=".8" fill="none"/>'
     +'<path d="M40 10 C35 16,26 26,24 38" stroke="rgba(255,255,255,.18)" stroke-width="2" fill="none" stroke-linecap="round"/>'
     +'</svg>'
-
     +'<div style="font-family:Syne,sans-serif;font-size:64px;font-weight:800;letter-spacing:-4px;color:#fff;line-height:1">rascal</div>'
     +'<div style="font-size:11px;color:var(--mu);letter-spacing:3px;text-transform:uppercase;margin-top:4px;margin-bottom:28px">The Leaf Family</div>'
-
     +'<div style="display:flex;justify-content:center;gap:16px;margin-bottom:28px;flex-wrap:wrap">'
     +badge('&#127939;','Jason','Jason','rgba(59,130,246,.8)','rgba(59,130,246,.15)')
     +badge('&#127800;','Kerry','Kerry','rgba(236,72,153,.8)','rgba(236,72,153,.15)')
@@ -520,7 +580,6 @@ function bLand(){
     +badge('&#11088;','Louis','Louis','rgba(168,85,247,.8)','rgba(168,85,247,.15)')
     +badge('&#128062;','Hugo','Hugo','rgba(245,158,11,.8)','rgba(245,158,11,.15)')
     +'</div>'
-
     +'<div style="width:100%;background:linear-gradient(135deg,rgba(34,197,94,.14),rgba(34,197,94,.04));border:1px solid rgba(34,197,94,.22);border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:14px">'
     +'<div style="text-align:center;min-width:52px"><div style="font-family:Syne,sans-serif;font-size:36px;font-weight:800;color:#22c55e;line-height:1">'+daysToRace+'</div><div style="font-size:9px;color:var(--mu);letter-spacing:2px;text-transform:uppercase;margin-top:1px">days</div></div>'
     +'<div style="width:1px;height:40px;background:rgba(34,197,94,.2);flex-shrink:0"></div>'
@@ -528,7 +587,6 @@ function bLand(){
     +'<div style="font-size:11px;color:var(--mu);margin-top:2px">Wed 9 Sep 2026</div>'
     +'<div style="font-size:11px;color:#22c55e;font-weight:600;margin-top:2px">'+msg+'</div>'
     +'</div></div>'
-
     +'</div>';
 }
 
@@ -688,15 +746,6 @@ if('serviceWorker' in navigator){
 <script>
 (function(){
   try{
-    // Clear cache if it's missing ctlHistory (new field added recently)
-    try{
-      var c=JSON.parse(localStorage.getItem("stv_cache")||"{}");
-      if(!c.ctlHistory||!c.lr||c.ctlV!==2){
-        localStorage.removeItem("stv_cache");
-        localStorage.removeItem("stv_ts");
-        console.log("STV: cleared stale cache — refetching");
-      }
-    }catch(e){localStorage.removeItem("stv_cache");localStorage.removeItem("stv_ts");}
     var p=new URLSearchParams(window.location.search);
     var code=p.get("code");
     if(code){
