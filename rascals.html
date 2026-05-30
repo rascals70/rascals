@@ -158,7 +158,12 @@ var STV={
   fetchPage:function(tok,after,page){
     return fetch("https://www.strava.com/api/v3/athlete/activities?per_page=200&after="+after+"&page="+page,{headers:{Authorization:"Bearer "+tok}}).then(function(r){return r.json();});
   },
-  stale:function(){return Date.now()-parseInt(localStorage.getItem("stv_ts")||"0")>86400000;},
+  stale:function(){
+    if(Date.now()-parseInt(localStorage.getItem("stv_ts")||"0")>86400000)return true;
+    // Also stale if cache missing ctlHistory (new field)
+    try{var c=JSON.parse(localStorage.getItem("stv_cache")||"{}");if(!c.ctlHistory)return true;}catch(e){return true;}
+    return false;
+  },
   calcCTL:function(runs){
     // Chronic Training Load (fitness): 42-day exponential moving average of daily km
     // Acute Training Load (fatigue): 7-day EMA
