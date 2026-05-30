@@ -165,23 +165,31 @@ var STV={
     return false;
   },
   calcCTL:function(runs){
-    // Chronic Training Load (fitness): 42-day exponential moving average of daily km
-    // Acute Training Load (fatigue): 7-day EMA
+    // CTL = 42-day EMA of daily TSS proxy (km * 6 ≈ Strava scale)
+    // ATL = 7-day EMA. TSB = CTL - ATL.
+    // Run full 365 days to build accurate CTL from scratch.
     var now=new Date();now.setHours(0,0,0,0);
-    var days=[];
-    for(var i=89;i>=0;i--){
+    // Index activities by date string for fast lookup
+    var byDate={};
+    runs.forEach(function(r){
+      if(!r.start_date_local)return;
+      var ds=r.start_date_local.slice(0,10);
+      byDate[ds]=(byDate[ds]||0)+r.distance/1000;
+    });
+    var ctl=0,atl=0;
+    var ctlHistory=[];
+    for(var i=364;i>=0;i--){
       var d=new Date(now);d.setDate(now.getDate()-i);
       var ds=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-      var km=runs.filter(function(r){return r.start_date_local&&r.start_date_local.slice(0,10)===ds;}).reduce(function(s,r){return s+r.distance/1000;},0);
-      days.push({date:new Date(d),km:km});
+      var km=byDate[ds]||0;
+      var tss=km*6; // ~6 TSS per km, puts 80km/wk at CTL~68, 120km/wk peak at ~100
+      ctl=ctl*(41/42)+tss/42;
+      atl=atl*(6/7)+tss/7;
+      // Only store last 90 days for chart
+      if(i<=89){
+        ctlHistory.push({date:new Date(d),ctl:parseFloat(ctl.toFixed(1)),atl:parseFloat(atl.toFixed(1)),tsb:parseFloat((ctl-atl).toFixed(1))});
+      }
     }
-    var ctl=50,atl=50; // initialise to reasonable starting point
-    var ctlHistory=[];
-    days.forEach(function(day){
-      ctl=ctl*(1-1/42)+day.km*(1/42);
-      atl=atl*(1-1/7)+day.km*(1/7);
-      ctlHistory.push({date:new Date(day.date),ctl:parseFloat(ctl.toFixed(1)),atl:parseFloat(atl.toFixed(1)),tsb:parseFloat((ctl-atl).toFixed(1))});
-    });
     return ctlHistory;
   },
   load:function(){
@@ -202,6 +210,7 @@ var STV={
       .then(function(pages){
         var all=[];pages.forEach(function(p){if(Array.isArray(p))all=all.concat(p);});
         var runs=all.filter(function(a){return a.type==="Run"||a.sport_type==="Run";});
+        runs.sort(function(a,b){return b.start_date_local.localeCompare(a.start_date_local);});
         var now=new Date();now.setHours(0,0,0,0);
         var dayOfWeek=(now.getDay()+6)%7;
         var thisMonday=new Date(now);thisMonday.setDate(now.getDate()-dayOfWeek);
@@ -218,7 +227,7 @@ var STV={
         var curCTL=ctlHistory[ctlHistory.length-1].ctl;
         var curTSB=ctlHistory[ctlHistory.length-1].tsb;
         STV.data={weeks:weeks,total:total,maxKm:maxKm,count:runs.length,lr:runs[0]||null,ctlHistory:ctlHistory,curCTL:Math.round(curCTL),curTSB:Math.round(curTSB)};
-        try{localStorage.setItem("stv_cache",JSON.stringify(STV.data));localStorage.setItem("stv_ts",String(Date.now()));}catch(e){}
+        try{STV.data.ctlV=2;localStorage.setItem("stv_cache",JSON.stringify(STV.data));localStorage.setItem("stv_ts",String(Date.now()));}catch(e){}
         if(typeof render==="function")render();
       }).catch(function(e){console.error("STV",e);});
     });
@@ -770,7 +779,7 @@ if('serviceWorker' in navigator){
     // Clear cache if it's missing ctlHistory (new field added recently)
     try{
       var c=JSON.parse(localStorage.getItem("stv_cache")||"{}");
-      if(!c.ctlHistory||!c.lr){
+      if(!c.ctlHistory||!c.lr||c.ctlV!==2){
         localStorage.removeItem("stv_cache");
         localStorage.removeItem("stv_ts");
         console.log("STV: cleared stale cache — refetching");
