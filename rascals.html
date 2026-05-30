@@ -372,7 +372,7 @@ function bRun(){
     var hasData=(typeof STV!=="undefined")&&STV.data;
 
     var chart=connected?(hasData?STV.chart():'<div style="border:1px solid rgba(252,76,2,.2);border-radius:14px;padding:20px;text-align:center;color:#888;font-size:13px">&#127939; Loading Strava data...</div>')
-      :'<a href="https://www.strava.com/oauth/authorize?client_id=252665&response_type=code&redirect_uri=https%3A%2F%2Frascals70.github.io%2Frascals%2Frascals.html&approval_prompt=force&scope=read%2Cactivity%3Aread_all" style="width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;text-decoration:none"><span style="font-size:22px">&#127939;</span><div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#fff">Reconnect Strava</div><div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px">Session expired — tap to reconnect</div></div></a>';
+      :'<div onclick="window.location.href='https://www.strava.com/oauth/authorize?client_id=252665&response_type=code&redirect_uri=https%3A%2F%2Frascals70.github.io%2Frascals%2Frascals.html&approval_prompt=force&scope=read%2Cactivity%3Aread_all'" style="cursor:pointer"><div style="width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px"><span style="font-size:22px">&#127939;</span><div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#fff">Reconnect Strava</div><div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px">Tap to authorise</div></div></div></div>'';
 
     var lastAct="";
     if(hasData&&STV.data.lr){
