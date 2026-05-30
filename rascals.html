@@ -543,7 +543,7 @@ function bLand(){
   }
 
   return '<div style="display:flex;flex-direction:column;align-items:center;min-height:100%;'
-    +'padding:calc(var(--st,0px)+40px) 24px 32px;'
+    +'padding:calc(var(--st,0px)+70px) 24px 32px;'
     +'background:radial-gradient(ellipse at 50% 25%,rgba(34,197,94,.07) 0%,transparent 65%)">'
 
     // Logo + wordmark
@@ -558,7 +558,7 @@ function bLand(){
     +'<path d="M40 10 C35 16,26 26,24 38" stroke="rgba(255,255,255,.18)" stroke-width="2" fill="none" stroke-linecap="round"/>'
     +'</svg>'
 
-    +'<div style="font-family:Syne,sans-serif;font-size:44px;font-weight:800;letter-spacing:-3px;color:#fff;line-height:1">rascal</div>'
+    +'<div style="font-family:Syne,sans-serif;font-size:64px;font-weight:800;letter-spacing:-4px;color:#fff;line-height:1">rascal</div>'
     +'<div style="font-size:11px;color:var(--mu);letter-spacing:3px;text-transform:uppercase;margin-top:4px;margin-bottom:24px">The Leaf Family</div>'
 
     // Family emoji badges — bigger
@@ -684,7 +684,7 @@ function bModal(){
 function bNav(){
   var t=S.tab;
   return '<nav class="nav">'
-    +'<button class="nb'+(t==="land"?" on":"")+'" data-a="tab" data-tab="land"><span class="ni">&#127807;</span>Rascal</button>'
+    +'<button class="nb'+(t==="land"?" on":"")+'" data-a="tab" data-tab="land"><span class="ni" style="font-size:0;line-height:22px"><svg viewBox="0 0 100 100" width="22" height="22" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto"><path d="M50 78 Q47 86 44 93" stroke="#15803d" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M50 12 C65 20,75 36,73 52 C71 66,61 76,50 78 C39 76,29 66,27 52 C25 36,35 20,50 12Z" fill="#16a34a"/><path d="M50 12 Q50 45 50 78" stroke="rgba(255,255,255,.3)" stroke-width="1.5" fill="none"/><path d="M50 28 Q41 34 33 35" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none"/><path d="M50 28 Q59 34 67 35" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none"/><path d="M50 44 Q40 48 32 48" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none"/><path d="M50 44 Q60 48 68 48" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none"/><path d="M50 12 C43 19,33 31,30 45" stroke="rgba(255,255,255,.22)" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg></span>Rascal</button>'
     +'<button class="nb'+(t==="home"?" on":"")+'" data-a="tab" data-tab="home"><span class="ni">&#127968;</span>Home</button>'
     +'<button class="nb'+(t==="calendar"?" on":"")+'" data-a="tab" data-tab="calendar"><span class="ni">&#128197;</span>Cal</button>'
     +'<button class="nb'+(t==="info"?" on":"")+'" data-a="tab" data-tab="info"><span class="ni">&#128220;</span>Info</button>'
