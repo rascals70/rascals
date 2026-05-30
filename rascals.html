@@ -367,10 +367,14 @@ function bSchool(){
 
 function bRun(){
   try{
-    var chart=(typeof STV!=="undefined")?STV.chart():'';
-    var fitness='';
+    var connected=(typeof STV!=="undefined")&&STV.ok();
+    var hasData=(typeof STV!=="undefined")&&STV.data;
+
+    var chart=connected?(hasData?STV.chart():'<div style="border:1px solid rgba(252,76,2,.2);border-radius:14px;padding:20px;text-align:center;color:#888;font-size:13px">&#127939; Loading Strava data...</div>')
+      :'<button data-a="stv-connect" style="width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border:none;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer"><span style="font-size:22px">&#127939;</span><div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#fff">Reconnect Strava</div><div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px">Session expired — tap to reconnect</div></div></button>';
+
     var lastAct="";
-    if(typeof STV!=="undefined"&&STV.data&&STV.data.lr){
+    if(hasData&&STV.data.lr){
       var r=STV.data.lr;
       var rd=new Date(r.start_date_local);
       var dateStr=rd.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
@@ -395,13 +399,13 @@ function bRun(){
       +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;color:var(--tx);margin-bottom:2px">Training</div>'
       +'<div style="font-size:12px;color:var(--mu);margin-bottom:16px">Dragon&#39;s Fire Race &middot; 9 Sep 2026</div>'
       +chart
-      +fitness
       +lastAct
       +'</div>';
   }catch(err){
-    return '<div style="padding:80px 16px 24px;color:#ef4444;font-size:13px">Error: '+err.message+'</div>';
+    return '<div style="padding:110px 16px 24px;color:#ef4444;font-size:13px">Error: '+err.message+'</div>';
   }
 }
+
 
 
 
