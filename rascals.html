@@ -372,7 +372,7 @@ function bRun(){
     var hasData=(typeof STV!=="undefined")&&STV.data;
 
     var chart=connected?(hasData?STV.chart():'<div style="border:1px solid rgba(252,76,2,.2);border-radius:14px;padding:20px;text-align:center;color:#888;font-size:13px">&#127939; Loading Strava data...</div>')
-      :'<button data-a="stv-connect" style="width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border:none;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer"><span style="font-size:22px">&#127939;</span><div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#fff">Reconnect Strava</div><div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px">Session expired — tap to reconnect</div></div></button>';
+      :'<button data-a="stv-connect" onclick="STV.connect();return false;" style="width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border:none;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer"><span style="font-size:22px">&#127939;</span><div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#fff">Reconnect Strava</div><div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px">Session expired — tap to reconnect</div></div></button>';
 
     var lastAct="";
     if(hasData&&STV.data.lr){
