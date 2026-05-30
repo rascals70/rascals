@@ -164,35 +164,7 @@ var STV={
     try{var c=JSON.parse(localStorage.getItem("stv_cache")||"{}");if(!c.ctlHistory)return true;}catch(e){return true;}
     return false;
   },
-  calcCTL:function(runs){
-    // CTL = 42-day EMA of daily TSS proxy (km * 6 ≈ Strava scale)
-    // ATL = 7-day EMA. TSB = CTL - ATL.
-    // Run full 365 days to build accurate CTL from scratch.
-    var now=new Date();now.setHours(0,0,0,0);
-    // Index activities by date string for fast lookup
-    var byDate={};
-    runs.forEach(function(r){
-      if(!r.start_date_local)return;
-      var ds=r.start_date_local.slice(0,10);
-      byDate[ds]=(byDate[ds]||0)+r.distance/1000;
-    });
-    var ctl=0,atl=0;
-    var ctlHistory=[];
-    for(var i=364;i>=0;i--){
-      var d=new Date(now);d.setDate(now.getDate()-i);
-      var ds=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-      var km=byDate[ds]||0;
-      var tss=km*6; // ~6 TSS per km, puts 80km/wk at CTL~68, 120km/wk peak at ~100
-      ctl=ctl*(41/42)+tss/42;
-      atl=atl*(6/7)+tss/7;
-      // Only store last 90 days for chart
-      if(i<=89){
-        ctlHistory.push({date:new Date(d),ctl:parseFloat(ctl.toFixed(1)),atl:parseFloat(atl.toFixed(1)),tsb:parseFloat((ctl-atl).toFixed(1))});
-      }
-    }
-    return ctlHistory;
-  },
-  load:function(){
+  load:load:function(){
     if(!STV.stale()&&localStorage.getItem("stv_cache")){
       try{
         var c=JSON.parse(localStorage.getItem("stv_cache"));
@@ -266,54 +238,9 @@ var STV={
       +'</svg>'
       +'<div style="font-size:9px;color:#444;margin-top:4px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:16px;height:1px;background:#22c55e;border-top:1px dashed #22c55e"></span><span>80km weekly target</span><span style="margin-left:8px;color:#333">&middot; Refreshes daily</span></div>'
       +'</div>';
-  },
-  fitnessChart:function(){
-    if(!STV.ok()||!STV.data||!STV.data.ctlHistory)return"";
-    var hist=STV.data.ctlHistory;
-    var cur=STV.data.curCTL;
-    var tsb=STV.data.curTSB;
-    var W=320,H=110,XPAD=28,YPAD=8,BPAD=18;
-    var cw=W-XPAD-8;var ch=H-YPAD-BPAD;
-    var maxCTL=Math.max.apply(null,hist.map(function(d){return Math.max(d.ctl,d.atl);}));
-    maxCTL=Math.ceil(maxCTL/10)*10+10;
-    function px(i){return XPAD+i*(cw/(hist.length-1));}
-    function py(v){return YPAD+ch-(v/maxCTL)*ch;}
-    // CTL line
-    var ctlLine="M"+px(0).toFixed(1)+","+py(hist[0].ctl).toFixed(1);
-    hist.slice(1).forEach(function(d,i){ctlLine+=" L"+px(i+1).toFixed(1)+","+py(d.ctl).toFixed(1);});
-    // CTL area
-    var ctlArea="M"+XPAD+","+(YPAD+ch);
-    hist.forEach(function(d,i){ctlArea+=" L"+px(i).toFixed(1)+","+py(d.ctl).toFixed(1);});
-    ctlArea+=" L"+(XPAD+cw)+","+(YPAD+ch)+" Z";
-    // Month labels
-    var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    var labels="";var lastM=-1;
-    hist.forEach(function(d,i){var m=d.date.getMonth();if(m!==lastM&&i%(Math.floor(hist.length/8))===0){labels+='<text x="'+px(i).toFixed(1)+'" y="'+(YPAD+ch+BPAD-2)+'" fill="#555" font-size="8" text-anchor="middle">'+months[m]+'</text>';lastM=m;}});
-    // Y labels
-    var yAxis="";
-    [0,Math.round(maxCTL/2),maxCTL].forEach(function(v){var y=py(v);yAxis+='<line x1="'+XPAD+'" y1="'+y.toFixed(1)+'" x2="'+(XPAD+cw)+'" y2="'+y.toFixed(1)+'" stroke="rgba(255,255,255,.05)" stroke-width="1"/><text x="'+(XPAD-3)+'" y="'+(y+3).toFixed(1)+'" fill="#555" font-size="7" text-anchor="end">'+v+'</text>';});
-    // TSB colour
-    var tsbCol=tsb>0?"#22c55e":tsb>-10?"#f59e0b":"#ef4444";
-    var tsbLabel=tsb>10?"Fresh &#128994;":tsb>0?"Neutral &#128993;":tsb>-20?"Tired &#128993;":"Fatigued &#128308;";
-    var BOX="background:linear-gradient(135deg,rgba(249,115,22,.12),rgba(249,115,22,.03));border:1px solid rgba(249,115,22,.2);border-radius:16px;padding:14px 16px";
-    return'<div style="'+BOX+';margin-top:14px">'
-      +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">'
-      +'<div><div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#f97316;margin-bottom:4px">Fitness Score</div>'
-      +'<div style="font-size:22px;font-weight:800;color:#fff;font-family:Syne,sans-serif;line-height:1">'+cur+'<span style="font-size:11px;color:#f97316;margin-left:4px">CTL</span></div></div>'
-      +'<div style="text-align:right"><div style="font-size:14px;font-weight:700;color:'+tsbCol+'">'+tsbLabel+'</div>'
-      +'<div style="font-size:10px;color:#666;margin-top:2px">TSB: '+(tsb>0?"+":"")+tsb+'</div></div>'
-      +'</div>'
-      +'<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;display:block;overflow:visible">'
-      +'<defs><linearGradient id="ctlg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f97316" stop-opacity="0.4"/><stop offset="100%" stop-color="#f97316" stop-opacity="0.02"/></linearGradient></defs>'
-      +yAxis
-      +'<path d="'+ctlArea+'" fill="url(#ctlg)"/>'
-      +'<path d="'+ctlLine+'" fill="none" stroke="#f97316" stroke-width="1.8" stroke-linejoin="round"/>'
-      +labels
-      +'</svg>'
-      +'<div style="font-size:9px;color:#444;margin-top:2px">42-day training load &middot; Calculated from Strava activities</div>'
-      +'</div>';
   }
 };
+
 </script>
 
 
@@ -441,7 +368,7 @@ function bSchool(){
 function bRun(){
   try{
     var chart=(typeof STV!=="undefined")?STV.chart():'';
-    var fitness=(typeof STV!=="undefined")?STV.fitnessChart():'';
+    var fitness='';
     var lastAct="";
     if(typeof STV!=="undefined"&&STV.data&&STV.data.lr){
       var r=STV.data.lr;
@@ -506,7 +433,7 @@ function bInfo(){
       ["Insurance Renewal","3 Jul 2026"],
       ["Insurer","One Click Direct"],
       ["Claims No.","0203 738 7300"],
-      ["Policy Login","portal.oneclickdirect.co.uk"],
+      ["Claims Web","portal.oneclickdirect.co.uk"],
       ["Policy No.","9586766"]
     ])
 
@@ -516,6 +443,7 @@ function bInfo(){
       ["MOT Due","11 Aug 2026"],
       ["Insurance Renewal","26 Nov 2026"],
       ["Insurer","Admiral"],
+      ["Claims No.","0333 234 9797"],
       ["Policy No.","P77443804"]
     ])
 
@@ -525,6 +453,7 @@ function bInfo(){
       ["MOT Due","13 Jan 2027"],
       ["Insurance Renewal","28 Jan 2027"],
       ["Insurer","RAC"],
+      ["Claims No.","0333 200 0999"],
       ["Policy No.","90294760"]
     ])
 
@@ -532,6 +461,7 @@ function bInfo(){
       ["Provider","Green Flag"],
       ["Covers","All 3 household cars"],
       ["Renewal","28 Jul 2026"],
+      ["Phone","0800 400 600"],
       ["App","Green Flag app"]
     ])
 
