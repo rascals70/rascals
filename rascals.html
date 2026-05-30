@@ -767,6 +767,15 @@ if('serviceWorker' in navigator){
 <script>
 (function(){
   try{
+    // Clear cache if it's missing ctlHistory (new field added recently)
+    try{
+      var c=JSON.parse(localStorage.getItem("stv_cache")||"{}");
+      if(!c.ctlHistory||!c.lr){
+        localStorage.removeItem("stv_cache");
+        localStorage.removeItem("stv_ts");
+        console.log("STV: cleared stale cache — refetching");
+      }
+    }catch(e){localStorage.removeItem("stv_cache");localStorage.removeItem("stv_ts");}
     var p=new URLSearchParams(window.location.search);
     var code=p.get("code");
     if(code){
