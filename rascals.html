@@ -381,6 +381,9 @@ async function fetchLive(){
 }
 
 function hardRefresh(){
+  // Store current tab so we can restore after reload
+  try{sessionStorage.setItem('rascal_tab',S.tab);}catch(e){}
+
   if('serviceWorker' in navigator){
     navigator.serviceWorker.getRegistrations().then(regs=>{
       Promise.all(regs.map(r=>r.unregister())).then(()=>caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k))).then(()=>window.location.reload(true))));
@@ -477,9 +480,9 @@ function bShop(){
   out+='</div>';
   if(_si.length===0)out+='<p style="color:var(--mu2);font-size:14px;font-style:italic">Nothing on the list</p>';
   else out+=rows;
-  out+='<div style="display:flex;gap:8px;margin-top:14px">';
-  out+='<input id="si" class="finp" placeholder="Add item..." style="margin-bottom:0;flex:1;padding:8px 10px;font-size:13px">';
-  out+='<button data-a="shop-add" style="background:#22c55e;border:none;border-radius:8px;color:#000;font-size:15px;padding:10px 16px;cursor:pointer;font-weight:700;font-family:inherit">Add</button>';
+  out+='<div style="display:flex;gap:8px;margin-top:12px;align-items:center">';
+  out+='<input id="si" placeholder="Add item..." style="flex:1;background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:14px;padding:9px 10px;font-family:DM Sans,sans-serif;min-width:0">';
+  out+='<button data-a="shop-add" style="background:#22c55e;border:none;border-radius:8px;color:#000;font-size:14px;padding:9px 14px;cursor:pointer;font-weight:700;font-family:inherit;white-space:nowrap;flex-shrink:0">Add</button>';
   out+='</div>';
   out+='<div style="font-size:10px;color:var(--mu2);margin-top:10px;text-align:center">Syncs across all devices</div>';
   return out+'</div>';
