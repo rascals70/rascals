@@ -557,8 +557,35 @@ function bInfo(){
 }
 
 
+function bShop(){
+  var items=JSON.parse(localStorage.getItem('rascal_shop')||'[]');
+  var pending=items.filter(function(i){return!i.done;});
+  var done=items.filter(function(i){return i.done;});
+
+  var itemsHTML=items.map(function(item,idx){
+    return'<div class="shop-item'+(item.done?' done':'')+'" data-a="shop-toggle" data-idx="'+idx+'">'
+      +'<div class="shop-cb'+(item.done?' done':'')+'">'+( item.done?'<span style="color:#fff;font-size:12px">&#10003;</span>':'' )+'</div>'
+      +'<div class="shop-title">'+item.name+'</div>'
+      +'<div class="shop-del" data-a="shop-del" data-idx="'+idx+'">&#215;</div>'
+      +'</div>';
+  }).join('');
+
+  return'<div style="padding:0 16px 24px"><div style="height:110px"></div>'
+    +'<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px">'
+    +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800">Shopping</div>'
+    +(done.length>0?'<button data-a="shop-clear" style="background:none;border:none;font-size:12px;color:var(--mu);cursor:pointer;font-family:inherit">Clear done ('+done.length+')</button>':'')
+    +'</div>'
+    +(items.length===0?'<div style="color:var(--mu2);font-size:14px;font-style:italic;padding:8px 0">Nothing on the list 🛒</div>':itemsHTML)
+    +'<div style="display:flex;gap:8px;margin-top:14px">'
+    +'<input id="shop-inp" class="finp" placeholder="Add item..." style="margin-bottom:0;flex:1" onkeydown="if(event.key===\'Enter\'){document.querySelector(\'[data-a=shop-add]\').click()}">'
+    +'<button data-a="shop-add" style="background:#22c55e;border:none;border-radius:8px;color:#000;font-size:15px;padding:10px 16px;cursor:pointer;font-family:inherit;font-weight:700">Add</button>'
+    +'</div>'
+    +'<div style="font-size:10px;color:var(--mu2);margin-top:10px;text-align:center">'+pending.length+' item'+(pending.length!==1?'s':'')+' remaining</div>'
+    +'</div>';
+}
+
 function render(){
-  document.getElementById("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():S.tab==="school"?bSchool():S.tab==="info"?bInfo():S.tab==="run"?bRun():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
+  document.getElementById("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():S.tab==="school"?bSchool():S.tab==="info"?bInfo():S.tab==="run"?bRun():S.tab==="shop"?bShop():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
   document.getElementById("app").addEventListener("click",handle);
 }
 
@@ -674,14 +701,16 @@ function bModal(){
 function bNav(){
   var t=S.tab;
   return '<nav class="nav">'
-    +'<button class="nb'+(t==="land"?" on":"")+'" data-a="tab" data-tab="land"><span class="ni" style="font-size:0"><svg viewBox="0 0 120 140" width="20" height="23" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto"><defs><radialGradient id="ndk" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#3a9e28"/><stop offset="100%" stop-color="#1e6e10"/></radialGradient><radialGradient id="nlt" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#c8e86a"/><stop offset="100%" stop-color="#90c830"/></radialGradient></defs><path d="M52 140 L56 102 Q58 94 62 90 Q66 94 68 102 L72 140Z" fill="#7a3c14"/><path d="M56 106 Q42 98 24 92" stroke="#7a3c14" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M68 106 Q82 98 100 92" stroke="#7a3c14" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M62 92 Q62 74 62 58" stroke="#7a3c14" stroke-width="5.5" fill="none" stroke-linecap="round"/><path d="M60 76 Q48 66 38 58" stroke="#7a3c14" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M64 76 Q76 66 86 58" stroke="#7a3c14" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="18" cy="87" rx="20" ry="13" fill="url(#ndk)" transform="rotate(-20 18 87)"/><ellipse cx="106" cy="87" rx="20" ry="13" fill="url(#nlt)" transform="rotate(20 106 87)"/><ellipse cx="32" cy="53" rx="22" ry="14" fill="url(#nlt)" transform="rotate(-25 32 53)"/><ellipse cx="92" cy="53" rx="22" ry="14" fill="url(#ndk)" transform="rotate(25 92 53)"/><ellipse cx="62" cy="28" rx="24" ry="17" fill="url(#nlt)"/></svg></span>Rascal</button>'
+    +'<button class="nb'+(t==="land"?" on":"")+'" data-a="tab" data-tab="land"><span class="ni" style="font-size:0">'+<svg viewBox="0 0 120 140" width="20" height="23" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto"><defs><radialGradient id="ndk" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#3a9e28"/><stop offset="100%" stop-color="#1e6e10"/></radialGradient><radialGradient id="nlt" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#c8e86a"/><stop offset="100%" stop-color="#90c830"/></radialGradient></defs><path d="M52 140 L56 102 Q58 94 62 90 Q66 94 68 102 L72 140Z" fill="#7a3c14"/><path d="M56 106 Q42 98 24 92" stroke="#7a3c14" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M68 106 Q82 98 100 92" stroke="#7a3c14" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M62 92 Q62 74 62 58" stroke="#7a3c14" stroke-width="5.5" fill="none" stroke-linecap="round"/><path d="M60 76 Q48 66 38 58" stroke="#7a3c14" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M64 76 Q76 66 86 58" stroke="#7a3c14" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="18" cy="87" rx="20" ry="13" fill="url(#ndk)" transform="rotate(-20 18 87)"/><ellipse cx="106" cy="87" rx="20" ry="13" fill="url(#nlt)" transform="rotate(20 106 87)"/><ellipse cx="32" cy="53" rx="22" ry="14" fill="url(#nlt)" transform="rotate(-25 32 53)"/><ellipse cx="92" cy="53" rx="22" ry="14" fill="url(#ndk)" transform="rotate(25 92 53)"/><ellipse cx="62" cy="28" rx="24" ry="17" fill="url(#nlt)"/></svg>+'</span>Rascal</button>'
     +'<button class="nb'+(t==="home"?" on":"")+'" data-a="tab" data-tab="home"><span class="ni">&#127968;</span>Home</button>'
     +'<button class="nb'+(t==="calendar"?" on":"")+'" data-a="tab" data-tab="calendar"><span class="ni">&#128197;</span>Cal</button>'
+    +'<button class="nb'+(t==="shop"?" on":"")+'" data-a="tab" data-tab="shop"><span class="ni">&#128722;</span>Shop</button>'
     +'<button class="nb'+(t==="info"?" on":"")+'" data-a="tab" data-tab="info"><span class="ni">&#128220;</span>Info</button>'
     +'<button class="nb'+(t==="run"?" on":"")+'" data-a="tab" data-tab="run"><span class="ni">&#127939;</span>Run</button>'
     +'<button class="nb" data-a="hard-refresh"><span class="ni">&#x21BB;</span>Update</button>'
     +'</nav>';
 }
+
 
 // ── HANDLE ────────────────────────────────────────────────────────────────────
 function handle(e){
@@ -697,6 +726,33 @@ function handle(e){
   if(a==="show-add")     set({showAdd:true});
   if(a==="cancel")       set({showAdd:false});
   if(a==="hard-refresh") hardRefresh();
+  if(a==="shop-toggle"){
+    var items=JSON.parse(localStorage.getItem('rascal_shop')||'[]');
+    var idx=parseInt(el.dataset.idx);
+    items[idx].done=!items[idx].done;
+    localStorage.setItem('rascal_shop',JSON.stringify(items));
+    set({});
+  }
+  if(a==="shop-del"){
+    var items=JSON.parse(localStorage.getItem('rascal_shop')||'[]');
+    items.splice(parseInt(el.dataset.idx),1);
+    localStorage.setItem('rascal_shop',JSON.stringify(items));
+    set({});
+  }
+  if(a==="shop-add"){
+    var inp=document.getElementById('shop-inp');
+    if(inp&&inp.value.trim()){
+      var items=JSON.parse(localStorage.getItem('rascal_shop')||'[]');
+      items.unshift({name:inp.value.trim(),done:false});
+      localStorage.setItem('rascal_shop',JSON.stringify(items));
+      set({});
+    }
+  }
+  if(a==="shop-clear"){
+    var items=JSON.parse(localStorage.getItem('rascal_shop')||'[]');
+    localStorage.setItem('rascal_shop',JSON.stringify(items.filter(function(i){return!i.done;})));
+    set({});
+  }
   if(a==="stv-connect"&&typeof STV!=="undefined") STV.connect();
   if(a==="toggle-member"){const m=el.dataset.m,cur=Array.isArray(S.nev.member)?S.nev.member:[];set({nev:{...S.nev,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]}});}
   if(a==="add"){const t=document.getElementById("et")?.value.trim(),d=document.getElementById("ed")?.value;if(!t||!d)return;const ms=Array.isArray(S.nev.member)?S.nev.member:[];const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;set({user:[...S.user,{id:"u"+Date.now(),title:t,date:d,member:mem,source:"user"}],showAdd:false,nev:{title:"",member:[],date:""}});}
