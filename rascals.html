@@ -382,8 +382,17 @@ async function fetchLive(){
 
 function hardRefresh(){
   try{sessionStorage.setItem('rascal_tab',S.tab);}catch(e){}
-  var base=window.location.href.split('?')[0];
-  window.location.replace(base+'?bust=1780248086&t='+Date.now());
+  // Show overlay so user knows it's refreshing
+  var ov=document.createElement('div');
+  ov.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:#040408;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px';
+  ov.innerHTML='<svg viewBox="0 0 120 140" width="60" height="70" xmlns="http://www.w3.org/2000/svg"><path d="M52 140 L56 102 Q58 94 62 90 Q66 94 68 102 L72 140Z" fill="#7a3c14"/><path d="M56 106 Q42 98 24 92" stroke="#7a3c14" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M68 106 Q82 98 100 92" stroke="#7a3c14" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M62 92 Q62 74 62 58" stroke="#7a3c14" stroke-width="5.5" fill="none" stroke-linecap="round"/><path d="M60 76 Q48 66 38 58" stroke="#7a3c14" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M64 76 Q76 66 86 58" stroke="#7a3c14" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="18" cy="87" rx="20" ry="13" fill="#1e7b14" transform="rotate(-20 18 87)"/><ellipse cx="106" cy="87" rx="20" ry="13" fill="#a8d44a" transform="rotate(20 106 87)"/><ellipse cx="32" cy="53" rx="22" ry="14" fill="#a8d44a" transform="rotate(-25 32 53)"/><ellipse cx="92" cy="53" rx="22" ry="14" fill="#1e7b14" transform="rotate(25 92 53)"/><ellipse cx="62" cy="28" rx="24" ry="17" fill="#a8d44a"/></svg>'
+    +'<div style="font-family:Syne,sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;color:#fff">rascal</div>'
+    +'<div style="font-size:12px;color:#22c55e;letter-spacing:3px;text-transform:uppercase">Updating...</div>';
+  document.body.appendChild(ov);
+  setTimeout(function(){
+    var base=window.location.href.split('?')[0];
+    window.location.replace(base+'?bust='+Date.now());
+  },400);
 }
 function hardRefreshOLD(){
   if('serviceWorker' in navigator){
@@ -482,9 +491,9 @@ function bShop(){
   out+='</div>';
   if(_si.length===0)out+='<p style="color:var(--mu2);font-size:14px;font-style:italic">Nothing on the list</p>';
   else out+=rows;
-  out+='<div style="display:flex;gap:8px;margin-top:12px;align-items:center">';
-  out+='<input id="si" placeholder="Add item..." style="flex:1;background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:14px;padding:9px 10px;font-family:DM Sans,sans-serif;min-width:0">';
-  out+='<button data-a="shop-add" style="background:#22c55e;border:none;border-radius:8px;color:#000;font-size:14px;padding:9px 14px;cursor:pointer;font-weight:700;font-family:inherit;white-space:nowrap;flex-shrink:0">Add</button>';
+  out+='<div style="margin-top:12px">';
+  out+='<input id="si" placeholder="Add item..." style="width:100%;box-sizing:border-box;background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:14px;padding:9px 10px;font-family:DM Sans,sans-serif;margin-bottom:8px">';
+  out+='<button data-a="shop-add" style="width:100%;background:#22c55e;border:none;border-radius:8px;color:#000;font-size:15px;padding:11px;cursor:pointer;font-weight:700;font-family:inherit">Add to list</button>';
   out+='</div>';
   out+='<div style="font-size:10px;color:var(--mu2);margin-top:10px;text-align:center">Syncs across all devices</div>';
   return out+'</div>';
