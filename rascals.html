@@ -187,6 +187,7 @@ var STV={
         var all=[];
         pages.forEach(function(p){if(Array.isArray(p))all=all.concat(p);});
         var runs=all.filter(function(a){return a.type==="Run"||a.sport_type==="Run";});
+        runs.sort(function(a,b){return(b.start_date_local||"").localeCompare(a.start_date_local||"");});
         // Build 52 weekly buckets — Monday to Sunday
         var now=new Date();now.setHours(0,0,0,0);
         // Find the most recent Monday
@@ -204,9 +205,9 @@ var STV={
         }
         var total=(runs.reduce(function(s,r){return s+r.distance;},0)/1000).toFixed(0);
         var maxKm=Math.max.apply(null,weeks.map(function(w){return w.km;}).concat([STV.TARGET_KM+10]));
-        STV.data={weeks:weeks,total:total,maxKm:maxKm,count:runs.length};
+        STV.data={weeks:weeks,total:total,maxKm:maxKm,count:runs.length,lr:runs[0]||null};
         // Cache for 24h
-        try{localStorage.setItem("stv_cache",JSON.stringify(STV.data));localStorage.setItem("stv_ts",String(Date.now()));}catch(e){}
+        STV.data.v=3;try{localStorage.setItem("stv_cache",JSON.stringify(STV.data));localStorage.setItem("stv_ts",String(Date.now()));}catch(e){}
         if(typeof render==="function")render();
       }).catch(function(e){console.error("STV",e);});
     });
@@ -723,7 +724,8 @@ if('serviceWorker' in navigator){
 <script>
 (function(){
   try{
-    var p=new URLSearchParams(window.location.search);
+    try{var _cc=JSON.parse(localStorage.getItem("stv_cache")||"{}");if(!_cc.lr||_cc.v!==3){localStorage.removeItem("stv_cache");localStorage.removeItem("stv_ts");}}catch(e){localStorage.removeItem("stv_cache");localStorage.removeItem("stv_ts");}
+var p=new URLSearchParams(window.location.search);
     var code=p.get("code");
     if(code){
       window.history.replaceState({},"",window.location.pathname);
@@ -737,7 +739,8 @@ if('serviceWorker' in navigator){
 <script>
 (function(){
   try{
-    var p=new URLSearchParams(window.location.search);
+    try{var _cc=JSON.parse(localStorage.getItem("stv_cache")||"{}");if(!_cc.lr||_cc.v!==3){localStorage.removeItem("stv_cache");localStorage.removeItem("stv_ts");}}catch(e){localStorage.removeItem("stv_cache");localStorage.removeItem("stv_ts");}
+var p=new URLSearchParams(window.location.search);
     var code=p.get("code");
     if(code){
       window.history.replaceState({},"",window.location.pathname);
