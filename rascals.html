@@ -487,8 +487,58 @@ function bShop(){
 
 
 
+function bInfo(){
+  function sec(title,color,items){
+    var rows='';
+    for(var i=0;i<items.length;i++){
+      rows+='<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 14px;'+(i<items.length-1?'border-bottom:1px solid var(--bd)':'')+'">';
+      rows+='<div style="font-size:11px;color:var(--mu);min-width:110px;flex-shrink:0">'+items[i][0]+'</div>';
+      rows+='<div style="font-size:13px;font-weight:600;color:var(--tx);text-align:right;flex:1;word-break:break-all">'+items[i][1]+'</div>';
+      rows+='</div>';
+    }
+    return '<div style="margin-bottom:20px">'
+      +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:'+color+';margin-bottom:8px;font-family:Syne,sans-serif">'+title+'</div>'
+      +'<div style="background:var(--card);border-radius:14px;border:1px solid var(--bd);overflow:hidden">'+rows+'</div>'
+      +'</div>';
+  }
+  var out='<div style="padding:0 16px 24px"><div style="height:110px"></div>';
+  out+='<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:4px">Info Store</div>';
+  out+='<div style="font-size:12px;color:var(--mu);margin-bottom:16px">Key numbers, dates &amp; documents</div>';
+  out+='<div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:12px 14px;font-size:12px;color:#ef4444;margin-bottom:16px">';
+  out+='&#9888;&#65039; Defender MOT was due 10 May 2026 &mdash; confirm if completed</div>';
+  out+=sec('&#127968; Home Insurance','#3b82f6',[
+    ['Insurer','Aviva'],['Policy No.','736762239'],['Cover','Premium &mdash; buildings &amp; contents'],
+    ['Renewal','2 March 2027'],['Claims','0800 051 5951'],['Login','aviva.co.uk/myaviva']
+  ]);
+  out+=sec('&#128664; Jason&#39;s Defender','#3b82f6',[
+    ['Reg','L3AF J'],['Licence No.','LEAF9704210JR9NK'],['MOT Due','10 May 2026 &#9888;&#65039;'],
+    ['Insurance Renewal','3 Jul 2026'],['Insurer','One Click Direct'],
+    ['Claims No.','0203 738 7300'],['Policy Login','portal.oneclickdirect.co.uk'],['Policy No.','9586766']
+  ]);
+  out+=sec('&#128664; Kerry&#39;s X3','#ec4899',[
+    ['Reg','V40WOO'],['Licence No.','LEAF9854300KA9BL'],['MOT Due','11 Aug 2026'],
+    ['Insurance Renewal','26 Nov 2026'],['Insurer','Admiral'],
+    ['Claims No.','0333 234 9797'],['Policy No.','P77443804']
+  ]);
+  out+=sec('&#128664; Oliver&#39;s Clio','#22c55e',[
+    ['Reg','LG64CPU'],['Licence No.','LEAF9854300KA9BL'],['MOT Due','13 Jan 2027'],
+    ['Insurance Renewal','28 Jan 2027'],['Insurer','RAC'],
+    ['Claims No.','0333 200 0999'],['Policy No.','90294760']
+  ]);
+  out+=sec('&#128737;&#65039; Breakdown Cover','#f59e0b',[
+    ['Provider','Green Flag'],['Covers','All 3 household cars'],
+    ['Phone','0800 400 600'],['Renewal','28 Jul 2026'],['App','Green Flag app']
+  ]);
+  out+=sec('&#128100; Family','#a855f7',[
+    ['Address','Cookham, Berkshire'],['Hugo microchip','TBC'],
+    ['WiFi password','TBC'],['Jason NHS','TBC'],['Kerry NHS','TBC'],
+    ['Oliver NHS','TBC'],['Louis NHS','TBC']
+  ]);
+  return out+'</div>';
+}
+
 function render(){
-  document.getElementById("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():S.tab==="school"?bSchool():S.tab==="run"?bRun():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
+  document.getElementById("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():S.tab==="school"?bSchool():S.tab==="info"?bInfo():S.tab==="shop"?bShop():S.tab==="run"?bRun():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
   document.getElementById("app").addEventListener("click",handle);
 }
 
