@@ -560,7 +560,7 @@ function bLand(){
       +'<div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:5px;letter-spacing:1px;text-transform:uppercase;font-weight:600">'+name+'</div>'
       +'</div>';
   }
-  var treeSVG='<svg viewBox="0 0 120 140" width="80" height="93" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:8px">'
+  var tree='<svg viewBox="0 0 120 140" width="80" height="93" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:8px">'
     +'<path d="M52 140 L56 102 Q58 94 62 90 Q66 94 68 102 L72 140Z" fill="#7a3c14"/>'
     +'<path d="M56 106 Q42 98 24 92" stroke="#7a3c14" stroke-width="5" fill="none" stroke-linecap="round"/>'
     +'<path d="M68 106 Q82 98 100 92" stroke="#7a3c14" stroke-width="5" fill="none" stroke-linecap="round"/>'
@@ -574,7 +574,7 @@ function bLand(){
     +'<ellipse cx="62" cy="28" rx="24" ry="17" fill="#a8d44a"/>'
     +'</svg>';
   return '<div style="display:flex;flex-direction:column;align-items:center;min-height:100%;padding:220px 24px 40px;background:radial-gradient(ellipse at 50% 25%,rgba(34,197,94,.07) 0%,transparent 65%)">'
-    +treeSVG
+    +tree
     +'<div style="font-family:Syne,sans-serif;font-size:64px;font-weight:800;letter-spacing:-4px;color:#fff;line-height:1">rascal</div>'
     +'<div style="font-size:11px;color:var(--mu);letter-spacing:3px;text-transform:uppercase;margin-top:4px;margin-bottom:28px">The Leaf Family</div>'
     +'<div style="display:flex;justify-content:center;gap:16px;margin-bottom:28px;flex-wrap:wrap">'
@@ -585,7 +585,8 @@ function bLand(){
     +badge('&#128062;','Hugo','Hugo','rgba(245,158,11,.8)','rgba(245,158,11,.15)')
     +'</div>'
     +'<div style="width:100%;background:linear-gradient(135deg,rgba(34,197,94,.14),rgba(34,197,94,.04));border:1px solid rgba(34,197,94,.22);border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:14px">'
-    +'<div style="text-align:center;min-width:52px"><div style="font-family:Syne,sans-serif;font-size:36px;font-weight:800;color:#22c55e;line-height:1">'+daysToRace+'</div><div style="font-size:9px;color:var(--mu);letter-spacing:2px;text-transform:uppercase;margin-top:1px">days</div></div>'
+    +'<div style="text-align:center;min-width:52px"><div style="font-family:Syne,sans-serif;font-size:36px;font-weight:800;color:#22c55e;line-height:1">'+daysToRace+'</div>'
+    +'<div style="font-size:9px;color:var(--mu);letter-spacing:2px;text-transform:uppercase;margin-top:1px">days</div></div>'
     +'<div style="width:1px;height:40px;background:rgba(34,197,94,.2);flex-shrink:0"></div>'
     +'<div><div style="font-size:14px;font-weight:700;color:#fff">Dragon's Fire Race</div>'
     +'<div style="font-size:11px;color:var(--mu);margin-top:2px">Wed 9 Sep 2026</div>'
@@ -601,6 +602,7 @@ function bLand(){
 // ── HOME ──────────────────────────────────────────────────────────────────────
 function bHome(){
   const all=allEvs();
+  const daysToRace=Math.ceil((raceDate-NOW)/(1000*60*60*24));
   const todayEvs=all.filter(e=>e.date===TD);
   const upcoming=all.filter(e=>e.date>TD).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,8);
   const avs=["Jason","Kerry","Oliver","Louis","Hugo"].map(m=>{
@@ -637,6 +639,17 @@ function bHome(){
     <div style="margin:0 16px;margin-top:-1px">
       <div style="background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(34,197,94,.05));border:1px solid rgba(34,197,94,.25);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:16px">
         <div style="text-align:center;min-width:56px">
+        </div>
+        <div style="width:1px;height:40px;background:rgba(34,197,94,.2)"></div>
+        <div>
+          <div style="font-size:11px;color:#22c55e;margin-top:2px">${daysToRace===0?"Race day! 🔥":daysToRace===1?"Tomorrow!":daysToRace<7?"This week!":daysToRace<30?"Coming soon":"Keep training 💪"}</div>
+        </div>
+      </div>
+    </div>
+    <div class="section"><div class="sec-label">Today</div>${todayHTML}</div>
+    <div class="avatars">${avs}</div>
+    <div class="section"><div class="sec-label">Coming up</div>${upcHTML}</div>
+  </div>`;
 }
 
 // ── CALENDAR ──────────────────────────────────────────────────────────────────
@@ -671,7 +684,7 @@ function bModal(){
 function bNav(){
   var t=S.tab;
   return '<nav class="nav">'
-    +'<button class="nb'+(t==="land"?" on":"")+'" data-a="tab" data-tab="land"><span class="ni">&#127807;</span>Rascal</button>'
+    +'<button class="nb'+(t==="land"?" on":"")+'" data-a="tab" data-tab="land"><span class="ni" style="font-size:0;line-height:22px"><svg viewBox="0 0 100 100" width="22" height="22" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto"><path d="M50 78 Q47 86 44 93" stroke="#15803d" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M50 12 C65 20,75 36,73 52 C71 66,61 76,50 78 C39 76,29 66,27 52 C25 36,35 20,50 12Z" fill="#16a34a"/><path d="M50 12 Q50 45 50 78" stroke="rgba(255,255,255,.3)" stroke-width="1.5" fill="none"/><path d="M50 28 Q41 34 33 35" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none"/><path d="M50 28 Q59 34 67 35" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none"/><path d="M50 44 Q40 48 32 48" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none"/><path d="M50 44 Q60 48 68 48" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none"/><path d="M50 12 C43 19,33 31,30 45" stroke="rgba(255,255,255,.22)" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg></span>Rascal</button>'
     +'<button class="nb'+(t==="home"?" on":"")+'" data-a="tab" data-tab="home"><span class="ni">&#127968;</span>Home</button>'
     +'<button class="nb'+(t==="calendar"?" on":"")+'" data-a="tab" data-tab="calendar"><span class="ni">&#128197;</span>Cal</button>'
     +'<button class="nb'+(t==="info"?" on":"")+'" data-a="tab" data-tab="info"><span class="ni">&#128220;</span>Info</button>'
@@ -679,7 +692,6 @@ function bNav(){
     +'<button class="nb" data-a="hard-refresh"><span class="ni">&#x21BB;</span>Update</button>'
     +'</nav>';
 }
-
 
 // ── HANDLE ────────────────────────────────────────────────────────────────────
 function handle(e){
