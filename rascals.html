@@ -43,21 +43,26 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans'
 .land-logo{margin-bottom:28px}
 .land-wordmark{font-family:'Syne',sans-serif;font-size:48px;font-weight:800;letter-spacing:-3px;color:#fff;line-height:1;text-align:center;margin-bottom:6px}
 .land-tag{font-size:12px;color:var(--mu);letter-spacing:3px;text-transform:uppercase;text-align:center;margin-bottom:48px}
-
-
-
-
-
-
-
-
-
+.land-btns{width:100%;display:flex;flex-direction:column;gap:10px;margin-bottom:40px}
+.land-btn{
+  width:100%;padding:16px 24px;border-radius:16px;border:1px solid var(--bd);
+  background:var(--card);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;
+  color:var(--tx);cursor:pointer;display:flex;align-items:center;gap:14px;
+  transition:all .15s;letter-spacing:.2px;
+}
+.land-btn:active{background:var(--card2);transform:scale(.98)}
+.land-btn.primary{background:var(--accent);border-color:var(--accent);color:#000}
+.land-btn.primary:active{background:#16a34a}
+.land-btn-icon{font-size:22px;flex-shrink:0}
+.land-btn-text{text-align:left}
+.land-btn-sub{font-size:11px;opacity:.6;font-weight:400;margin-top:1px}
+.land-update{background:none;border:none;color:var(--mu);font-size:11px;letter-spacing:2px;text-transform:uppercase;font-family:'DM Sans',sans-serif;cursor:pointer;padding:8px;display:flex;align-items:center;gap:6px}
 .land-dots{display:flex;gap:7px;justify-content:center;margin-bottom:36px}
 .land-dot{width:8px;height:8px;border-radius:50%}
 
 /* ══ HOME ══ */
 .home{padding:0 0 24px}
-.hero{background:linear-gradient(160deg,#0a1a0d 0%,#040408 55%);padding:110px 20px 24px;position:relative;overflow:hidden}
+.hero{background:linear-gradient(160deg,#0a1a0d 0%,#040408 55%);padding:calc(var(--st)+20px) 20px 24px;position:relative;overflow:hidden}
 .hero::after{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(34,197,94,.1) 0%,transparent 70%);pointer-events:none}
 .hero-date{font-size:10px;letter-spacing:3px;color:var(--mu);text-transform:uppercase;margin-bottom:5px}
 .hero-title{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1.1}
@@ -324,7 +329,7 @@ const MS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec
 const DA=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 const MB=["Jason","Kerry","Oliver","Louis","Hugo"];
 
-const EMBEDDED=[{"id": "t1", "title": "🏫 Term 5 starts", "date": "2026-04-13", "member": "Louis"}, {"id": "bh-may", "title": "Early May Bank Holiday", "date": "2026-05-04", "member": "Holiday"}, {"id": "car2", "title": "🚗 Defender MOT Due ⚠️", "date": "2026-05-10", "member": "Jason"}, {"id": "t2", "title": "🏖️ May half term starts", "date": "2026-05-22", "member": "Louis"}, {"id": "bh-spring", "title": "Spring Bank Holiday", "date": "2026-05-25", "member": "Holiday"}, {"id": "c1", "title": "Paula Parrot 50th 🎉", "date": "2026-05-29", "member": "Kerry"}, {"id": "c2", "title": "Haircut ✂️", "date": "2026-05-30", "member": "Kerry"}, {"id": "cl1", "title": "Champions League Final 🏆⚽ 3pm", "date": "2026-05-30", "member": ["Jason", "Oliver"]}, {"id": "bday-granny", "title": "🎂 Granny Seaside's Birthday", "date": "2026-05-31", "member": "All"}, {"id": "s1", "title": "Arsenal Trophy Parade 🏆", "date": "2026-05-31", "member": ["Jason", "Oliver"]}, {"id": "c3", "title": "Matilda home after art club", "date": "2026-06-01", "member": ["Kerry", "Louis"]}, {"id": "t3", "title": "🏫 Term 6 starts", "date": "2026-06-01", "member": "Louis"}, {"id": "c4", "title": "Oliver: Chemistry Paper 1 📝 (9am, SPH R2)", "date": "2026-06-02", "member": "Oliver"}, {"id": "cx1", "title": "Oliver: Maths Pure 1 📝 (1:30pm, SPH M4)", "date": "2026-06-03", "member": "Oliver"}, {"id": "c5", "title": "Oliver: Economics Paper 3 📝 (9am, SPH P1)", "date": "2026-06-04", "member": "Oliver"}, {"id": "c6", "title": "Call vets – Hugo flea treatment 🐶", "date": "2026-06-04", "member": ["Kerry", "Hugo"]}, {"id": "c7", "title": "Leafy meningitis vaccine 💉", "date": "2026-06-05", "member": ["Kerry", "Oliver"]}, {"id": "c8", "title": "Louis & Kerry – Harry Potter Studio Tour ⚡", "date": "2026-06-06", "member": ["Kerry", "Louis"]}, {"id": "c9", "title": "Oliver: Chemistry Paper 2 📝 (9am, HALL C5)", "date": "2026-06-09", "member": "Oliver"}, {"id": "c10", "title": "Oliver: Maths Pure 2 📝 (1:30pm, SPH M4)", "date": "2026-06-11", "member": "Oliver"}, {"id": "c11", "title": "Mum & Dad in France 🇫🇷", "date": "2026-06-11", "member": "All"}, {"id": "c12", "title": "Louis arts & culture performance 🎭", "date": "2026-06-12", "member": "Louis"}, {"id": "h1", "title": "Crepe Farm Barns 🏡 Check-in from 4pm", "date": "2026-06-12", "member": ["Jason", "Kerry"]}, {"id": "c13", "title": "Will & Jess Wedding 💍", "date": "2026-06-13", "member": "All"}, {"id": "h2", "title": "Crepe Farm Barns 🏡 (Bridport, Will & Jess wedding)", "date": "2026-06-13", "member": ["Jason", "Kerry"]}, {"id": "h3", "title": "Crepe Farm Barns 🏡 Checkout by 10am", "date": "2026-06-14", "member": ["Jason", "Kerry"]}, {"id": "c14", "title": "Oliver: Chemistry Paper 3 📝 (9am, SPH Q10)", "date": "2026-06-15", "member": "Oliver"}, {"id": "c15", "title": "Kerry at Butcher's wine shop 🍷", "date": "2026-06-18", "member": "Kerry"}, {"id": "c16", "title": "Oliver: Maths Stats & Mechanics 📝 (1:30pm, SPH M4)", "date": "2026-06-18", "member": "Oliver"}, {"id": "s3", "title": "King's Birthday 👑", "date": "2026-06-20", "member": "Holiday"}, {"id": "s4", "title": "Father's Day 🎉", "date": "2026-06-21", "member": "Holiday"}, {"id": "c17", "title": "Leafy, Mum & Dad day out", "date": "2026-07-03", "member": "All"}, {"id": "car1", "title": "🚗 Defender Insurance Renewal", "date": "2026-07-03", "member": "Jason"}, {"id": "c18", "title": "HT Fest 🎪", "date": "2026-07-04", "member": "All"}, {"id": "s5", "title": "Churchill Airbnb 🛁 Check-in after 4pm", "date": "2026-07-09", "member": "All"}, {"id": "bday-oliver", "title": "🎂 Oliver's Birthday", "date": "2026-07-10", "member": "Oliver"}, {"id": "s6", "title": "Churchill Airbnb 🏡 (Axminster, sleeps 15)", "date": "2026-07-10", "member": "All"}, {"id": "s7", "title": "Churchill Airbnb 🛁 Checkout by 10am", "date": "2026-07-12", "member": "All"}, {"id": "c19", "title": "Mum & Dad in France 🇫🇷", "date": "2026-07-16", "member": "All"}, {"id": "t4", "title": "🏖️ Summer holidays start", "date": "2026-07-16", "member": "Louis"}, {"id": "c20", "title": "Emma & Declan engagement party 🥂", "date": "2026-07-25", "member": "All"}, {"id": "r2", "title": "Will & Lou Anniversary", "date": "2026-07-25", "member": "All"}, {"id": "car5", "title": "🛡️ Green Flag Breakdown Renewal", "date": "2026-07-28", "member": "All"}, {"id": "r3", "title": "Defender MOT Due 🚗", "date": "2026-08-02", "member": "Jason"}, {"id": "car3", "title": "🚗 Kerry X3 MOT Due", "date": "2026-08-11", "member": "Kerry"}, {"id": "bday-grandad", "title": "🎂 Grandad Seaside's Birthday", "date": "2026-08-12", "member": "All"}, {"id": "c21", "title": "Leafy in Swanage 🏖️", "date": "2026-08-21", "member": "Oliver"}, {"id": "bh-summer", "title": "Summer Bank Holiday", "date": "2026-08-31", "member": "Holiday"}, {"id": "c22", "title": "Leafy in Spain ☀️", "date": "2026-08-31", "member": "Oliver"}, {"id": "t5", "title": "🏫 Back to school — Term 1", "date": "2026-09-02", "member": "Louis"}, {"id": "c23", "title": "Dragon's Fire Race 🏃", "date": "2026-09-09", "member": "Jason"}, {"id": "r5", "title": "Max's Birthday 🎂", "date": "2026-09-19", "member": "All"}, {"id": "r6", "title": "Flick's Birthday 🎂", "date": "2026-09-28", "member": "All"}, {"id": "bday-louis", "title": "🎂 Louis's Birthday", "date": "2026-10-02", "member": "Louis"}, {"id": "t6", "title": "🏖️ October half term starts", "date": "2026-10-23", "member": "Louis"}, {"id": "t7", "title": "🏫 Term 2 starts", "date": "2026-11-02", "member": "Louis"}, {"id": "r9", "title": "Grace's Birthday 🎂", "date": "2026-11-17", "member": "All"}, {"id": "car6", "title": "🚗 Kerry X3 Insurance Renewal", "date": "2026-11-26", "member": "Kerry"}, {"id": "c24", "title": "Xmas Singalong London 🎄", "date": "2026-12-10", "member": "All"}, {"id": "r10", "title": "Wedding Anniversary 💑", "date": "2026-12-15", "member": ["Jason", "Kerry"]}, {"id": "t8", "title": "🎄 Christmas holidays start", "date": "2026-12-18", "member": "Louis"}, {"id": "bh-xmas", "title": "Christmas Day 🎄", "date": "2026-12-25", "member": "Holiday"}, {"id": "bh-boxing", "title": "Boxing Day 🎁", "date": "2026-12-28", "member": "Holiday"}, {"id": "bh-ny27", "title": "New Year's Day", "date": "2027-01-01", "member": "Holiday"}, {"id": "t9", "title": "🏫 Spring term starts", "date": "2027-01-04", "member": "Louis"}, {"id": "car4", "title": "🚗 Oliver Clio MOT Due", "date": "2027-01-13", "member": "Oliver"}, {"id": "car7", "title": "🚗 Oliver Clio Insurance Renewal", "date": "2027-01-28", "member": "Oliver"}, {"id": "bday-mandy", "title": "🎂 Auntie Mandy's Birthday", "date": "2027-02-18", "member": "All"}, {"id": "ins-home", "title": "🏠 Aviva Home Insurance Renewal", "date": "2027-03-02", "member": "Jason"}, {"id": "r12", "title": "Will's Birthday 🎂", "date": "2027-03-16", "member": "All"}, {"id": "r13", "title": "Monty's Birthday 🎂", "date": "2027-03-23", "member": "All"}, {"id": "bh-gf27", "title": "Good Friday", "date": "2027-03-26", "member": "Holiday"}, {"id": "bh-em27", "title": "Easter Monday", "date": "2027-03-29", "member": "Holiday"}, {"id": "bday-jason", "title": "🎂 Jason's Birthday", "date": "2027-04-21", "member": "Jason"}, {"id": "bday-kerry", "title": "🎂 Kerry's Birthday", "date": "2027-04-30", "member": "Kerry"}, {"id": "bh-may27", "title": "Early May Bank Holiday", "date": "2027-05-03", "member": "Holiday"}, {"id": "bh-spring27", "title": "Spring Bank Holiday", "date": "2027-05-31", "member": "Holiday"}, {"id": "bh-summer27", "title": "Summer Bank Holiday", "date": "2027-08-30", "member": "Holiday"}];
+const EMBEDDED=[{"id": "t1", "title": "🏫 Term 5 starts", "date": "2026-04-13", "member": "Louis"}, {"id": "bh-may", "title": "Early May Bank Holiday", "date": "2026-05-04", "member": "Holiday"}, {"id": "t2", "title": "🏖️ May half term starts", "date": "2026-05-22", "member": "Louis"}, {"id": "bh-spring", "title": "Spring Bank Holiday", "date": "2026-05-25", "member": "Holiday"}, {"id": "c1", "title": "Paula Parrot 50th 🎉", "date": "2026-05-29", "member": "Kerry"}, {"id": "c2", "title": "Haircut ✂️", "date": "2026-05-30", "member": "Kerry"}, {"id": "cl1", "title": "Champions League Final 🏆⚽ 3pm", "date": "2026-05-30", "member": ["Jason", "Oliver"]}, {"id": "bday-granny", "title": "🎂 Granny Seaside's Birthday", "date": "2026-05-31", "member": "All"}, {"id": "s1", "title": "Arsenal Trophy Parade 🏆", "date": "2026-05-31", "member": ["Jason", "Oliver"]}, {"id": "c3", "title": "Matilda home after art club", "date": "2026-06-01", "member": ["Kerry", "Louis"]}, {"id": "t3", "title": "🏫 Term 6 starts", "date": "2026-06-01", "member": "Louis"}, {"id": "c4", "title": "Oliver: Chemistry Paper 1 📝 (9am, SPH R2)", "date": "2026-06-02", "member": "Oliver"}, {"id": "cx1", "title": "Oliver: Maths Pure 1 📝 (1:30pm, SPH M4)", "date": "2026-06-03", "member": "Oliver"}, {"id": "c5", "title": "Oliver: Economics Paper 3 📝 (9am, SPH P1)", "date": "2026-06-04", "member": "Oliver"}, {"id": "c6", "title": "Call vets – Hugo flea treatment 🐶", "date": "2026-06-04", "member": ["Kerry", "Hugo"]}, {"id": "c7", "title": "Leafy meningitis vaccine 💉", "date": "2026-06-05", "member": ["Kerry", "Oliver"]}, {"id": "c8", "title": "Louis & Kerry – Harry Potter Studio Tour ⚡", "date": "2026-06-06", "member": ["Kerry", "Louis"]}, {"id": "c9", "title": "Oliver: Chemistry Paper 2 📝 (9am, HALL C5)", "date": "2026-06-09", "member": "Oliver"}, {"id": "c10", "title": "Oliver: Maths Pure 2 📝 (1:30pm, SPH M4)", "date": "2026-06-11", "member": "Oliver"}, {"id": "c11", "title": "Mum & Dad in France 🇫🇷", "date": "2026-06-11", "member": "All"}, {"id": "c12", "title": "Louis arts & culture performance 🎭", "date": "2026-06-12", "member": "Louis"}, {"id": "h1", "title": "Crepe Farm Barns 🏡 Check-in from 4pm", "date": "2026-06-12", "member": ["Jason", "Kerry"]}, {"id": "c13", "title": "Will & Jess Wedding 💍", "date": "2026-06-13", "member": "All"}, {"id": "h2", "title": "Crepe Farm Barns 🏡 (Bridport, Will & Jess wedding)", "date": "2026-06-13", "member": ["Jason", "Kerry"]}, {"id": "h3", "title": "Crepe Farm Barns 🏡 Checkout by 10am", "date": "2026-06-14", "member": ["Jason", "Kerry"]}, {"id": "c14", "title": "Oliver: Chemistry Paper 3 📝 (9am, SPH Q10)", "date": "2026-06-15", "member": "Oliver"}, {"id": "c15", "title": "Kerry at Butcher's wine shop 🍷", "date": "2026-06-18", "member": "Kerry"}, {"id": "c16", "title": "Oliver: Maths Stats & Mechanics 📝 (1:30pm, SPH M4)", "date": "2026-06-18", "member": "Oliver"}, {"id": "s3", "title": "King's Birthday 👑", "date": "2026-06-20", "member": "Holiday"}, {"id": "s4", "title": "Father's Day 🎉", "date": "2026-06-21", "member": "Holiday"}, {"id": "c17", "title": "Leafy, Mum & Dad day out", "date": "2026-07-03", "member": "All"}, {"id": "c18", "title": "HT Fest 🎪", "date": "2026-07-04", "member": "All"}, {"id": "s5", "title": "Churchill Airbnb 🛁 Check-in after 4pm", "date": "2026-07-09", "member": "All"}, {"id": "bday-oliver", "title": "🎂 Oliver's Birthday", "date": "2026-07-10", "member": "Oliver"}, {"id": "s6", "title": "Churchill Airbnb 🏡 (Axminster, sleeps 15)", "date": "2026-07-10", "member": "All"}, {"id": "s7", "title": "Churchill Airbnb 🛁 Checkout by 10am", "date": "2026-07-12", "member": "All"}, {"id": "c19", "title": "Mum & Dad in France 🇫🇷", "date": "2026-07-16", "member": "All"}, {"id": "t4", "title": "🏖️ Summer holidays start", "date": "2026-07-16", "member": "Louis"}, {"id": "c20", "title": "Emma & Declan engagement party 🥂", "date": "2026-07-25", "member": "All"}, {"id": "r2", "title": "Will & Lou Anniversary", "date": "2026-07-25", "member": "All"}, {"id": "r3", "title": "Defender MOT Due 🚗", "date": "2026-08-02", "member": "Jason"}, {"id": "bday-grandad", "title": "🎂 Grandad Seaside's Birthday", "date": "2026-08-12", "member": "All"}, {"id": "c21", "title": "Leafy in Swanage 🏖️", "date": "2026-08-21", "member": "Oliver"}, {"id": "bh-summer", "title": "Summer Bank Holiday", "date": "2026-08-31", "member": "Holiday"}, {"id": "c22", "title": "Leafy in Spain ☀️", "date": "2026-08-31", "member": "Oliver"}, {"id": "t5", "title": "🏫 Back to school — Term 1", "date": "2026-09-02", "member": "Louis"}, {"id": "c23", "title": "Dragon's Fire Race 🏃", "date": "2026-09-09", "member": "Jason"}, {"id": "r5", "title": "Max's Birthday 🎂", "date": "2026-09-19", "member": "All"}, {"id": "r6", "title": "Flick's Birthday 🎂", "date": "2026-09-28", "member": "All"}, {"id": "bday-louis", "title": "🎂 Louis's Birthday", "date": "2026-10-02", "member": "Louis"}, {"id": "t6", "title": "🏖️ October half term starts", "date": "2026-10-23", "member": "Louis"}, {"id": "t7", "title": "🏫 Term 2 starts", "date": "2026-11-02", "member": "Louis"}, {"id": "r9", "title": "Grace's Birthday 🎂", "date": "2026-11-17", "member": "All"}, {"id": "c24", "title": "Xmas Singalong London 🎄", "date": "2026-12-10", "member": "All"}, {"id": "r10", "title": "Wedding Anniversary 💑", "date": "2026-12-15", "member": ["Jason", "Kerry"]}, {"id": "t8", "title": "🎄 Christmas holidays start", "date": "2026-12-18", "member": "Louis"}, {"id": "bh-xmas", "title": "Christmas Day 🎄", "date": "2026-12-25", "member": "Holiday"}, {"id": "bh-boxing", "title": "Boxing Day 🎁", "date": "2026-12-28", "member": "Holiday"}, {"id": "bh-ny27", "title": "New Year's Day", "date": "2027-01-01", "member": "Holiday"}, {"id": "t9", "title": "🏫 Spring term starts", "date": "2027-01-04", "member": "Louis"}, {"id": "bday-mandy", "title": "🎂 Auntie Mandy's Birthday", "date": "2027-02-18", "member": "All"}, {"id": "ins-home", "title": "Home Insurance Renewal (Aviva)", "date": "2027-03-02", "member": "Jason"}, {"id": "r12", "title": "Will's Birthday 🎂", "date": "2027-03-16", "member": "All"}, {"id": "r13", "title": "Monty's Birthday 🎂", "date": "2027-03-23", "member": "All"}, {"id": "bh-gf27", "title": "Good Friday", "date": "2027-03-26", "member": "Holiday"}, {"id": "bh-em27", "title": "Easter Monday", "date": "2027-03-29", "member": "Holiday"}, {"id": "bday-jason", "title": "🎂 Jason's Birthday", "date": "2027-04-21", "member": "Jason"}, {"id": "bday-kerry", "title": "🎂 Kerry's Birthday", "date": "2027-04-30", "member": "Kerry"}, {"id": "bh-may27", "title": "Early May Bank Holiday", "date": "2027-05-03", "member": "Holiday"}, {"id": "bh-spring27", "title": "Spring Bank Holiday", "date": "2027-05-31", "member": "Holiday"}, {"id": "bh-summer27", "title": "Summer Bank Holiday", "date": "2027-08-30", "member": "Holiday"}];
 
 const NOW=new Date();NOW.setHours(0,0,0,0);
 function fmt(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
@@ -406,7 +411,7 @@ function bSchool(){
     ]},
   ];
   const now=new Date();now.setHours(0,0,0,0);
-  return`<div style="padding:110px 16px 24px">
+  return`<div style="padding:calc(var(--st)+16px) 16px 24px">
     <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:4px">School Terms</div>
     <div style="font-size:12px;color:var(--mu);margin-bottom:20px">Holy Trinity C of E Primary, Cookham</div>
     ${terms.map(t=>`
@@ -431,205 +436,64 @@ function bSchool(){
 
 function bRun(){
   try{
-    var chart=(typeof STV!=="undefined")?STV.chart():'<p style="color:#fc4c02">STV not defined</p>';
-
-    // Last activity card
-    var lastAct="";
-    if(typeof STV!=="undefined"&&STV.data&&STV.data.lr){
-      var r=STV.data.lr;
-      var rd=new Date(r.start_date_local);
-      var dateStr=rd.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
-      var dist=STV.km(r.distance);
-      var pace=STV.pace(r.moving_time,r.distance);
-      var elev=Math.round(r.total_elevation_gain);
-      var hrs=Math.floor(r.moving_time/3600);
-      var mins=Math.floor((r.moving_time%3600)/60);
-      var timeStr=hrs>0?hrs+"h "+mins+"m":mins+"m";
-      lastAct='<div style="background:rgba(252,76,2,.08);border:1px solid rgba(252,76,2,.2);border-radius:14px;padding:14px 16px;margin-top:14px">'
-        +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fc4c02;margin-bottom:10px">Last Activity</div>'
-        +'<div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">'+r.name+'</div>'
-        +'<div style="font-size:11px;color:#888;margin-bottom:12px">'+dateStr+'</div>'
-        +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px">'
-        +'<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff;font-family:Syne,sans-serif">'+dist+'</div><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:2px">km</div></div>'
-        +'<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff;font-family:Syne,sans-serif">'+pace+'</div><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:2px">/km</div></div>'
-        +'<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff;font-family:Syne,sans-serif">'+elev+'</div><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:2px">m &#8593;</div></div>'
-        +'<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff;font-family:Syne,sans-serif">'+timeStr+'</div><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:2px">time</div></div>'
-        +'</div>'
-        +'</div>';
-    }
-
-    return '<div style="padding:0 16px 24px"><div style="height:110px"></div>'
+    var chart = (typeof STV!=="undefined") ? STV.chart() : '<p style="color:#fc4c02">STV not defined</p>';
+    return '<div style="padding:calc(var(--st,0px)+60px) 16px 24px">'
       +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;color:var(--tx);margin-bottom:2px">Training</div>'
       +'<div style="font-size:12px;color:var(--mu);margin-bottom:16px">Dragon&#39;s Fire Race &middot; 9 Sep 2026</div>'
       +chart
-      +lastAct
       +'</div>';
   }catch(err){
     return '<div style="padding:80px 16px 24px;color:#ef4444;font-size:13px">Error: '+err.message+'</div>';
   }
 }
 
-
-function bInfo(){
-  var sec=function(title,color,items){
-    var rows=items.map(function(item){
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid var(--bd)">'
-        +'<div style="font-size:11px;color:var(--mu);min-width:110px;flex-shrink:0">'+item[0]+'</div>'
-        +'<div style="font-size:13px;font-weight:600;color:var(--tx);text-align:right;flex:1;word-break:break-all">'+item[1]+'</div>'
-        +'</div>';
-    }).join('').replace(/border-bottom:1px solid var\(--bd\)(?=<\/div><\/div>)/,'');
-    return '<div style="margin-bottom:20px">'
-      +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:'+color+';margin-bottom:8px;font-family:Syne,sans-serif">'+title+'</div>'
-      +'<div style="background:var(--card);border-radius:14px;border:1px solid var(--bd);overflow:hidden">'+rows+'</div>'
-      +'</div>';
-  };
-  return '<div style="padding:0 16px 24px"><div style="height:110px"></div>'
-    +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:4px">Info Store</div>'
-    +'<div style="font-size:12px;color:var(--mu);margin-bottom:16px">Key numbers, dates &amp; documents</div>'
-
-    +'<div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:12px 14px;font-size:12px;color:#ef4444;margin-bottom:16px">'
-    +'&#9888;&#65039; Defender MOT was due 10 May 2026 — confirm if completed'
-    +'</div>'
-
-    +sec("&#128664; Jason&#39;s Defender","#3b82f6",[
-      ["Reg","L3AF J"],
-      ["Licence No.","LEAF9704210JR9NK"],
-      ["MOT Due","10 May 2026 &#9888;&#65039;"],
-      ["Insurance Renewal","3 Jul 2026"],
-      ["Insurer","One Click Direct"],
-      ["Claims No.","0203 738 7300"],
-      ["Policy Login","portal.oneclickdirect.co.uk"],
-      ["Policy No.","9586766"]
-    ])
-
-    +sec("&#128664; Kerry&#39;s X3","#ec4899",[
-      ["Reg","V40WOO"],
-      ["Licence No.","LEAF9854300KA9BL"],
-      ["MOT Due","11 Aug 2026"],
-      ["Insurance Renewal","26 Nov 2026"],
-      ["Insurer","Admiral"],
-      ["Claims No.","0333 234 9797"],
-      ["Policy No.","P77443804"]
-    ])
-
-    +sec("&#128664; Oliver&#39;s Clio","#22c55e",[
-      ["Reg","LG64CPU"],
-      ["Licence No.","LEAF9854300KA9BL"],
-      ["MOT Due","13 Jan 2027"],
-      ["Insurance Renewal","28 Jan 2027"],
-      ["Insurer","RAC"],
-      ["Claims No.","0333 200 0999"],
-      ["Policy No.","90294760"]
-    ])
-
-    +sec("&#128737;&#65039; Breakdown Cover","#f59e0b",[
-      ["Provider","Green Flag"],
-      ["Covers","All 3 household cars"],
-      ["Renewal","28 Jul 2026"],
-      ["Phone","0800 400 600"],
-      ["App","Green Flag app"]
-    ])
-
-    +sec("&#128100; Family","#a855f7",[
-      ["Address","Cookham, Berkshire"],
-      ["Hugo microchip","TBC"],
-      ["WiFi password","TBC"],
-      ["Jason NHS","TBC"],
-      ["Kerry NHS","TBC"],
-      ["Oliver NHS","TBC"],
-      ["Louis NHS","TBC"]
-    ])
-    +'</div>';
-}
-
-
-// ── SHOPPING LIST (Firebase) ──────────────────────────────────────────────────
-var FB_URL = "https://rascal-4c10a-default-rtdb.europe-west1.firebasedatabase.app/shop.json";
-var shopItems = [];
-var shopLoaded = false;
-
-function shopLoad(){
-  fetch(FB_URL).then(function(r){return r.json();}).then(function(d){
-    if(d && typeof d === 'object'){
-      // Firebase returns object with keys, convert to array
-      shopItems = Object.keys(d).map(function(k){return Object.assign({fbKey:k},d[k]);});
-      shopItems.sort(function(a,b){return(a.ts||0)-(b.ts||0);});
-    } else {
-      shopItems = [];
-    }
-    shopLoaded = true;
-    if(S.tab==='shop') render();
-  }).catch(function(e){console.error('Shop load error',e);shopLoaded=true;if(S.tab==='shop')render();});
-}
-
-function shopAdd(name){
-  var item={name:name,done:false,ts:Date.now()};
-  fetch(FB_URL.replace('.json','')+'/.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)})
-  .then(function(){shopLoad();});
-}
-
-function shopToggle(fbKey,done){
-  fetch(FB_URL.replace('.json','/'+fbKey+'/done.json'),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(!done)})
-  .then(function(){shopLoad();});
-}
-
-function shopDel(fbKey){
-  fetch(FB_URL.replace('.json','/'+fbKey+'.json'),{method:'DELETE'})
-  .then(function(){shopLoad();});
-}
-
-function shopClearDone(){
-  var done=shopItems.filter(function(i){return i.done;});
-  Promise.all(done.map(function(i){
-    return fetch(FB_URL.replace('.json','/'+i.fbKey+'.json'),{method:'DELETE'});
-  })).then(function(){shopLoad();});
-}
-
+var _fb="https://rascal-4c10a-default-rtdb.europe-west1.firebasedatabase.app/shop";
+var _si=[],_sl=false;
+function _sLoad(){fetch(_fb+".json").then(function(r){return r.json();}).then(function(d){_si=d&&typeof d==="object"?Object.keys(d).map(function(k){return Object.assign({k:k},d[k]);}).sort(function(a,b){return(a.ts||0)-(b.ts||0);}):[];_sl=true;if(S.tab==="shop")render();}).catch(function(){_sl=true;if(S.tab==="shop")render();});}
+function _sAdd(n){fetch(_fb+"/.json",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:n,done:false,ts:Date.now()})}).then(function(){_sLoad();});}
+function _sTog(k,d){fetch(_fb+"/"+k+"/done.json",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(!d)}).then(function(){_sLoad();});}
+function _sDel(k){fetch(_fb+"/"+k+".json",{method:"DELETE"}).then(function(){_sLoad();});}
+function _sClr(){Promise.all(_si.filter(function(i){return i.done;}).map(function(i){return fetch(_fb+"/"+i.k+".json",{method:"DELETE"});})).then(function(){_sLoad();});}
 function bShop(){
-  if(!shopLoaded){shopLoad();return'<div style="padding:0 16px 24px"><div style="height:110px"></div><div style="color:var(--mu);font-size:14px">Loading shopping list...</div></div>';}
-  var pending=shopItems.filter(function(i){return!i.done;});
-  var done=shopItems.filter(function(i){return i.done;});
-  var itemsHTML=shopItems.length===0
-    ?'<div style="color:var(--mu2);font-size:14px;font-style:italic;padding:8px 0">Nothing on the list &#128722;</div>'
-    :shopItems.map(function(item){
-      return'<div class="shop-item'+(item.done?' done':'')+'">'
-        +'<div class="shop-cb'+(item.done?' done':'')+'" onclick="shopToggle(''+item.fbKey+'','+item.done+')">'+(item.done?'&#10003;':'')+'</div>'
-        +'<div class="shop-title">'+item.name+'</div>'
-        +'<div class="shop-del" onclick="shopDel(''+item.fbKey+'')">&#215;</div>'
-        +'</div>';
-    }).join('');
+  if(!_sl){_sLoad();return'<div style="padding:0 16px 24px"><div style="height:110px"></div><div style="color:var(--mu)">Loading...</div></div>';}
+  var dn=_si.filter(function(i){return i.done;}).length;
+  var rows=_si.map(function(i){return'<div style="display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--card);border-radius:12px;margin-bottom:7px;border:1px solid var(--bd)"'+(i.done?' class="shop-dk"':'')+'>'
+    +'<div class="shop-cb'+(i.done?" ck":"")+'" onclick="_sTog(''+i.k+'','+i.done+')">'+(i.done?"&#10003;":"")+'</div>'
+    +'<div class="shop-ttl">'+i.name+'</div>'
+    +'<div style="font-size:18px;color:var(--mu2);padding:4px 4px 4px 8px;cursor:pointer" onclick="_sDel(''+i.k+'')">&#215;</div>'
+    +'</div>';}).join("");
   return'<div style="padding:0 16px 24px"><div style="height:110px"></div>'
     +'<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px">'
     +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800">Shopping</div>'
-    +(done.length>0?'<button onclick="shopClearDone()" style="background:none;border:none;font-size:12px;color:var(--mu);cursor:pointer;font-family:inherit">Clear done ('+done.length+')</button>':'')
+    +(dn?'<button onclick="_sClr()" style="background:none;border:none;font-size:12px;color:var(--mu);cursor:pointer;font-family:inherit">Clear done ('+dn+')</button>':"")
     +'</div>'
-    +itemsHTML
+    +(_si.length===0?'<div style="color:var(--mu2);font-size:14px;font-style:italic;padding:4px 0">Nothing on the list</div>':rows)
     +'<div style="display:flex;gap:8px;margin-top:14px">'
-    +'<input id="shop-inp" class="finp" placeholder="Add item..." style="margin-bottom:0;flex:1" onkeydown="if(event.key==='Enter'){var v=document.getElementById('shop-inp').value.trim();if(v){shopAdd(v);document.getElementById('shop-inp').value='';render();}}">'
-    +'<button onclick="var v=document.getElementById('shop-inp').value.trim();if(v){shopAdd(v);document.getElementById('shop-inp').value='';render();}" style="background:#22c55e;border:none;border-radius:8px;color:#000;font-size:15px;padding:10px 16px;cursor:pointer;font-family:inherit;font-weight:700">Add</button>'
+    +'<input id="si" class="finp" placeholder="Add item..." style="margin-bottom:0;flex:1">'
+    +'<button onclick="var v=document.getElementById('si').value.trim();if(v){_sAdd(v);document.getElementById('si').value='';}" style="background:#22c55e;border:none;border-radius:8px;color:#000;font-size:15px;padding:10px 16px;cursor:pointer;font-weight:700">Add</button>'
     +'</div>'
-    +'<div style="font-size:10px;color:var(--mu2);margin-top:10px;text-align:center">'+pending.length+' item'+(pending.length!==1?'s':'')+' remaining &middot; syncs across all devices</div>'
+    +'<div style="font-size:10px;color:var(--mu2);margin-top:10px;text-align:center">Syncs across all devices</div>'
     +'</div>';
 }
 
 function render(){
-  document.getElementById("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():S.tab==="school"?bSchool():S.tab==="info"?bInfo():S.tab==="run"?bRun():S.tab==="shop"?bShop():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
+  document.getElementById("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():S.tab==="school"?bSchool():S.tab==="run"?bRun():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
   document.getElementById("app").addEventListener("click",handle);
 }
 
 // ── LANDING ──────────────────────────────────────────────────────────────────
 function bLand(){
-  var raceDate=new Date("2026-09-09");
-  var now=new Date();now.setHours(0,0,0,0);
-  var daysToRace=Math.ceil((raceDate-now)/(1000*60*60*24));
-  var msg=daysToRace===0?"Race day!":daysToRace<7?"This week!":daysToRace<30?"Nearly there":"Keep training";
-  function badge(emoji,name,member,color,bg){
-    return '<div style="text-align:center;cursor:pointer" data-a="goto-cal" data-m="'+member+'">'
-      +'<div style="width:56px;height:56px;border-radius:50%;background:'+bg+';border:2px solid '+color+';display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto">'+emoji+'</div>'
-      +'<div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:5px;letter-spacing:1px;text-transform:uppercase;font-weight:600">'+name+'</div>'
+  var rd=new Date("2026-09-09"),nw=new Date();nw.setHours(0,0,0,0);
+  var dtr=Math.ceil((rd-nw)/(1000*60*60*24));
+  var msg=dtr===0?"Race day!":dtr<7?"This week!":dtr<30?"Nearly there":"Keep training";
+  function badge(e,n,m,c,b){
+    return'<div style="text-align:center;cursor:pointer" data-a="goto-cal" data-m="'+m+'">'
+      +'<div style="width:56px;height:56px;border-radius:50%;background:'+b+';border:2px solid '+c
+      +';display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto">'+e+'</div>'
+      +'<div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:5px;letter-spacing:1px;text-transform:uppercase;font-weight:600">'+n+'</div>'
       +'</div>';
   }
-  var tree='<svg viewBox="0 0 120 140" width="80" height="93" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:8px">'
+  var tr='<svg viewBox="0 0 120 140" width="80" height="93" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:8px">'
     +'<path d="M52 140 L56 102 Q58 94 62 90 Q66 94 68 102 L72 140Z" fill="#7a3c14"/>'
     +'<path d="M56 106 Q42 98 24 92" stroke="#7a3c14" stroke-width="5" fill="none" stroke-linecap="round"/>'
     +'<path d="M68 106 Q82 98 100 92" stroke="#7a3c14" stroke-width="5" fill="none" stroke-linecap="round"/>'
@@ -642,8 +506,8 @@ function bLand(){
     +'<ellipse cx="92" cy="53" rx="22" ry="14" fill="#1e7b14" transform="rotate(25 92 53)"/>'
     +'<ellipse cx="62" cy="28" rx="24" ry="17" fill="#a8d44a"/>'
     +'</svg>';
-  return '<div style="display:flex;flex-direction:column;align-items:center;min-height:100%;padding:220px 24px 40px;background:radial-gradient(ellipse at 50% 25%,rgba(34,197,94,.07) 0%,transparent 65%)">'
-    +tree
+  return'<div style="display:flex;flex-direction:column;align-items:center;min-height:100%;padding:220px 24px 40px;background:radial-gradient(ellipse at 50% 25%,rgba(34,197,94,.07) 0%,transparent 65%)">'
+    +tr
     +'<div style="font-family:Syne,sans-serif;font-size:64px;font-weight:800;letter-spacing:-4px;color:#fff;line-height:1">rascal</div>'
     +'<div style="font-size:11px;color:var(--mu);letter-spacing:3px;text-transform:uppercase;margin-top:4px;margin-bottom:28px">The Leaf Family</div>'
     +'<div style="display:flex;justify-content:center;gap:16px;margin-bottom:28px;flex-wrap:wrap">'
@@ -654,10 +518,13 @@ function bLand(){
     +badge('&#128062;','Hugo','Hugo','rgba(245,158,11,.8)','rgba(245,158,11,.15)')
     +'</div>'
     +'<div style="width:100%;background:linear-gradient(135deg,rgba(34,197,94,.14),rgba(34,197,94,.04));border:1px solid rgba(34,197,94,.22);border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:14px">'
-    +'<div style="text-align:center;min-width:52px"><div style="font-family:Syne,sans-serif;font-size:36px;font-weight:800;color:#22c55e;line-height:1">'+daysToRace+'</div>'
-    +'<div style="font-size:9px;color:var(--mu);letter-spacing:2px;text-transform:uppercase;margin-top:1px">days</div></div>'
+    +'<div style="text-align:center;min-width:52px">'
+    +'<div style="font-family:Syne,sans-serif;font-size:36px;font-weight:800;color:#22c55e;line-height:1">'+dtr+'</div>'
+    +'<div style="font-size:9px;color:var(--mu);letter-spacing:2px;text-transform:uppercase;margin-top:1px">days</div>'
+    +'</div>'
     +'<div style="width:1px;height:40px;background:rgba(34,197,94,.2);flex-shrink:0"></div>'
-    +'<div><div style="font-size:14px;font-weight:700;color:#fff">Dragon's Fire Race</div>'
+    +'<div>'
+    +'<div style="font-size:14px;font-weight:700;color:#fff">Dragon&#39;s Fire Race</div>'
     +'<div style="font-size:11px;color:var(--mu);margin-top:2px">Wed 9 Sep 2026</div>'
     +'<div style="font-size:11px;color:#22c55e;font-weight:600;margin-top:2px">'+msg+'</div>'
     +'</div></div>'
@@ -665,13 +532,9 @@ function bLand(){
 }
 
 
-
-
-
 // ── HOME ──────────────────────────────────────────────────────────────────────
 function bHome(){
   const all=allEvs();
-  const daysToRace=Math.ceil((raceDate-NOW)/(1000*60*60*24));
   const todayEvs=all.filter(e=>e.date===TD);
   const upcoming=all.filter(e=>e.date>TD).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,8);
   const avs=["Jason","Kerry","Oliver","Louis","Hugo"].map(m=>{
@@ -704,16 +567,6 @@ function bHome(){
       <div class="hero-date">${NOW.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"})}</div>
       <div class="hero-title">The Leaf<br>Family</div>
       <div class="hero-sub">Cookham · Jason, Kerry, Oliver, Louis & Hugo 🐾</div>
-    </div>
-    <div style="margin:0 16px;margin-top:-1px">
-      <div style="background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(34,197,94,.05));border:1px solid rgba(34,197,94,.25);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:16px">
-        <div style="text-align:center;min-width:56px">
-        </div>
-        <div style="width:1px;height:40px;background:rgba(34,197,94,.2)"></div>
-        <div>
-          <div style="font-size:11px;color:#22c55e;margin-top:2px">${daysToRace===0?"Race day! 🔥":daysToRace===1?"Tomorrow!":daysToRace<7?"This week!":daysToRace<30?"Coming soon":"Keep training 💪"}</div>
-        </div>
-      </div>
     </div>
     <div class="section"><div class="sec-label">Today</div>${todayHTML}</div>
     <div class="avatars">${avs}</div>
@@ -752,24 +605,22 @@ function bModal(){
 // ── NAV ───────────────────────────────────────────────────────────────────────
 function bNav(){
   var t=S.tab;
-  return '<nav class="nav">'
+  return'<nav class="nav">'
     +'<button class="nb'+(t==="land"?" on":"")+'" data-a="tab" data-tab="land"><span class="ni">&#127807;</span>Rascal</button>'
     +'<button class="nb'+(t==="home"?" on":"")+'" data-a="tab" data-tab="home"><span class="ni">&#127968;</span>Home</button>'
     +'<button class="nb'+(t==="calendar"?" on":"")+'" data-a="tab" data-tab="calendar"><span class="ni">&#128197;</span>Cal</button>'
-    +'<button class="nb'+(t==="shop"?" on":"")+'" data-a="tab" data-tab="shop" onclick="shopLoaded=false;shopLoad()"><span class="ni">&#128722;</span>Shop</button>'
+    +'<button class="nb'+(t==="shop"?" on":"")+'" data-a="tab" data-tab="shop"><span class="ni">&#128722;</span>Shop</button>'
     +'<button class="nb'+(t==="info"?" on":"")+'" data-a="tab" data-tab="info"><span class="ni">&#128220;</span>Info</button>'
     +'<button class="nb'+(t==="run"?" on":"")+'" data-a="tab" data-tab="run"><span class="ni">&#127939;</span>Run</button>'
     +'<button class="nb" data-a="hard-refresh"><span class="ni">&#x21BB;</span>Update</button>'
     +'</nav>';
 }
 
-
 // ── HANDLE ────────────────────────────────────────────────────────────────────
 function handle(e){
   const el=e.target.closest("[data-a]");if(!el)return;
   const a=el.dataset.a;
-  if(a==="tab"&&el.dataset.tab!=="-") set({tab:el.dataset.tab,sel:null,showAdd:false});
-  if(a==="tab"&&el.dataset.tab==="-") hardRefresh();
+  if(a==="tab")          set({tab:el.dataset.tab,sel:null,showAdd:false});
   if(a==="goto-cal")     set({tab:"calendar",filter:el.dataset.m,sel:null});
   if(a==="prev")         S.mo===0?set({mo:11,y:S.y-1,sel:null}):set({mo:S.mo-1,sel:null});
   if(a==="next")         S.mo===11?set({mo:0,y:S.y+1,sel:null}):set({mo:S.mo+1,sel:null});
