@@ -709,6 +709,14 @@ function handle(e){
   if(a==="delete-event"){const id=el.dataset.id;set({user:S.user.filter(e=>e.id!==id),events:S.events.filter(e=>e.id!==id),showEdit:false,editId:null});}
 }
 
+// Restore tab after Update reload
+try{
+  if(window.location.search.indexOf('bust=')>-1){
+    window.history.replaceState({},'',window.location.pathname);
+  }
+  var _rt=sessionStorage.getItem('rascal_tab');
+  if(_rt){S.tab=_rt;sessionStorage.removeItem('rascal_tab');}
+}catch(e){}
 render();
 /* Cozi sync disabled */
 </script>
