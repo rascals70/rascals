@@ -796,7 +796,7 @@ try{
 }catch(e){}
 render();
 /* Cozi sync disabled */
-fetch(_wfb+".json").then(function(r){return r.json();}).then(function(d){if(!d)fetch(_wfb+"/.json",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({title:"Killing Them Softly",type:"movie",watched:false,ts:1});});});
+fetch(_wfb+".json").then(function(r){return r.json();}).then(function(d){if(!d)fetch(_wfb+"/.json",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({title:"Killing Them Softly",type:"movie",watched:false,ts:1})});});
 </script>
 <script>
 if('serviceWorker' in navigator){
