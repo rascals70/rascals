@@ -680,9 +680,16 @@ function bModal(){
 // ── NAV ───────────────────────────────────────────────────────────────────────
 function bNav(){
   var t=S.tab;
+  // Count events in next 24 hours
+  var now=new Date();now.setHours(0,0,0,0);
+  var tom=new Date(now);tom.setDate(tom.getDate()+1);
+  var tomStr=tom.getFullYear()+'-'+String(tom.getMonth()+1).padStart(2,'0')+'-'+String(tom.getDate()).padStart(2,'0');
+  var todayStr=TD;
+  var upcoming24=allEvs().filter(function(e){return e.date===todayStr||e.date===tomStr;}).length;
+  var bdg=upcoming24>0?'<span class="badge">'+upcoming24+'</span>':'';
   return'<nav class="nav">'
     +'<button class="nb'+(t==="land"?" on":"")+'" data-a="tab" data-tab="land"><span class="ni">&#127807;</span>Rascal</button>'
-    +'<button class="nb'+(t==="home"?" on":"")+'" data-a="tab" data-tab="home"><span class="ni">&#127968;</span>Home</button>'
+    +'<button class="nb'+(t==="home"?" on":"")+'" data-a="tab" data-tab="home" style="position:relative"><span class="ni">&#127968;</span>Home'+bdg+'</button>'
     +'<button class="nb'+(t==="calendar"?" on":"")+'" data-a="tab" data-tab="calendar"><span class="ni">&#128197;</span>Cal</button>'
     +'<button class="nb'+(t==="shop"?" on":"")+'" data-a="tab" data-tab="shop"><span class="ni">&#128722;</span>Shop</button>'
     +'<button class="nb'+(t==="info"?" on":"")+'" data-a="tab" data-tab="info"><span class="ni">&#128220;</span>Info</button>'
@@ -690,6 +697,7 @@ function bNav(){
     +'<button class="nb" data-a="hard-refresh"><span class="ni">&#x21BB;</span>Update</button>'
     +'</nav>';
 }
+
 
 // ── HANDLE ────────────────────────────────────────────────────────────────────
 function handle(e){
