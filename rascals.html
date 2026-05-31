@@ -381,9 +381,11 @@ async function fetchLive(){
 }
 
 function hardRefresh(){
-  // Store current tab so we can restore after reload
   try{sessionStorage.setItem('rascal_tab',S.tab);}catch(e){}
-
+  var base=window.location.href.split('?')[0];
+  window.location.replace(base+'?bust=1780248086&t='+Date.now());
+}
+function hardRefreshOLD(){
   if('serviceWorker' in navigator){
     navigator.serviceWorker.getRegistrations().then(regs=>{
       Promise.all(regs.map(r=>r.unregister())).then(()=>caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k))).then(()=>window.location.reload(true))));
