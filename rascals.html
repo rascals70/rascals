@@ -29,7 +29,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans'
 .body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 
 /* BOTTOM NAV */
-.nav{display:flex;flex-shrink:0;background:rgba(4,4,8,.97);backdrop-filter:blur(24px);border-top:1px solid var(--bd);padding:6px 0 calc(var(--sb) + 6px)}
+.nav{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-shrink:0;background:rgba(4,4,8,.97);backdrop-filter:blur(24px);border-top:1px solid var(--bd);padding:6px 0 calc(var(--sb) + 6px);padding-bottom:2px}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:7px 0;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:600;color:var(--mu);letter-spacing:1px;text-transform:uppercase;transition:color .2s}
 .nb.on{color:var(--accent)}
 .ni{font-size:22px;line-height:1}
@@ -551,8 +551,61 @@ function bInfo(){
   return out+'</div>';
 }
 
+
+var _wfb="https://rascal-4c10a-default-rtdb.europe-west1.firebasedatabase.app/watch";
+var _wi=[],_wl=false;
+function _wLoad(){fetch(_wfb+".json").then(function(r){return r.json();}).then(function(d){
+  _wi=d&&typeof d==="object"?Object.keys(d).map(function(k){return Object.assign({k:k},d[k]);}).sort(function(a,b){return(a.ts||0)-(b.ts||0);}):[];
+  _wl=true;if(S.tab==="watch")render();
+}).catch(function(){_wl=true;if(S.tab==="watch")render();});}
+function _wAdd(title,type){fetch(_wfb+"/.json",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({title:title,type:type,watched:false,ts:Date.now()})}).then(function(){_wLoad();});}
+function _wTog(k,w){fetch(_wfb+"/"+k+"/watched.json",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(!w)}).then(function(){_wLoad();});}
+function _wDel(k){fetch(_wfb+"/"+k+".json",{method:"DELETE"}).then(function(){_wLoad();});}
+
+function bWatch(){
+  if(!_wl){_wLoad();return'<div style="padding:0 16px 24px"><div style="height:110px"></div><div style="color:var(--mu)">Loading...</div></div>';}
+  var movies=_wi.filter(function(i){return i.type==="movie"&&!i.watched;});
+  var tv=_wi.filter(function(i){return i.type==="tv"&&!i.watched;});
+  var watched=_wi.filter(function(i){return i.watched;});
+
+  function row(item){
+    return'<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--bd)">'
+      +'<div style="font-size:20px">'+(item.type==="movie"?"&#127909;":"&#128250;")+'</div>'
+      +'<div style="flex:1;font-size:14px;font-weight:500;color:var(--tx)'+(item.watched?';text-decoration:line-through;opacity:.5':'')+'">'+item.title+'</div>'
+      +'<div style="display:flex;gap:8px;align-items:center">'
+      +'<div data-a="watch-tog" data-k="'+item.k+'" data-w="'+item.watched+'" style="width:22px;height:22px;border-radius:50%;border:2px solid '+(item.watched?'#22c55e':'var(--mu2)')+';background:'+(item.watched?'#22c55e':'transparent')+';cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;flex-shrink:0">'+(item.watched?'&#10003;':'')+'</div>'
+      +'<div data-a="watch-del" data-k="'+item.k+'" style="font-size:16px;color:var(--mu2);cursor:pointer;padding:2px 4px">&#215;</div>'
+      +'</div></div>';
+  }
+
+  function section(label,emoji,items){
+    if(!items.length)return'';
+    return'<div style="margin-bottom:18px">'
+      +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:8px">'+emoji+' '+label+'</div>'
+      +'<div style="background:var(--card);border-radius:14px;border:1px solid var(--bd);overflow:hidden">'+items.map(row).join('')+'</div>'
+      +'</div>';
+  }
+
+  var out='<div style="padding:0 16px 24px"><div style="height:110px"></div>';
+  out+='<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:16px">Watch List</div>';
+  if(!_wi.length) out+='<div style="color:var(--mu2);font-size:14px;font-style:italic;padding:4px 0">Nothing added yet</div>';
+  out+=section("Movies","&#127909;",movies);
+  out+=section("TV","&#128250;",tv);
+  if(watched.length) out+=section("Watched","&#10003;",watched);
+
+  // Add row
+  out+='<div style="margin-top:14px">';
+  out+='<input id="wi" placeholder="Title..." style="width:100%;box-sizing:border-box;background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:14px;padding:9px 10px;font-family:DM Sans,sans-serif;margin-bottom:8px">';
+  out+='<div style="display:flex;gap:8px">';
+  out+='<button data-a="watch-add-movie" style="flex:1;background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:13px;padding:9px 8px;cursor:pointer;font-family:inherit">&#127909; Movie</button>';
+  out+='<button data-a="watch-add-tv" style="flex:1;background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:13px;padding:9px 8px;cursor:pointer;font-family:inherit">&#128250; TV</button>';
+  out+='</div></div>';
+  out+='<div style="font-size:10px;color:var(--mu2);margin-top:10px;text-align:center">Syncs across all devices</div>';
+  return out+'</div>';
+}
+
 function render(){
-  document.getElementById("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():S.tab==="school"?bSchool():S.tab==="info"?bInfo():S.tab==="shop"?bShop():S.tab==="run"?bRun():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
+  document.getElementById("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():S.tab==="school"?bSchool():S.tab==="info"?bInfo():S.tab==="shop"?bShop():S.tab==="run"?bRun():S.tab==="watch"?bWatch():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
   document.getElementById("app").addEventListener("click",handle);
 }
 
@@ -680,23 +733,24 @@ function bModal(){
 // ── NAV ───────────────────────────────────────────────────────────────────────
 function bNav(){
   var t=S.tab;
-  // Count events in next 24 hours
-  var now=new Date();now.setHours(0,0,0,0);
-  var tom=new Date(now);tom.setDate(tom.getDate()+1);
-  var tomStr=tom.getFullYear()+'-'+String(tom.getMonth()+1).padStart(2,'0')+'-'+String(tom.getDate()).padStart(2,'0');
-  var todayStr=TD;
-  var upcoming24=allEvs().filter(function(e){return e.date===todayStr||e.date===tomStr;}).length;
-  var bdg=upcoming24>0?'<span class="badge">'+upcoming24+'</span>':'';
+  var today=new Date();today.setHours(0,0,0,0);
+  var tom=new Date(today);tom.setDate(today.getDate()+1);
+  var tStr=TD;
+  var mStr=tom.getFullYear()+'-'+String(tom.getMonth()+1).padStart(2,'0')+'-'+String(tom.getDate()).padStart(2,'0');
+  var cnt=allEvs().filter(function(e){return e.date===tStr||e.date===mStr;}).length;
+  var bdg=cnt?'<span class="badge">'+cnt+'</span>':'';
   return'<nav class="nav">'
     +'<button class="nb'+(t==="land"?" on":"")+'" data-a="tab" data-tab="land"><span class="ni">&#127807;</span>Rascal</button>'
     +'<button class="nb'+(t==="home"?" on":"")+'" data-a="tab" data-tab="home" style="position:relative"><span class="ni">&#127968;</span>Home'+bdg+'</button>'
     +'<button class="nb'+(t==="calendar"?" on":"")+'" data-a="tab" data-tab="calendar"><span class="ni">&#128197;</span>Cal</button>'
     +'<button class="nb'+(t==="shop"?" on":"")+'" data-a="tab" data-tab="shop"><span class="ni">&#128722;</span>Shop</button>'
+    +'<button class="nb'+(t==="watch"?" on":"")+'" data-a="tab" data-tab="watch"><span class="ni">&#127909;</span>Watch</button>'
     +'<button class="nb'+(t==="info"?" on":"")+'" data-a="tab" data-tab="info"><span class="ni">&#128220;</span>Info</button>'
     +'<button class="nb'+(t==="run"?" on":"")+'" data-a="tab" data-tab="run"><span class="ni">&#127939;</span>Run</button>'
     +'<button class="nb" data-a="hard-refresh"><span class="ni">&#x21BB;</span>Update</button>'
     +'</nav>';
 }
+
 
 
 // ── HANDLE ────────────────────────────────────────────────────────────────────
@@ -712,6 +766,12 @@ function handle(e){
   if(a==="show-add")     set({showAdd:true});
   if(a==="cancel")       set({showAdd:false});
   if(a==="hard-refresh") hardRefresh();
+  if(a==="watch-tog"){_wTog(el.dataset.k,el.dataset.w==="true");}
+  if(a==="watch-del"){_wDel(el.dataset.k);}
+  if(a==="watch-add-movie"||a==="watch-add-tv"){
+    var wv=document.getElementById("wi");
+    if(wv&&wv.value.trim()){_wAdd(wv.value.trim(),a==="watch-add-movie"?"movie":"tv");wv.value="";}
+  }
   if(a==="shop-tog"){_sTog(el.dataset.k, el.dataset.d==="true");}
   if(a==="shop-del"){_sDel(el.dataset.k);}
   if(a==="shop-clr"){_sClr();}
@@ -736,6 +796,7 @@ try{
 }catch(e){}
 render();
 /* Cozi sync disabled */
+fetch(_wfb+".json").then(function(r){return r.json();}).then(function(d){if(!d)fetch(_wfb+"/.json",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({title:"Killing Them Softly",type:"movie",watched:false,ts:1});});});
 </script>
 <script>
 if('serviceWorker' in navigator){
