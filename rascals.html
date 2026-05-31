@@ -690,6 +690,10 @@ function handle(e){
   if(a==="show-add")     set({showAdd:true});
   if(a==="cancel")       set({showAdd:false});
   if(a==="hard-refresh") hardRefresh();
+  if(a==="shop-tog"){_sTog(el.dataset.k, el.dataset.d==="true");}
+  if(a==="shop-del"){_sDel(el.dataset.k);}
+  if(a==="shop-clr"){_sClr();}
+  if(a==="shop-add"){var sv=document.getElementById("si");if(sv&&sv.value.trim()){_sAdd(sv.value.trim());sv.value="";}}
   if(a==="stv-connect"&&typeof STV!=="undefined") STV.connect();
   if(a==="toggle-member"){const m=el.dataset.m,cur=Array.isArray(S.nev.member)?S.nev.member:[];set({nev:{...S.nev,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]}});}
   if(a==="add"){const t=document.getElementById("et")?.value.trim(),d=document.getElementById("ed")?.value;if(!t||!d)return;const ms=Array.isArray(S.nev.member)?S.nev.member:[];const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;set({user:[...S.user,{id:"u"+Date.now(),title:t,date:d,member:mem,source:"user"}],showAdd:false,nev:{title:"",member:[],date:""}});}
