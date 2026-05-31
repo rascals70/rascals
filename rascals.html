@@ -543,8 +543,77 @@ function bInfo(){
 }
 
 
+// ── SHOPPING LIST (Firebase) ──────────────────────────────────────────────────
+var FB_URL = "https://rascal-4c10a-default-rtdb.europe-west1.firebasedatabase.app/shop.json";
+var shopItems = [];
+var shopLoaded = false;
+
+function shopLoad(){
+  fetch(FB_URL).then(function(r){return r.json();}).then(function(d){
+    if(d && typeof d === 'object'){
+      // Firebase returns object with keys, convert to array
+      shopItems = Object.keys(d).map(function(k){return Object.assign({fbKey:k},d[k]);});
+      shopItems.sort(function(a,b){return(a.ts||0)-(b.ts||0);});
+    } else {
+      shopItems = [];
+    }
+    shopLoaded = true;
+    if(S.tab==='shop') render();
+  }).catch(function(e){console.error('Shop load error',e);shopLoaded=true;if(S.tab==='shop')render();});
+}
+
+function shopAdd(name){
+  var item={name:name,done:false,ts:Date.now()};
+  fetch(FB_URL.replace('.json','')+'/.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)})
+  .then(function(){shopLoad();});
+}
+
+function shopToggle(fbKey,done){
+  fetch(FB_URL.replace('.json','/'+fbKey+'/done.json'),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(!done)})
+  .then(function(){shopLoad();});
+}
+
+function shopDel(fbKey){
+  fetch(FB_URL.replace('.json','/'+fbKey+'.json'),{method:'DELETE'})
+  .then(function(){shopLoad();});
+}
+
+function shopClearDone(){
+  var done=shopItems.filter(function(i){return i.done;});
+  Promise.all(done.map(function(i){
+    return fetch(FB_URL.replace('.json','/'+i.fbKey+'.json'),{method:'DELETE'});
+  })).then(function(){shopLoad();});
+}
+
+function bShop(){
+  if(!shopLoaded){shopLoad();return'<div style="padding:0 16px 24px"><div style="height:110px"></div><div style="color:var(--mu);font-size:14px">Loading shopping list...</div></div>';}
+  var pending=shopItems.filter(function(i){return!i.done;});
+  var done=shopItems.filter(function(i){return i.done;});
+  var itemsHTML=shopItems.length===0
+    ?'<div style="color:var(--mu2);font-size:14px;font-style:italic;padding:8px 0">Nothing on the list &#128722;</div>'
+    :shopItems.map(function(item){
+      return'<div class="shop-item'+(item.done?' done':'')+'">'
+        +'<div class="shop-cb'+(item.done?' done':'')+'" onclick="shopToggle(''+item.fbKey+'','+item.done+')">'+(item.done?'&#10003;':'')+'</div>'
+        +'<div class="shop-title">'+item.name+'</div>'
+        +'<div class="shop-del" onclick="shopDel(''+item.fbKey+'')">&#215;</div>'
+        +'</div>';
+    }).join('');
+  return'<div style="padding:0 16px 24px"><div style="height:110px"></div>'
+    +'<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px">'
+    +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800">Shopping</div>'
+    +(done.length>0?'<button onclick="shopClearDone()" style="background:none;border:none;font-size:12px;color:var(--mu);cursor:pointer;font-family:inherit">Clear done ('+done.length+')</button>':'')
+    +'</div>'
+    +itemsHTML
+    +'<div style="display:flex;gap:8px;margin-top:14px">'
+    +'<input id="shop-inp" class="finp" placeholder="Add item..." style="margin-bottom:0;flex:1" onkeydown="if(event.key==='Enter'){var v=document.getElementById('shop-inp').value.trim();if(v){shopAdd(v);document.getElementById('shop-inp').value='';render();}}">'
+    +'<button onclick="var v=document.getElementById('shop-inp').value.trim();if(v){shopAdd(v);document.getElementById('shop-inp').value='';render();}" style="background:#22c55e;border:none;border-radius:8px;color:#000;font-size:15px;padding:10px 16px;cursor:pointer;font-family:inherit;font-weight:700">Add</button>'
+    +'</div>'
+    +'<div style="font-size:10px;color:var(--mu2);margin-top:10px;text-align:center">'+pending.length+' item'+(pending.length!==1?'s':'')+' remaining &middot; syncs across all devices</div>'
+    +'</div>';
+}
+
 function render(){
-  document.getElementById("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():S.tab==="school"?bSchool():S.tab==="info"?bInfo():S.tab==="run"?bRun():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
+  document.getElementById("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():S.tab==="school"?bSchool():S.tab==="info"?bInfo():S.tab==="run"?bRun():S.tab==="shop"?bShop():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
   document.getElementById("app").addEventListener("click",handle);
 }
 
@@ -684,14 +753,16 @@ function bModal(){
 function bNav(){
   var t=S.tab;
   return '<nav class="nav">'
-    +'<button class="nb'+(t==="land"?" on":"")+'" data-a="tab" data-tab="land"><span class="ni" style="font-size:0;line-height:22px"><svg viewBox="0 0 100 100" width="22" height="22" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto"><path d="M50 78 Q47 86 44 93" stroke="#15803d" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M50 12 C65 20,75 36,73 52 C71 66,61 76,50 78 C39 76,29 66,27 52 C25 36,35 20,50 12Z" fill="#16a34a"/><path d="M50 12 Q50 45 50 78" stroke="rgba(255,255,255,.3)" stroke-width="1.5" fill="none"/><path d="M50 28 Q41 34 33 35" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none"/><path d="M50 28 Q59 34 67 35" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none"/><path d="M50 44 Q40 48 32 48" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none"/><path d="M50 44 Q60 48 68 48" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none"/><path d="M50 12 C43 19,33 31,30 45" stroke="rgba(255,255,255,.22)" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg></span>Rascal</button>'
+    +'<button class="nb'+(t==="land"?" on":"")+'" data-a="tab" data-tab="land"><span class="ni">&#127807;</span>Rascal</button>'
     +'<button class="nb'+(t==="home"?" on":"")+'" data-a="tab" data-tab="home"><span class="ni">&#127968;</span>Home</button>'
     +'<button class="nb'+(t==="calendar"?" on":"")+'" data-a="tab" data-tab="calendar"><span class="ni">&#128197;</span>Cal</button>'
+    +'<button class="nb'+(t==="shop"?" on":"")+'" data-a="tab" data-tab="shop" onclick="shopLoaded=false;shopLoad()"><span class="ni">&#128722;</span>Shop</button>'
     +'<button class="nb'+(t==="info"?" on":"")+'" data-a="tab" data-tab="info"><span class="ni">&#128220;</span>Info</button>'
     +'<button class="nb'+(t==="run"?" on":"")+'" data-a="tab" data-tab="run"><span class="ni">&#127939;</span>Run</button>'
     +'<button class="nb" data-a="hard-refresh"><span class="ni">&#x21BB;</span>Update</button>'
     +'</nav>';
 }
+
 
 // ── HANDLE ────────────────────────────────────────────────────────────────────
 function handle(e){
