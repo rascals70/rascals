@@ -289,6 +289,69 @@ function badge24(){
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
+
+function pageSchool(){
+  function term(name,start,end,color){
+    var sd=new Date(start+"T00:00:00"),ed=new Date(end+"T00:00:00");
+    var days=Math.round((ed-sd)/(1000*60*60*24))+1;
+    var now=new Date();now.setHours(0,0,0,0);
+    var active=now>=sd&&now<=ed;
+    var past=now>ed;
+    return'<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--bd)">'
+      +'<div style="width:10px;height:10px;border-radius:50%;background:'+color+';flex-shrink:0;opacity:'+(past?'0.35':'1')+'"></div>'
+      +'<div style="flex:1">'
+      +'<div style="font-size:14px;font-weight:600;color:'+(past?'var(--mu)':' var(--tx)')+'">'+name+(active?' <span style="font-size:10px;color:#22c55e;font-weight:700;letter-spacing:1px">NOW</span>':'')+'</div>'
+      +'<div style="font-size:11px;color:var(--mu);margin-top:2px">'+dateStr(start)+' &ndash; '+dateStr(end)+' &middot; '+days+' days</div>'
+      +'</div></div>';
+  }
+
+  function hol(name,start,end){
+    var now=new Date();now.setHours(0,0,0,0);
+    var sd=new Date(start+"T00:00:00"),ed=new Date(end+"T00:00:00");
+    var active=now>=sd&&now<=ed;
+    var past=now>ed;
+    return'<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--bd)">'
+      +'<div style="font-size:16px">🏖️</div>'
+      +'<div style="flex:1">'
+      +'<div style="font-size:14px;font-weight:500;color:'+(past?'var(--mu2)':' var(--tx)')+'">'+name+(active?' <span style="font-size:10px;color:#f59e0b;font-weight:700">NOW</span>':'')+'</div>'
+      +'<div style="font-size:11px;color:var(--mu);margin-top:2px">'+dateStr(start)+' &ndash; '+dateStr(end)+'</div>'
+      +'</div></div>';
+  }
+
+  return'<div class="page">'
+    +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:2px">School Terms</div>'
+    +'<div style="font-size:12px;color:var(--mu);margin-bottom:20px">Holy Trinity C of E Primary, Cookham</div>'
+
+    +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:8px">2025–2026</div>'
+    +'<div style="background:var(--card);border-radius:14px;border:1px solid var(--bd);overflow:hidden;margin-bottom:16px">'
+    +term("Autumn 1","2025-09-04","2025-10-24","#f59e0b")
+    +hol("Half Term","2025-10-27","2025-10-31")
+    +term("Autumn 2","2025-11-03","2025-12-19","#f59e0b")
+    +hol("Christmas","2025-12-22","2026-01-02")
+    +term("Spring 1","2026-01-05","2026-02-13","#3b82f6")
+    +hol("Half Term","2026-02-16","2026-02-20")
+    +term("Spring 2","2026-02-23","2026-04-01","#3b82f6")
+    +hol("Easter","2026-04-02","2026-04-17")
+    +term("Summer 1","2026-04-20","2026-05-22","#22c55e")
+    +hol("Half Term","2026-05-25","2026-05-29")
+    +term("Summer 2","2026-06-01","2026-07-22","#22c55e")
+    +'</div>'
+
+    +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:8px">2026–2027</div>'
+    +'<div style="background:var(--card);border-radius:14px;border:1px solid var(--bd);overflow:hidden;margin-bottom:16px">'
+    +term("Autumn 1","2026-09-07","2026-10-23","#f59e0b")
+    +hol("Half Term","2026-10-26","2026-10-30")
+    +term("Autumn 2","2026-11-02","2026-12-18","#f59e0b")
+    +hol("Christmas","2026-12-21","2027-01-01")
+    +term("Spring 1","2027-01-04","2027-02-12","#3b82f6")
+    +hol("Half Term","2027-02-15","2027-02-19")
+    +term("Spring 2","2027-02-22","2027-04-01","#3b82f6")
+    +'</div>'
+
+    +'<div style="font-size:10px;color:var(--mu2);text-align:center">Dates based on Royal Borough of Windsor &amp; Maidenhead</div>'
+    +'</div>';
+}
+
 function render(){
   var body=document.getElementById("body");
   var nav=document.getElementById("nav");
