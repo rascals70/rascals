@@ -31,12 +31,13 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans'
   border-top:1px solid var(--bd);
   height:calc(var(--nav-h) + var(--sb));
   padding-bottom:var(--sb);
-  overflow-x:auto;-webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
+  width:100%;max-width:100%;overflow-x:auto;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  box-sizing:border-box;
 }
 .nav::-webkit-scrollbar{display:none}
 .nb{
-  flex:0 0 auto;min-width:56px;
+  flex:1 1 0;min-width:52px;max-width:80px;
   background:none;border:none;color:var(--mu);
   font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;
   font-family:'DM Sans',sans-serif;
