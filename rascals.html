@@ -893,9 +893,11 @@ var STV={
     return !!(r&&r.length>0);
   },
   connect:function(){
-    location.href="https://www.strava.com/oauth/authorize?client_id="+STV.C
+    // In PWA standalone mode, open in Safari so redirect works
+    var url="https://www.strava.com/oauth/authorize?client_id="+STV.C
       +"&response_type=code&redirect_uri="+encodeURIComponent(STV.R)
       +"&approval_prompt=force&scope=read,activity:read_all";
+    window.location.href=url;
   },
   exchange:function(code){
     return fetch("https://www.strava.com/oauth/token",{
@@ -1025,7 +1027,17 @@ var STV={
     var code=p.get("code");
     if(code){
       window.history.replaceState({},"",window.location.pathname);
-      STV.exchange(code).then(function(){STV.load();});
+      STV.exchange(code).then(function(tok){
+      if(tok){
+        // Token saved — if in Safari, close back to PWA won't work
+        // But data is in localStorage so opening PWA will pick it up
+        STV.load();
+        if(window.history.length>1){
+          // Try to go back to PWA
+          document.title="Rascal — Connected!";
+        }
+      }
+    });
     }else if(STV.ok()){
       STV.load();
     }
