@@ -1017,6 +1017,21 @@ var STV={
   }
 };
 </script>
+<script>
+// Strava OAuth init
+(function(){
+  try{
+    var p=new URLSearchParams(window.location.search);
+    var code=p.get("code");
+    if(code){
+      window.history.replaceState({},"",window.location.pathname);
+      STV.exchange(code).then(function(){STV.load();});
+    }else if(STV.ok()){
+      STV.load();
+    }
+  }catch(e){console.error("STV init",e);}
+})();
+</script>
 
 </body>
 </body>
