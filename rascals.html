@@ -804,7 +804,25 @@ function handle(e){
   if(a==="open-edit"){const ev=allEvs().find(e=>e.id===el.dataset.id);if(!ev)return;const ms=getM(ev).filter(m=>m!=="All"&&m!=="Holiday");set({showEdit:true,editId:el.dataset.id,edit:{title:ev.title,date:ev.date,member:ms}});}
   if(a==="close-edit")   set({showEdit:false,editId:null});
   if(a==="edit-toggle-member"){const m=el.dataset.m,cur=Array.isArray(S.edit.member)?S.edit.member:[];set({edit:{...S.edit,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]}});}
-  if(a==="save-edit"){const t=document.getElementById("edit-t")?.value.trim(),d=document.getElementById("edit-d")?.value,ed=document.getElementById("edit-end")?.value||"";if(!t||!d)return;const ms=Array.isArray(S.edit.member)?S.edit.member:[];const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;const inU=S.user.find(e=>e.id===S.editId);if(inU)set({user:S.user.map(e=>e.id===S.editId?{...e,title:t,date:d,endDate:ed,member:mem}:e),showEdit:false,editId:null});else set({user:[...S.user,{id:S.editId,title:t,date:d,endDate:ed,member:mem,source:"edited"}],events:S.events.filter(e=>e.id!==S.editId),showEdit:false,editId:null});}
+  if(a==="save-edit"){
+    const t=document.getElementById("edit-t")?.value.trim();
+    const d=document.getElementById("edit-d")?.value;
+    const ed=document.getElementById("edit-end")?.value||"";
+    if(!t||!d)return;
+    const ms=Array.isArray(S.edit.member)?S.edit.member:[];
+    const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;
+    const id=S.editId;
+    // Check raw arrays (not expanded allEvs)
+    const inUser=S.user.some(e=>e.id===id);
+    const inEvents=S.events.some(e=>e.id===id);
+    if(inUser){
+      set({user:S.user.map(e=>e.id===id?{...e,title:t,date:d,endDate:ed,member:mem}:e),showEdit:false,editId:null});
+    } else if(inEvents){
+      set({events:S.events.map(e=>e.id===id?{...e,title:t,date:d,endDate:ed,member:mem}:e),showEdit:false,editId:null});
+    } else {
+      set({user:[...S.user,{id:id,title:t,date:d,endDate:ed,member:mem,source:"edited"}],showEdit:false,editId:null});
+    }
+  }
   if(a==="delete-event"){const id=el.dataset.id;set({user:S.user.filter(e=>e.id!==id),events:S.events.filter(e=>e.id!==id),showEdit:false,editId:null});}
 }
 
