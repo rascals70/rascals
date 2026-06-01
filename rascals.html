@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rascal">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#040408">
 <title>Rascal</title>
@@ -142,6 +143,16 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'DM Sans'
 .spinner{width:24px;height:24px;border:2px solid var(--bd);border-top-color:#22c55e;
   border-radius:50%;animation:spin .8s linear infinite}
 </style>
+<script>
+(function(){
+  var ico="https://rascals70.github.io/rascals/rascal-tree-v2.png";
+  var m={name:"Rascal",short_name:"Rascal",start_url:"/rascals/rascals.html",display:"standalone",background_color:"#040408",theme_color:"#040408",icons:[{src:ico,sizes:"512x512",type:"image/png"}]};
+  var l=document.createElement("link");
+  l.rel="manifest";
+  l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));
+  document.head.appendChild(l);
+})();
+</script>
 </head>
 <body>
 <div id="app">
