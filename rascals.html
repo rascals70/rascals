@@ -477,8 +477,8 @@ function pageTrains(){
   var today=fmtDate(now);
 
   // National Rail deep links
-  var cmkToPad="https://ojp.nationalrail.co.uk/service/timesandfares/CMK/PAD/"+today.replace(/-/g,"")+"/"+( hr<10?"0":"")+hr+"00/dep";
-  var padToCmk="https://ojp.nationalrail.co.uk/service/timesandfares/PAD/CMK/"+today.replace(/-/g,"")+"/"+( hr<10?"0":"")+hr+"00/dep";
+  var cmkToPad="https://www.thetrainline.com/book/results?origin=CMK&destination=PAD&outwardDate="+today+"T"+(hr<10?"0":"")+hr+":00:00&outwardDateType=departAfter&adults=1";
+  var padToCmk="https://www.thetrainline.com/book/results?origin=PAD&destination=CMK&outwardDate="+today+"T"+(hr<10?"0":"")+hr+":00:00&outwardDateType=departAfter&adults=1";
 
   function routeCard(from,to,label,emoji,link,active){
     return'<div class="card" style="border-color:'+(active?"rgba(34,197,94,.4)":"var(--bd)")+';margin-bottom:12px">'
