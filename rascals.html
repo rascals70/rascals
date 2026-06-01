@@ -297,6 +297,7 @@ function pageSchool(){
     var now=new Date();now.setHours(0,0,0,0);
     var active=now>=sd&&now<=ed;
     var past=now>ed;
+    if(past)return"";
     return'<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--bd)">'
       +'<div style="width:10px;height:10px;border-radius:50%;background:'+color+';flex-shrink:0;opacity:'+(past?'0.35':'1')+'"></div>'
       +'<div style="flex:1">'
@@ -310,6 +311,7 @@ function pageSchool(){
     var sd=new Date(start+"T00:00:00"),ed=new Date(end+"T00:00:00");
     var active=now>=sd&&now<=ed;
     var past=now>ed;
+    if(past)return"";
     return'<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--bd)">'
       +'<div style="font-size:16px">🏖️</div>'
       +'<div style="flex:1">'
