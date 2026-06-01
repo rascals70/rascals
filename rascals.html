@@ -741,37 +741,10 @@ function bCal(){
 
 // ── MODAL ─────────────────────────────────────────────────────────────────────
 function bModal(){
-  var ev=allEvs().find(function(e){return e.id===S.editId;});
-  if(!ev)return '';
-  var ms=Array.isArray(S.edit.member)?S.edit.member:[];
-  var pills=MB.map(function(m){
-    var on=ms.includes(m);
-    var sty=on?'border-color:'+C[m]+';background:'+C[m]+'20;color:'+C[m]:'';
-    return'<button class="pill'+(on?' on':'')+'" data-a="edit-toggle-member" data-m="'+m+'" style="'+sty+'">'
-      +'<span class="pdot" style="background:'+C[m]+'"></span>'+m+'</button>';
-  }).join('');
-  var delBtn=ev.source!=='cozi'
-    ?'<button class="del-btn" data-a="delete-event" data-id="'+ev.id+'">Delete</button>':'';
-  var safeTitle=ev.title.replace(/"/g,'&quot;');
-  return'<div class="modal-bg" data-a="close-edit" onclick="if(event.target===this)set({showEdit:false,editId:null})">'
-    +'<div class="modal" onclick="event.stopPropagation()">'
-    +'<div class="mhdr">'
-    +'<div class="mtitle">Edit Event</div>'
-    +'<button class="mclose" data-a="close-edit" onclick="set({showEdit:false,editId:null})">&#10005;</button>'
-    +'</div>'
-    +'<div class="flabel">Title</div>'
-    +'<input class="finp" id="edit-t" value="'+safeTitle+'">'
-    +'<div class="flabel">Start Date</div>'
-    +'<input class="finp" type="date" id="edit-d" value="'+S.edit.date+'" style="color-scheme:dark">'
-    +'<div class="flabel">End Date <span style="color:var(--mu);font-weight:400">(optional)</span></div>'
-    +'<input class="finp" type="date" id="edit-end" value="'+(S.edit.endDate||'')+'" style="color-scheme:dark;margin-bottom:12px">'
-    +'<div class="flabel">Who</div>'
-    +'<div class="mpills" style="margin-bottom:14px">'+pills+'</div>'
-    +'<div class="brow">'
-    +'<button class="bpri" data-a="save-edit">Save</button>'
-    +delBtn
-    +'<button class="bgh" data-a="close-edit" onclick="set({showEdit:false,editId:null})">Cancel</button>'
-    +'</div></div></div>';
+  const ev=allEvs().find(e=>e.id===S.editId);if(!ev)return"";
+  const ms=Array.isArray(S.edit.member)?S.edit.member:[];
+  const pills=MB.map(m=>{const on=ms.includes(m);return`<button class="pill${on?" on":""}" data-a="edit-toggle-member" data-m="${m}" style="${on?`border-color:${C[m]};background:${C[m]}20;color:${C[m]}`:""}"><span class="pdot" style="background:${C[m]}"></span>${m}</button>`;}).join("");
+  return`<div class="modal-bg" data-a="close-edit" onclick="if(event.target===this)set({showEdit:false,editId:null})"><div class="modal" onclick="event.stopPropagation()"><div class="mhdr"><div class="mtitle">Edit Event</div><button class="mclose" data-a="close-edit" onclick="set({showEdit:false,editId:null})">✕</button></div><div class="flabel">Title</div><input class="finp" id="edit-t" value="${ev.title.replace(/"/g,'&quot;')}"><div class="flabel">Date</div><input class="finp" type="date" id="edit-d" value="${S.edit.date}" style="color-scheme:dark"><div class="flabel">Who</div><div class="mpills" style="margin-bottom:14px">${pills}</div><div class="brow"><button class="bpri" data-a="save-edit">Save</button>${ev.source!=="cozi"?`<button class="del-btn" data-a="delete-event" data-id="${ev.id}">Delete</button>`:""}<button class="bgh" data-a="close-edit" onclick="set({showEdit:false,editId:null})">Cancel</button></div></div></div>`;
 }
 
 
@@ -827,7 +800,7 @@ function handle(e){
   if(a==="open-edit"){const ev=allEvs().find(e=>e.id===el.dataset.id);if(!ev)return;const ms=getM(ev).filter(m=>m!=="All"&&m!=="Holiday");set({showEdit:true,editId:el.dataset.id,edit:{title:ev.title,date:ev.date,member:ms}});}
   if(a==="close-edit")   set({showEdit:false,editId:null});
   if(a==="edit-toggle-member"){const m=el.dataset.m,cur=Array.isArray(S.edit.member)?S.edit.member:[];set({edit:{...S.edit,member:cur.includes(m)?cur.filter(x=>x!==m):[...cur,m]}});}
-  if(a==="save-edit"){const t=document.getElementById("edit-t")?.value.trim(),d=document.getElementById("edit-d")?.value,ed=document.getElementById("edit-end")?.value||"";if(!t||!d)return;const ms=Array.isArray(S.edit.member)?S.edit.member:[];const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;const inU=S.user.find(e=>e.id===S.editId);if(inU)set({user:S.user.map(e=>e.id===S.editId?{...e,title:t,date:d,endDate:ed,member:mem}:e),showEdit:false,editId:null});else set({user:[...S.user,{id:S.editId,title:t,date:d,endDate:ed,member:mem,source:"edited"}],events:S.events.filter(e=>e.id!==S.editId),showEdit:false,editId:null});}
+  if(a==="save-edit"){const t=document.getElementById("edit-t")?.value.trim(),d=document.getElementById("edit-d")?.value;if(!t||!d)return;const ms=Array.isArray(S.edit.member)?S.edit.member:[];const mem=ms.length===0?"All":ms.length===1?ms[0]:ms;const inU=S.user.find(e=>e.id===S.editId);if(inU)set({user:S.user.map(e=>e.id===S.editId?{...e,title:t,date:d,member:mem}:e),showEdit:false,editId:null});else set({user:[...S.user,{id:S.editId,title:t,date:d,member:mem,source:"edited"}],events:S.events.filter(e=>e.id!==S.editId),showEdit:false,editId:null});}
   if(a==="delete-event"){const id=el.dataset.id;set({user:S.user.filter(e=>e.id!==id),events:S.events.filter(e=>e.id!==id),showEdit:false,editId:null});}
 }
 
