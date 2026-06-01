@@ -1029,13 +1029,9 @@ var STV={
       window.history.replaceState({},"",window.location.pathname);
       STV.exchange(code).then(function(tok){
       if(tok){
-        // Token saved — if in Safari, close back to PWA won't work
-        // But data is in localStorage so opening PWA will pick it up
         STV.load();
-        if(window.history.length>1){
-          // Try to go back to PWA
-          document.title="Rascal — Connected!";
-        }
+        // Switch to run tab so user sees data loading
+        set({tab:'run'});
       }
     });
     }else if(STV.ok()){
