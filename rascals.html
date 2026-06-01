@@ -352,6 +352,78 @@ function pageSchool(){
     +'</div>';
 }
 
+
+// ── WEATHER ───────────────────────────────────────────────────────────────────
+var _wx = null, _wxLoading = false, _wxErr = null;
+
+var _WX_CODES = {
+  0:"Clear",1:"Mainly clear",2:"Partly cloudy",3:"Overcast",
+  45:"Foggy",48:"Icy fog",51:"Light drizzle",53:"Drizzle",55:"Heavy drizzle",
+  61:"Light rain",63:"Rain",65:"Heavy rain",71:"Light snow",73:"Snow",75:"Heavy snow",
+  80:"Rain showers",81:"Showers",82:"Heavy showers",85:"Snow showers",86:"Heavy snow showers",
+  95:"Thunderstorm",96:"Thunderstorm",99:"Thunderstorm"
+};
+var _WX_ICONS = {
+  0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",
+  51:"🌦️",53:"🌦️",55:"🌧️",61:"🌦️",63:"🌧️",65:"🌧️",
+  71:"🌨️",73:"❄️",75:"❄️",80:"🌦️",81:"🌧️",82:"⛈️",
+  95:"⛈️",96:"⛈️",99:"⛈️"
+};
+
+function _wxLoad(){
+  if(_wxLoading)return;
+  _wxLoading=true;
+  navigator.geolocation.getCurrentPosition(function(pos){
+    var lat=pos.coords.latitude.toFixed(4);
+    var lon=pos.coords.longitude.toFixed(4);
+    var url="https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon
+      +"&current=temperature_2m,weathercode,windspeed_10m,relativehumidity_2m"
+      +"&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_sum"
+      +"&timezone=Europe%2FLondon&forecast_days=4";
+    fetch(url).then(function(r){return r.json();}).then(function(d){
+      _wx=d;_wxLoading=false;
+      if(S.tab==="home")render();
+    }).catch(function(){_wxLoading=false;_wxErr="Failed to load";if(S.tab==="home")render();});
+  },function(err){
+    _wxLoading=false;
+    _wxErr=err.code===1?"Location denied":"Location unavailable";
+    if(S.tab==="home")render();
+  },{timeout:8000});
+}
+
+function _wxWidget(){
+  if(!navigator.geolocation) return "";
+  if(!_wx&&!_wxLoading&&!_wxErr){
+    setTimeout(_wxLoad,100);
+    return'<div class="card" style="text-align:center;padding:16px"><div class="spinner"></div></div>';
+  }
+  if(_wxLoading) return'<div class="card" style="text-align:center;padding:16px"><div class="spinner" style="margin:0 auto"></div></div>';
+  if(_wxErr) return'<div class="card" style="font-size:13px;color:var(--mu);text-align:center">'+_wxErr+'</div>';
+  var c=_wx.current,d=_wx.daily;
+  var icon=_WX_ICONS[c.weathercode]||"🌡️";
+  var desc=_WX_CODES[c.weathercode]||"";
+  var days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var forecast=d.time.slice(1,4).map(function(date,i){
+    var dt=new Date(date+"T00:00:00");
+    var ic=_WX_ICONS[d.weathercode[i+1]]||"🌡️";
+    return'<div style="text-align:center;flex:1">'
+      +'<div style="font-size:10px;color:var(--mu);margin-bottom:4px">'+days[dt.getDay()]+'</div>'
+      +'<div style="font-size:18px">'+ic+'</div>'
+      +'<div style="font-size:11px;font-weight:600;margin-top:2px">'+Math.round(d.temperature_2m_max[i+1])+"°</div>"
+      +'<div style="font-size:10px;color:var(--mu)">'+Math.round(d.temperature_2m_min[i+1])+"°</div>"
+      +'</div>';
+  }).join("");
+  return'<div class="card" style="padding:14px 16px">'
+    +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'
+    +'<div style="font-size:42px;line-height:1">'+icon+'</div>'
+    +'<div>'
+    +'<div style="font-family:Syne,sans-serif;font-size:32px;font-weight:800;line-height:1">'+Math.round(c.temperature_2m)+'°<span style="font-size:14px;color:var(--mu)">C</span></div>'
+    +'<div style="font-size:12px;color:var(--mu);margin-top:2px">'+desc+' &middot; '+Math.round(c.windspeed_10m)+' km/h</div>'
+    +'</div></div>'
+    +'<div style="display:flex;gap:4px;border-top:1px solid var(--bd);padding-top:12px">'+forecast+'</div>'
+    +'</div>';
+}
+
 function render(){
   var body=document.getElementById("body");
   var nav=document.getElementById("nav");
@@ -544,7 +616,8 @@ function pageHome(){
     +'<div style="font-family:Syne,sans-serif;font-size:28px;font-weight:800;margin-bottom:2px">The Leaf Family</div>'
     +'<div style="font-size:12px;color:var(--mu);margin-bottom:20px">Cookham · Jason, Kerry, Oliver, Louis &amp; Hugo 🐾</div>'
     +'<div style="display:flex;justify-content:space-between;margin-bottom:24px">'+avs+'</div>'
-    +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:10px">Today</div>'
+    +_wxWidget()
+    +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-top:16px;margin-bottom:10px">Today</div>'
     +todayHTML
     +(upcoming.length?'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-top:20px;margin-bottom:10px">Coming Up</div>'+upcoming.map(upRow).join(""):"")
     +'</div>';
