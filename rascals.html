@@ -556,7 +556,8 @@ function pageLand(){
     +'<div style="font-size:11px;color:var(--mu);margin-top:2px">Wed 9 Sep 2026</div>'
     +'<div style="font-size:11px;color:#22c55e;font-weight:600;margin-top:2px">'+msg+'</div>'
     +'</div></div>'
-    +'</div>';
+    +'</div>'
+    +_wxWidget();
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -618,8 +619,7 @@ function pageHome(){
     +'<div style="font-family:Syne,sans-serif;font-size:28px;font-weight:800;margin-bottom:2px">The Leaf Family</div>'
     +'<div style="font-size:12px;color:var(--mu);margin-bottom:20px">Cookham · Jason, Kerry, Oliver, Louis &amp; Hugo 🐾</div>'
     +'<div style="display:flex;justify-content:space-between;margin-bottom:24px">'+avs+'</div>'
-    +_wxWidget()
-    +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-top:16px;margin-bottom:10px">Today</div>'
+    +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:10px">Today</div>'
     +todayHTML
     +(upcoming.length?'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-top:20px;margin-bottom:10px">Coming Up</div>'+upcoming.map(upRow).join(""):"")
     +'</div>';
