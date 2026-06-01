@@ -619,6 +619,40 @@ function bWatch(){
   return out+'</div>';
 }
 
+
+// ── FIREBASE EVENTS (background sync) ────────────────────────────────────────
+var _FB_EV="https://rascal-4c10a-default-rtdb.europe-west1.firebasedatabase.app/events";
+
+function _fbEvSync(){
+  // Fetch events from Firebase in background — doesn't block render
+  fetch(_FB_EV+".json")
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d||typeof d!=="object")return;
+      var arr=Object.keys(d).map(function(k){return d[k];})
+        .filter(function(e){return e&&e.id&&e.date;})
+        .sort(function(a,b){return a.date.localeCompare(b.date);});
+      if(arr.length>0){
+        set({events:arr});
+      }
+    })
+    .catch(function(e){console.log("FB events unavailable, using embedded");});
+}
+
+function _fbEvWrite(ev){
+  // Write single event to Firebase
+  return fetch(_FB_EV+"/"+ev.id+".json",{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(ev)
+  }).catch(function(e){console.log("FB write failed",e);});
+}
+
+function _fbEvDelete(id){
+  return fetch(_FB_EV+"/"+id+".json",{method:"DELETE"})
+    .catch(function(e){console.log("FB delete failed",e);});
+}
+
 function render(){
   document.getElementById("app").innerHTML=`<div class="body">${S.tab==="land"?bLand():S.tab==="home"?bHome():S.tab==="school"?bSchool():S.tab==="info"?bInfo():S.tab==="shop"?bShop():S.tab==="run"?bRun():S.tab==="watch"?bWatch():bCal()}</div>${bNav()}${S.showEdit?bModal():""}`;
   document.getElementById("app").addEventListener("click",handle);
@@ -778,17 +812,20 @@ function doSaveEdit(){
   var ms=Array.isArray(S.edit.member)?S.edit.member:[];
   var mem=ms.length===0?"All":ms.length===1?ms[0]:ms;
   var id=S.editId;
+  var updated=Object.assign({},{id:id,title:t,date:d,member:mem});
+  if(ed)updated.endDate=ed;
+  _fbEvWrite(updated);
   if(S.user.some(function(e){return e.id===id;})){
-    set({user:S.user.map(function(e){return e.id===id?Object.assign({},e,{title:t,date:d,endDate:ed,member:mem}):e;}),showEdit:false,editId:null});
+    set({user:S.user.map(function(e){return e.id===id?updated:e;}),showEdit:false,editId:null});
   } else {
-    set({events:S.events.map(function(e){return e.id===id?Object.assign({},e,{title:t,date:d,endDate:ed,member:mem}):e;}),showEdit:false,editId:null});
+    set({events:S.events.map(function(e){return e.id===id?updated:e;}),showEdit:false,editId:null});
   }
 }
 
 function handle(e){
   const el=e.target.closest("[data-a]");if(!el)return;
   const a=el.dataset.a;
-  if(a==="tab")          set({tab:el.dataset.tab,sel:null,showAdd:false});
+  if(a==="tab")          {set({tab:el.dataset.tab,sel:null,showAdd:false});if(el.dataset.tab==="calendar")_fbEvSync();}
   if(a==="goto-cal")     set({tab:"calendar",filter:el.dataset.m,sel:null});
   if(a==="prev")         S.mo===0?set({mo:11,y:S.y-1,sel:null}):set({mo:S.mo-1,sel:null});
   if(a==="next")         S.mo===11?set({mo:0,y:S.y+1,sel:null}):set({mo:S.mo+1,sel:null});
@@ -846,6 +883,7 @@ try{
   if(_ry&&_rm){S.y=parseInt(_ry);S.mo=parseInt(_rm);sessionStorage.removeItem('rascal_cal_y');sessionStorage.removeItem('rascal_cal_mo');}
 }catch(e){}
 render();
+setTimeout(_fbEvSync, 500); /* sync events from Firebase */
 /* Cozi sync disabled */
 fetch(_wfb+".json").then(function(r){return r.json();}).then(function(d){if(!d)fetch(_wfb+"/.json",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({title:"Killing Them Softly",type:"movie",watched:false,ts:1})});});
 </script>
