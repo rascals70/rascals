@@ -415,7 +415,7 @@ function _wxWidget(){
       +'<div style="font-size:10px;color:var(--mu)">'+Math.round(d.temperature_2m_min[i+1])+"°</div>"
       +'</div>';
   }).join("");
-  return'<div class="card" style="padding:10px 14px;margin-top:12px">'
+  return'<div class="card" style="padding:10px 14px">'
     +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'
     +'<div style="font-size:32px;line-height:1">'+icon+'</div>'
     +'<div>'
@@ -556,8 +556,8 @@ function pageLand(){
     +'<div style="font-size:11px;color:var(--mu);margin-top:2px">Wed 9 Sep 2026</div>'
     +'<div style="font-size:11px;color:#22c55e;font-weight:600;margin-top:2px">'+msg+'</div>'
     +'</div></div>'
-    +'</div>'
-    +_wxWidget();
+    +'<div style="width:100%;margin-top:12px">'+_wxWidget()+'</div>'
+    +'</div>';
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
