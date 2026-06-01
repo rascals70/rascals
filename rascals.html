@@ -384,12 +384,12 @@ function _wxLoad(){
       +"&timezone=Europe%2FLondon&forecast_days=4";
     fetch(url).then(function(r){return r.json();}).then(function(d){
       _wx=d;_wxLoading=false;
-      if(S.tab==="home")render();
-    }).catch(function(){_wxLoading=false;_wxErr="Failed to load";if(S.tab==="home")render();});
+      if(S.tab==="weather")render();
+    }).catch(function(){_wxLoading=false;_wxErr="Failed to load";if(S.tab==="weather")render();});
   },function(err){
     _wxLoading=false;
     _wxErr=err.code===1?"Location denied":"Location unavailable";
-    if(S.tab==="home")render();
+    if(S.tab==="weather")render();
   },{timeout:8000});
 }
 
@@ -426,6 +426,51 @@ function _wxWidget(){
     +'</div>';
 }
 
+
+function pageWeather(){
+  // Load on first open or if stale (>30 min)
+  if(!_wx&&!_wxLoading&&!_wxErr){_wxLoad();}
+  if(_wxLoading) return'<div class="page" style="display:flex;align-items:center;justify-content:center;min-height:60vh"><div class="spinner"></div></div>';
+  if(_wxErr) return'<div class="page"><div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:16px">Weather</div><div class="card" style="text-align:center;padding:24px;color:var(--mu)">'+_wxErr+'<br><br><button onclick="_wx=null;_wxErr=null;_wxLoading=false;_wxLoad()" style="background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);padding:8px 16px;cursor:pointer;font-family:inherit;margin-top:8px">Try again</button></div></div>';
+  if(!_wx) return'<div class="page"><div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:16px">Weather</div><div class="card" style="text-align:center;padding:24px;color:var(--mu)">Loading...</div></div>';
+
+  var c=_wx.current,d=_wx.daily;
+  var icon=_WX_ICONS[c.weathercode]||"🌡️";
+  var desc=_WX_CODES[c.weathercode]||"";
+  var days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var MONTHS_SH=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+  // 7-day forecast
+  var forecast=d.time.map(function(date,i){
+    var dt=new Date(date+"T00:00:00");
+    var ic=_WX_ICONS[d.weathercode[i]]||"🌡️";
+    var desc2=_WX_CODES[d.weathercode[i]]||"";
+    var isToday=i===0;
+    var rain=d.precipitation_sum[i]>0?'<div style="font-size:10px;color:#60a5fa;margin-top:2px">💧'+d.precipitation_sum[i].toFixed(1)+"mm</div>":"";
+    return'<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--bd)">'
+      +'<div style="min-width:44px"><div style="font-size:12px;font-weight:600;color:'+(isToday?'#22c55e':'var(--tx)')+'">'+( isToday?"Today":days[dt.getDay()])+'</div><div style="font-size:10px;color:var(--mu)">'+dt.getDate()+' '+MONTHS_SH[dt.getMonth()]+'</div></div>'
+      +'<div style="font-size:24px;flex-shrink:0">'+ic+'</div>'
+      +'<div style="flex:1"><div style="font-size:13px;color:var(--tx)">'+desc2+'</div>'+rain+'</div>'
+      +'<div style="text-align:right"><div style="font-size:15px;font-weight:700">'+Math.round(d.temperature_2m_max[i])+"°</div>"
+      +'<div style="font-size:11px;color:var(--mu)">'+Math.round(d.temperature_2m_min[i])+"°</div>"
+      +'</div></div>';
+  }).join("");
+
+  return'<div class="page">'
+    +'<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px">'
+    +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800">Weather</div>'
+    +'<button onclick="_wx=null;_wxErr=null;_wxLoading=false;_wxLoad()" style="background:none;border:none;font-size:12px;color:var(--mu);cursor:pointer;font-family:inherit">Refresh</button>'
+    +'</div>'
+    +'<div class="card" style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:16px">'
+    +'<div style="font-size:56px;line-height:1">'+icon+'</div>'
+    +'<div><div style="font-family:Syne,sans-serif;font-size:48px;font-weight:800;line-height:1">'+Math.round(c.temperature_2m)+'°</div>'
+    +'<div style="font-size:14px;color:var(--mu);margin-top:4px">'+desc+'</div>'
+    +'<div style="font-size:12px;color:var(--mu2);margin-top:2px">💨 '+Math.round(c.windspeed_10m)+' km/h &middot; 💧 '+c.relativehumidity_2m+'%</div>'
+    +'</div></div>'
+    +'<div style="background:var(--card);border-radius:14px;border:1px solid var(--bd);overflow:hidden">'+forecast+'</div>'
+    +'</div>';
+}
+
 function render(){
   var body=document.getElementById("body");
   var nav=document.getElementById("nav");
@@ -450,6 +495,7 @@ function page(){
     case"info":     return pageInfo();
     case"run":      return pageRun();
     case"school":   return pageSchool();
+    case"weather":  return pageWeather();
     default:        return pageHome();
   }
 }
@@ -469,6 +515,7 @@ function navHTML(){
     +nb("watch","🎬","Watch")
     +nb("info","📋","Info")
     +nb("run","🏃","Run")
+    +nb("weather","🌤️","Weather")
     +nb("school","🏫","School")
     +'<button class="nb" onclick="doUpdate()"><span class="ni">↻</span>Update</button>';
 }
@@ -556,7 +603,6 @@ function pageLand(){
     +'<div style="font-size:11px;color:var(--mu);margin-top:2px">Wed 9 Sep 2026</div>'
     +'<div style="font-size:11px;color:#22c55e;font-weight:600;margin-top:2px">'+msg+'</div>'
     +'</div></div>'
-    +'<div style="width:100%;margin-top:12px">'+_wxWidget()+'</div>'
     +'</div>';
 }
 
