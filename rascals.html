@@ -324,7 +324,7 @@ function pageSchool(){
     +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:2px">School Terms</div>'
     +'<div style="font-size:12px;color:var(--mu);margin-bottom:20px">Holy Trinity C of E Primary, Cookham</div>'
 
-    +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:8px">2025–2026</div>'
+    +'<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:6px">2025–2026</div>'
     +'<div style="background:var(--card);border-radius:14px;border:1px solid var(--bd);overflow:hidden;margin-bottom:16px">'
     +term("Autumn 1","2025-09-04","2025-10-24","#f59e0b")
     +hol("Half Term","2025-10-27","2025-10-31")
@@ -415,11 +415,11 @@ function _wxWidget(){
       +'<div style="font-size:10px;color:var(--mu)">'+Math.round(d.temperature_2m_min[i+1])+"°</div>"
       +'</div>';
   }).join("");
-  return'<div class="card" style="padding:14px 16px">'
+  return'<div class="card" style="padding:10px 14px;margin-top:12px">'
     +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'
-    +'<div style="font-size:42px;line-height:1">'+icon+'</div>'
+    +'<div style="font-size:32px;line-height:1">'+icon+'</div>'
     +'<div>'
-    +'<div style="font-family:Syne,sans-serif;font-size:32px;font-weight:800;line-height:1">'+Math.round(c.temperature_2m)+'°<span style="font-size:14px;color:var(--mu)">C</span></div>'
+    +'<div style="font-family:Syne,sans-serif;font-size:26px;font-weight:800;line-height:1">'+Math.round(c.temperature_2m)+'°<span style="font-size:14px;color:var(--mu)">C</span></div>'
     +'<div style="font-size:12px;color:var(--mu);margin-top:2px">'+desc+' &middot; '+Math.round(c.windspeed_10m)+' km/h</div>'
     +'</div></div>'
     +'<div style="display:flex;gap:4px;border-top:1px solid var(--bd);padding-top:12px">'+forecast+'</div>'
@@ -521,7 +521,7 @@ function pageLand(){
       +'<div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:5px;letter-spacing:1px;text-transform:uppercase;font-weight:600">'+name+'</div>'
       +'</div>';
   }
-  var tree='<svg viewBox="0 0 120 140" width="80" height="93" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:8px">'
+  var tree='<svg viewBox="0 0 120 140" width="64" height="74" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:8px">'
     +'<path d="M52 140 L56 102 Q58 94 62 90 Q66 94 68 102 L72 140Z" fill="#7a3c14"/>'
     +'<path d="M56 106 Q42 98 24 92" stroke="#7a3c14" stroke-width="5" fill="none" stroke-linecap="round"/>'
     +'<path d="M68 106 Q82 98 100 92" stroke="#7a3c14" stroke-width="5" fill="none" stroke-linecap="round"/>'
@@ -534,11 +534,11 @@ function pageLand(){
     +'<ellipse cx="92" cy="53" rx="22" ry="14" fill="#1e7b14" transform="rotate(25 92 53)"/>'
     +'<ellipse cx="62" cy="28" rx="24" ry="17" fill="#a8d44a"/>'
     +'</svg>';
-  return'<div style="display:flex;flex-direction:column;align-items:center;min-height:100%;padding:220px 24px 40px;background:radial-gradient(ellipse at 50% 25%,rgba(34,197,94,.07) 0%,transparent 65%)">'
+  return'<div style="display:flex;flex-direction:column;align-items:center;min-height:100%;padding:160px 24px 24px;background:radial-gradient(ellipse at 50% 25%,rgba(34,197,94,.07) 0%,transparent 65%)">'
     +tree
-    +'<div style="font-family:Syne,sans-serif;font-size:64px;font-weight:800;letter-spacing:-4px;color:#fff;line-height:1">rascal</div>'
-    +'<div style="font-size:11px;color:var(--mu);letter-spacing:3px;text-transform:uppercase;margin-top:4px;margin-bottom:28px">The Leaf Family</div>'
-    +'<div style="display:flex;justify-content:center;gap:16px;margin-bottom:28px;flex-wrap:wrap">'
+    +'<div style="font-family:Syne,sans-serif;font-size:52px;font-weight:800;letter-spacing:-3px;color:#fff;line-height:1">rascal</div>'
+    +'<div style="font-size:11px;color:var(--mu);letter-spacing:3px;text-transform:uppercase;margin-top:4px;margin-bottom:16px">The Leaf Family</div>'
+    +'<div style="display:flex;justify-content:center;gap:14px;margin-bottom:16px;flex-wrap:wrap">'
     +badge('🏃','Jason','rgba(59,130,246,.8)','rgba(59,130,246,.15)')
     +badge('🌸','Kerry','rgba(236,72,153,.8)','rgba(236,72,153,.15)')
     +badge('📚','Oliver','rgba(34,197,94,.8)','rgba(34,197,94,.15)')
