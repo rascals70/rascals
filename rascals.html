@@ -894,56 +894,20 @@ evLoad();
 </script>
 <script>
 var STV={
-  C:"252665",
-  S:"baa6b378bb17f228dfb918528d8eb68f01065a49",
+  C:"252665",S:"baa6b378bb17f228dfb918528d8eb68f01065a49",
   R:"https://rascals70.github.io/rascals/rascals.html",
-  FB_TOK:"https://rascal-4c10a-default-rtdb.europe-west1.firebasedatabase.app/strava_tokens",
   TARGET_KM:80,
   data:null,
   loading:false,
-
-  // ── Token storage — Firebase as bridge between Safari and PWA ──────────────
-  saveTok:function(ref,acc,exp){
-    // Save to both localStorage AND Firebase
-    try{localStorage.setItem("stv_r",ref);localStorage.setItem("stv_a",acc);localStorage.setItem("stv_e",String(exp));}catch(e){}
-    // Save to Firebase so PWA can read it
-    fetch(STV.FB_TOK+".json",{
-      method:"PUT",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({ref:ref,acc:acc,exp:exp,ts:Date.now()})
-    }).catch(function(){});
-  },
-
-  loadTokFromFB:function(cb){
-    fetch(STV.FB_TOK+".json")
-      .then(function(r){return r.json();})
-      .then(function(d){
-        if(d&&d.ref&&d.acc){
-          try{
-            localStorage.setItem("stv_r",d.ref);
-            localStorage.setItem("stv_a",d.acc);
-            localStorage.setItem("stv_e",String(d.exp));
-          }catch(e){}
-          // Delete from Firebase after reading (one-time bridge)
-          fetch(STV.FB_TOK+".json",{method:"DELETE"}).catch(function(){});
-          if(cb)cb(true);
-        } else {
-          if(cb)cb(false);
-        }
-      })
-      .catch(function(){if(cb)cb(false);});
-  },
-
   ok:function(){
-    try{var r=localStorage.getItem("stv_r");return !!(r&&r.length>0);}catch(e){return false;}
+    var r=localStorage.getItem("stv_r");
+    return !!(r&&r.length>0);
   },
-
   connect:function(){
     location.href="https://www.strava.com/oauth/authorize?client_id="+STV.C
       +"&response_type=code&redirect_uri="+encodeURIComponent(STV.R)
       +"&approval_prompt=force&scope=read,activity:read_all";
   },
-
   exchange:function(code){
     return fetch("https://www.strava.com/oauth/token",{
       method:"POST",
@@ -951,32 +915,36 @@ var STV={
       body:JSON.stringify({client_id:STV.C,client_secret:STV.S,code:code,grant_type:"authorization_code"})
     }).then(function(r){return r.json();}).then(function(d){
       if(d.refresh_token){
-        STV.saveTok(d.refresh_token,d.access_token,d.expires_at);
+        localStorage.setItem("stv_r",d.refresh_token);
+        localStorage.setItem("stv_a",d.access_token);
+        localStorage.setItem("stv_e",String(d.expires_at));
       }
       return d.access_token||null;
     });
   },
-
   tok:function(){
-    var ref,acc,exp;
-    try{ref=localStorage.getItem("stv_r");acc=localStorage.getItem("stv_a");exp=parseInt(localStorage.getItem("stv_e")||"0");}catch(e){}
+    var exp=parseInt(localStorage.getItem("stv_e")||"0");
+    var ref=localStorage.getItem("stv_r");
     if(!ref)return Promise.resolve(null);
-    if(Date.now()/1000<exp-300)return Promise.resolve(acc);
+    if(Date.now()/1000<exp-300)return Promise.resolve(localStorage.getItem("stv_a"));
     return fetch("https://www.strava.com/oauth/token",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({client_id:STV.C,client_secret:STV.S,refresh_token:ref,grant_type:"refresh_token"})
     }).then(function(r){return r.json();}).then(function(d){
-      if(d.access_token){STV.saveTok(d.refresh_token||ref,d.access_token,d.expires_at);}
+      if(d.access_token){
+        localStorage.setItem("stv_a",d.access_token);
+        localStorage.setItem("stv_e",String(d.expires_at));
+        localStorage.setItem("stv_r",d.refresh_token||ref);
+      }
       return d.access_token||null;
     });
   },
-
   load:function(){
     if(STV.loading)return;
     STV.loading=true;
     STV.tok().then(function(t){
-      if(!t){STV.loading=false;if(typeof render==="function")render();return;}
+      if(!t){STV.loading=false;return;}
       var after=Math.floor((Date.now()-366*86400000)/1000);
       Promise.all([
         fetch("https://www.strava.com/api/v3/athlete/activities?per_page=200&after="+after+"&page=1",{headers:{Authorization:"Bearer "+t}}).then(function(r){return r.json();}),
@@ -994,8 +962,9 @@ var STV={
         for(var i=51;i>=0;i--){
           var ws=new Date(mon);ws.setDate(mon.getDate()-i*7);
           var we=new Date(ws);we.setDate(ws.getDate()+6);we.setHours(23,59,59);
-          var km=runs.filter(function(r){var d=new Date(r.start_date_local);return d>=ws&&d<=we;})
-            .reduce(function(s,r){return s+r.distance/1000;},0);
+          var km=runs.filter(function(r){
+            var d=new Date(r.start_date_local);return d>=ws&&d<=we;
+          }).reduce(function(s,r){return s+r.distance/1000;},0);
           weeks.push({ws:new Date(ws),km:parseFloat(km.toFixed(1))});
         }
         var total=(runs.reduce(function(s,r){return s+r.distance;},0)/1000).toFixed(0);
@@ -1003,19 +972,23 @@ var STV={
         STV.data={weeks:weeks,total:total,maxKm:maxKm,count:runs.length,lr:runs[0]||null};
         STV.loading=false;
         if(typeof render==="function")render();
-      }).catch(function(e){console.error("STV fetch",e);STV.loading=false;});
-    }).catch(function(e){console.error("STV tok",e);STV.loading=false;});
+      }).catch(function(e){
+        console.error("STV fetch error",e);
+        STV.loading=false;
+      });
+    }).catch(function(e){
+      console.error("STV tok error",e);
+      STV.loading=false;
+    });
   },
-
   km:function(m){return(m/1000).toFixed(1);},
   pace:function(s,m){var p=s/m*1000;var mn=Math.floor(p/60);var sc=Math.round(p%60);return mn+":"+(sc<10?"0":"")+sc;},
-
   chart:function(){
     if(!STV.ok()){
-      return'<button onclick="STV.connect()" style="width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border:none;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;box-sizing:border-box">'
+      return'<a href="'+STV.R.replace('rascals.html','')+'rascals.html" onclick="STV.connect();return false;" style="display:flex;width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border:none;border-radius:14px;padding:14px 18px;align-items:center;gap:12px;text-decoration:none;box-sizing:border-box">'
         +'<span style="font-size:22px">&#127939;</span>'
         +'<div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#fff">Connect Strava</div>'
-        +'<div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px">Tap to authorise</div></div></button>';
+        +'<div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px">Tap to authorise</div></div></a>';
     }
     if(!STV.data){
       if(!STV.loading)STV.load();
@@ -1035,7 +1008,7 @@ var STV={
     [0,40,80,Math.round(max)].forEach(function(v){if(v>max)return;var y=TPAD+ch-(v/max)*ch;yAxis+='<line x1="'+XPAD+'" y1="'+y.toFixed(1)+'" x2="'+(XPAD+cw)+'" y2="'+y.toFixed(1)+'" stroke="rgba(255,255,255,.06)" stroke-width="1"/><text x="'+(XPAD-3)+'" y="'+(y+3).toFixed(1)+'" fill="#555" font-size="7" text-anchor="end">'+v+'</text>';});
     var targetY=TPAD+ch-(STV.TARGET_KM/max)*ch;
     var targetLine='<line x1="'+XPAD+'" y1="'+targetY.toFixed(1)+'" x2="'+(XPAD+cw)+'" y2="'+targetY.toFixed(1)+'" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,3" opacity="0.7"/><text x="'+(XPAD+cw+2)+'" y="'+(targetY+3).toFixed(1)+'" fill="#22c55e" font-size="7">80</text>';
-    var dLeft=Math.ceil((new Date("2026-09-09")-new Date())/86400000);
+    var race=new Date("2026-09-09");var dLeft=Math.ceil((race-new Date())/86400000);
     var BOX="background:linear-gradient(135deg,rgba(252,76,2,.14),rgba(252,76,2,.04));border:1px solid rgba(252,76,2,.25);border-radius:16px;padding:14px 16px";
     return'<div style="'+BOX+'">'
       +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">'
@@ -1048,34 +1021,25 @@ var STV={
       +yAxis+targetLine+'<path d="'+area+'" fill="url(#og)"/><path d="'+line+'" fill="none" stroke="#fc4c02" stroke-width="1.8" stroke-linejoin="round"/>'+labels
       +'</svg>'
       +'<div style="font-size:9px;color:#444;margin-top:4px;display:flex;align-items:center;gap:6px">'
-      +'<span style="display:inline-block;width:16px;height:1px;border-top:1px dashed #22c55e"></span>'
-      +'<span>80km weekly target</span><span style="margin-left:8px;color:#333">&middot; Live from Strava</span></div>'
+      +'<span style="display:inline-block;width:16px;height:1px;background:#22c55e;border-top:1px dashed #22c55e"></span>'
+      +'<span>80km weekly target</span>'
+      +'<span style="margin-left:8px;color:#333">&middot; Live from Strava</span></div>'
       +'</div>';
   }
 };
 </script>
 <script>
-// Strava OAuth init
 (function(){
   try{
     var p=new URLSearchParams(window.location.search);
     var code=p.get("code");
     if(code){
-      // OAuth callback — exchange code for tokens
       window.history.replaceState({},"",window.location.pathname);
-      STV.exchange(code).then(function(tok){
-        if(tok){STV.load();set({tab:"run"});}
-      });
-    } else if(STV.ok()){
-      // Tokens in localStorage — load directly
+      STV.exchange(code).then(function(){STV.load();});
+    }else if(STV.ok()){
       STV.load();
-    } else {
-      // No tokens in localStorage — check Firebase bridge (PWA reading from Safari session)
-      STV.loadTokFromFB(function(found){
-        if(found){STV.load();set({tab:"run"});}
-      });
     }
-  }catch(e){console.error("STV init",e);}
+  }catch(e){console.error("STV init error",e);}
 })();
 </script>
 
