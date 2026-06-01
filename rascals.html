@@ -352,7 +352,7 @@ function doUpdate(){
 // Restore state after update
 (function(){
   try{
-    if(location.search)history.replaceState({},"",location.pathname);
+    if(location.search&&!location.search.includes('code='))history.replaceState({},"",location.pathname);
     var t=sessionStorage.getItem("r_tab");
     if(t){S.tab=t;sessionStorage.removeItem("r_tab");}
     var y=sessionStorage.getItem("r_y"),mo=sessionStorage.getItem("r_mo");
