@@ -283,9 +283,9 @@ function matchFilter(e){
 
 // Count events today+tomorrow for badge
 function badge24(){
-  var tom=new Date(NOW);tom.setDate(NOW.getDate()+1);
+  var tom=new Date(NOW);tom.setDate(NOW.getDate()+7);
   var ts=fmtDate(tom);
-  return allEvs().filter(function(e){return e.date===TD||e.date===ts;}).length;
+  return allEvs().filter(function(e){return e.date>=TD&&e.date<=ts;}).length;
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
@@ -602,7 +602,10 @@ function pageHome(){
 
   // Avatars
   var avs=MB.map(function(m){
-    var n=all.filter(function(e){return e.date===TD&&(e.member===m||e.member==="All"||(Array.isArray(e.member)&&e.member.indexOf(m)>-1));}).length;
+    // Count events in next 7 days for this member
+    var now7=new Date(NOW);now7.setDate(NOW.getDate()+7);
+    var d7=fmtDate(now7);
+    var n=all.filter(function(e){return e.date>=TD&&e.date<=d7&&(e.member===m||e.member==="All"||(Array.isArray(e.member)&&e.member.indexOf(m)>-1));}).length;
     return'<div style="text-align:center;cursor:pointer" data-a="filter-cal" data-m="'+m+'">'
       +'<div style="position:relative;width:48px;height:48px;border-radius:50%;background:'+C[m]+'20;border:2px solid '+C[m]+'50;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto">'+{Jason:"🏃",Kerry:"🌸",Oliver:"📚",Louis:"⭐",Hugo:"🐾"}[m]
       +(n?'<span class="bdg">'+n+'</span>':'')
