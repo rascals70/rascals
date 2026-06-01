@@ -973,10 +973,10 @@ var STV={
   pace:function(s,m){var p=s/m*1000;var mn=Math.floor(p/60);var sc=Math.round(p%60);return mn+":"+(sc<10?"0":"")+sc;},
   chart:function(){
     if(!STV.ok()){
-      return'<a href="'+STV.R.replace('rascals.html','')+'rascals.html" onclick="STV.connect();return false;" style="display:flex;width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border:none;border-radius:14px;padding:14px 18px;align-items:center;gap:12px;text-decoration:none;box-sizing:border-box">'
+      return'<button onclick="STV.connect()" style="width:100%;background:linear-gradient(135deg,#fc4c02,#e34402);border:none;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;box-sizing:border-box">'
         +'<span style="font-size:22px">&#127939;</span>'
         +'<div style="text-align:left"><div style="font-size:14px;font-weight:700;color:#fff">Connect Strava</div>'
-        +'<div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px">Tap to authorise</div></div></a>';
+        +'<div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px">Tap to authorise</div></div></button>';
     }
     if(!STV.data){
       if(!STV.loading)STV.load();
