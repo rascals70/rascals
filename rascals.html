@@ -242,15 +242,43 @@ function evDelete(id){
 }
 
 // ── EVENT HELPERS ─────────────────────────────────────────────────────────────
+// Term dates for Holy Trinity (term-time recurrence). Each is [start,end] inclusive.
+var TERM_DATES=[
+  ["2026-04-20","2026-05-22"],["2026-06-01","2026-07-22"],
+  ["2026-09-07","2026-10-23"],["2026-11-02","2026-12-18"],
+  ["2027-01-04","2027-02-12"],["2027-02-22","2027-04-01"],
+  ["2027-04-19","2027-05-28"],["2027-06-07","2027-07-21"]
+];
+function inTermTime(ds){
+  return TERM_DATES.some(function(t){return ds>=t[0]&&ds<=t[1];});
+}
 function allEvs(){
   var out=[];
+  // Window for expanding recurring events: 6 months back, 18 months forward
+  var winStart=new Date();winStart.setMonth(winStart.getMonth()-6);
+  var winEnd=new Date();winEnd.setMonth(winEnd.getMonth()+18);
   S.events.forEach(function(e){
-    if(e.endDate&&e.endDate>e.date){
-      var cur=new Date(e.date+"T00:00:00"),end=new Date(e.endDate+"T00:00:00");
-      while(cur<=end){
+    if(e.recur==="weekly"){
+      // Weekly recurrence on the same weekday as e.date
+      var start=new Date(e.date+"T00:00:00");
+      var cur=new Date(start);
+      // Don't go before the event's own start date
+      if(cur<winStart)cur=new Date(winStart);
+      // Align to the correct weekday
+      var targetDow=start.getDay();
+      while(cur.getDay()!==targetDow)cur.setDate(cur.getDate()+1);
+      while(cur<=winEnd){
         var ds=fmtDate(cur);
-        out.push(Object.assign({},e,{date:ds,_span:true}));
-        cur.setDate(cur.getDate()+1);
+        if(ds>=e.date&&(!e.termOnly||inTermTime(ds))){
+          out.push(Object.assign({},e,{date:ds,_recur:true}));
+        }
+        cur.setDate(cur.getDate()+7);
+      }
+    } else if(e.endDate&&e.endDate>e.date){
+      var c2=new Date(e.date+"T00:00:00"),end=new Date(e.endDate+"T00:00:00");
+      while(c2<=end){
+        out.push(Object.assign({},e,{date:fmtDate(c2),_span:true}));
+        c2.setDate(c2.getDate()+1);
       }
     } else {
       out.push(e);
