@@ -1052,7 +1052,7 @@ function toggleAddMember(m){
   var t=document.getElementById("new-t"),d=document.getElementById("new-d"),e=document.getElementById("new-end");
   var cur=Array.isArray(S.nev.member)?S.nev.member:[];
   var next=cur.indexOf(m)>-1?cur.filter(function(x){return x!==m;}):cur.concat([m]);
-  S.nev={title:t?t.value:"",date:d?d.value:"",endDate:e?e.value:"",member:next};
+  S.nev={title:t?t.value:"",date:d?d.value:"",endDate:e?e.value:"",member:next,recur:document.getElementById("new-recur")?.checked?"weekly":undefined,termOnly:document.getElementById("new-term")?.checked||undefined};
   var old=document.querySelector(".modal-bg");if(old)old.remove();
   showAddModal();
 }
@@ -1060,7 +1060,7 @@ function toggleEditMember(m){
   var t=document.getElementById("edit-t"),d=document.getElementById("edit-d"),e=document.getElementById("edit-end");
   var cur=Array.isArray(S.edit.member)?S.edit.member:[];
   var next=cur.indexOf(m)>-1?cur.filter(function(x){return x!==m;}):cur.concat([m]);
-  S.edit=Object.assign({},S.edit,{title:t?t.value:S.edit.title,date:d?d.value:S.edit.date,endDate:e?e.value:"",member:next});
+  S.edit=Object.assign({},S.edit,{title:t?t.value:S.edit.title,date:d?d.value:S.edit.date,endDate:e?e.value:"",member:next,recur:document.getElementById("edit-recur")?.checked?"weekly":undefined,termOnly:document.getElementById("edit-term")?.checked||undefined});
   var old=document.querySelector(".modal-bg");if(old)old.remove();
   showModal();
 }
@@ -1074,6 +1074,11 @@ function doSaveEdit(){
   var id=S.editId;
   var updated={id:id,title:t,date:d,member:mem};
   if(ed)updated.endDate=ed;
+  if(document.getElementById("edit-recur")?.checked){updated.recur="weekly";}
+  if(document.getElementById("edit-term")?.checked){updated.termOnly=true;}
+  // Preserve source
+  var orig=S.events.find(function(e){return e.id===id;});
+  if(orig&&orig.source)updated.source=orig.source;
   // Write to Firebase
   evWrite(updated);
   // Update local state
@@ -1103,6 +1108,9 @@ function showAddModal(){
     +'<input class="finp" type="date" id="new-d" value="'+( S.nev.date||TD)+'" style="color-scheme:dark">'
     +'<div class="flabel">End Date <span style="color:var(--mu);font-weight:400">(optional)</span></div>'
     +'<input class="finp" type="date" id="new-end" style="color-scheme:dark">'
+    +'<div class="flabel">Repeat</div>'
+    +'<label style="display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer"><input type="checkbox" id="new-recur" '+(S.nev.recur==="weekly"?"checked":"")+' style="width:18px;height:18px;accent-color:#22c55e"> <span style="font-size:14px">Every week</span></label>'
+    +'<label style="display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer"><input type="checkbox" id="new-term" '+(S.nev.termOnly?"checked":"")+' style="width:18px;height:18px;accent-color:#22c55e"> <span style="font-size:14px">Term-time only</span></label>'
     +'<div class="flabel">Who</div>'
     +'<div style="margin-bottom:16px">'+pills+'</div>'
     +'<div class="brow">'
@@ -1123,6 +1131,8 @@ function doAddEvent(){
   var id="u"+Date.now();
   var ev={id:id,title:t,date:d,member:mem,source:"user"};
   if(ed)ev.endDate=ed;
+  if(document.getElementById("new-recur")?.checked){ev.recur="weekly";}
+  if(document.getElementById("new-term")?.checked){ev.termOnly=true;}
   evWrite(ev);
   var newEvs=S.events.concat([ev]).sort(function(a,b){return a.date.localeCompare(b.date);});
   set({events:newEvs,showAdd:false,nev:{title:"",date:"",member:[]}});
@@ -1151,7 +1161,7 @@ document.addEventListener("click",function(e){
     // For All/Holiday, show no pills selected (saves as All)
     // For specific members, show them selected
     var ms=Array.isArray(ev.member)?ev.member:(ev.member==="All"||ev.member==="Holiday")?[]:[ ev.member];
-    var ex=document.querySelector(".modal-bg");if(ex)ex.remove();S.showEdit=true;S.editId=id;S.edit={title:ev.title,date:ev.date,endDate:ev.endDate||"",member:ms};showModal();
+    var ex=document.querySelector(".modal-bg");if(ex)ex.remove();S.showEdit=true;S.editId=id;S.edit={title:ev.title,date:ev.date,endDate:ev.endDate||"",member:ms,recur:ev.recur,termOnly:ev.termOnly};showModal();
   }
   if(a==="edit-toggle"){
     var m=el.dataset.m;
