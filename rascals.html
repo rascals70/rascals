@@ -1077,7 +1077,7 @@ function doSaveEdit(){
   var id=S.editId;
   var updated={id:id,title:t,date:d,member:mem};
   if(ed)updated.endDate=ed;
-  if(S.edit.tod&&S.edit.tod!=="allday"){updated.tod=S.edit.tod;}
+  updated.tod=(S.edit.tod&&S.edit.tod!=="allday")?S.edit.tod:"morning";
   if(document.getElementById("edit-recur")?.checked){updated.recur="weekly";}
   if(document.getElementById("edit-term")?.checked){updated.termOnly=true;}
   // Preserve source
@@ -1116,7 +1116,7 @@ function showAddModal(){
     +'<div class="tod-row" style="display:flex;gap:6px;margin-bottom:4px">'
     +["allday","morning","afternoon","evening"].map(function(tod){
       var lbl={allday:"All day",morning:"🌅 AM",afternoon:"☀️ PM",evening:"🌆 Eve"}[tod];
-      var on=(S.nev.tod||"allday")===tod;
+      var on=(S.nev.tod||"morning")===tod;
       return '<button class="todpill'+(on?" on":"")+'" data-a="add-tod" data-tod="'+tod+'" style="flex:1;padding:8px 4px;border-radius:8px;border:1px solid '+(on?"#22c55e":"var(--bd)")+';background:'+(on?"#22c55e20":"var(--card2)")+';color:'+(on?"#22c55e":"var(--tx)")+';font-size:11px;font-weight:600;font-family:inherit;cursor:pointer">'+lbl+'</button>';
     }).join("")
     +'</div>'
@@ -1143,7 +1143,7 @@ function doAddEvent(){
   var id="u"+Date.now();
   var ev={id:id,title:t,date:d,member:mem,source:"user"};
   if(ed)ev.endDate=ed;
-  if(S.nev.tod&&S.nev.tod!=="allday"){ev.tod=S.nev.tod;}
+  ev.tod=(S.nev.tod&&S.nev.tod!=="allday")?S.nev.tod:"morning";
   if(document.getElementById("new-recur")?.checked){ev.recur="weekly";}
   if(document.getElementById("new-term")?.checked){ev.termOnly=true;}
   evWrite(ev);
@@ -1174,7 +1174,7 @@ document.addEventListener("click",function(e){
     // For All/Holiday, show no pills selected (saves as All)
     // For specific members, show them selected
     var ms=Array.isArray(ev.member)?ev.member:(ev.member==="All"||ev.member==="Holiday")?[]:[ ev.member];
-    var ex=document.querySelector(".modal-bg");if(ex)ex.remove();S.showEdit=true;S.editId=id;S.edit={title:ev.title,date:ev.date,endDate:ev.endDate||"",member:ms,recur:ev.recur,termOnly:ev.termOnly,tod:ev.tod||"allday"};showModal();
+    var ex=document.querySelector(".modal-bg");if(ex)ex.remove();S.showEdit=true;S.editId=id;S.edit={title:ev.title,date:ev.date,endDate:ev.endDate||"",member:ms,recur:ev.recur,termOnly:ev.termOnly,tod:ev.tod||"morning"};showModal();
   }
   if(a==="edit-toggle"){
     var m=el.dataset.m;
