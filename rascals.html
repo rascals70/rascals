@@ -832,12 +832,19 @@ function pageCal(){
   // Upcoming events list — shows when no specific day selected (e.g. after picking a member filter)
   var upHTML='';
   if(!S.sel){
-    var upcoming=all.filter(function(e){return e.date>=TD&&matchFilter(e);})
-      .sort(evSort)
-      .slice(0,15);
+    var nowD2=new Date();
+    var viewingCur=(S.y===nowD2.getFullYear()&&S.mo===nowD2.getMonth());
+    var monthPfx=S.y+"-"+p2(S.mo+1);
+    var upcoming;
+    if(viewingCur){
+      upcoming=all.filter(function(e){return e.date>=TD&&matchFilter(e);}).sort(evSort).slice(0,15);
+    } else {
+      upcoming=all.filter(function(e){return e.date.indexOf(monthPfx)===0&&matchFilter(e);}).sort(evSort);
+    }
     if(upcoming.length){
+      var lbl=viewingCur?"Upcoming":(MONTHS_S[S.mo]+" "+S.y);
       upHTML='<div style="margin-top:16px">';
-      upHTML+='<div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:10px">Upcoming</div>';
+      upHTML+='<div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:10px">'+lbl+'</div>';
       upcoming.forEach(function(e){
         var col=primColor(e);
         var d=new Date(e.date+"T00:00:00");
