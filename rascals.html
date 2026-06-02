@@ -783,12 +783,36 @@ function pageCal(){
     }
   }
 
+  // Upcoming events list — shows when no specific day selected (e.g. after picking a member filter)
+  var upHTML='';
+  if(!S.sel){
+    var upcoming=all.filter(function(e){return e.date>=TD&&matchFilter(e);})
+      .sort(function(a,b){return a.date.localeCompare(b.date);})
+      .slice(0,15);
+    if(upcoming.length){
+      upHTML='<div style="margin-top:16px">';
+      upHTML+='<div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:10px">Upcoming</div>';
+      upcoming.forEach(function(e){
+        var col=primColor(e);
+        var d=new Date(e.date+"T00:00:00");
+        var ds=DAYS_S[d.getDay()]+" "+d.getDate()+" "+MONTHS_S[d.getMonth()];
+        upHTML+='<div class="ev-row" style="border-left-color:'+col+'" data-a="open-edit" data-id="'+e.id+'">'
+          +'<div style="flex:1"><div class="ev-title">'+e.title+'</div>'
+          +'<div class="ev-sub">'+ds+' &middot; '+memberLabel(e.member)+'</div></div>'
+          +'<span style="color:var(--mu);font-size:18px">›</span></div>';
+      });
+      upHTML+='</div>';
+    } else {
+      upHTML='<div style="margin-top:24px;text-align:center;color:var(--mu);font-size:13px;padding:20px">No upcoming events</div>';
+    }
+  }
+
   return'<div class="page" style="padding-top:calc(var(--st) + 20px);overflow-x:hidden">'
     +'<div style="position:sticky;top:0;z-index:10;background:var(--bg);padding:calc(var(--st) + 60px) 0 12px;margin-bottom:4px;overflow:visible">'
     +header
     +'<div style="display:flex;gap:6px;flex-wrap:wrap;padding-bottom:8px">'+pills.join("")+'</div>'
     +'</div>'
-    +dayHeaders+grid+selHTML
+    +dayHeaders+grid+selHTML+upHTML
     +'<button data-a="show-add" style="position:fixed;bottom:calc(var(--nav-h) + var(--sb) + 16px);right:16px;width:50px;height:50px;border-radius:25px;background:#22c55e;border:none;color:#000;font-size:28px;cursor:pointer;box-shadow:0 4px 16px rgba(34,197,94,.4)">+</button>'
     +'</div>';
 }
