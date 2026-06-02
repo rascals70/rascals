@@ -975,7 +975,7 @@ function showModal(){
   el.className="modal-bg";
   el.style.pointerEvents="auto";
   el.onclick=function(e){if(e.target===el)closeModal();};
-  el.innerHTML='<div class="modal" onclick="event.stopPropagation()">'
+  el.innerHTML='<div class="modal">'
     +'<div class="mhdr"><div class="mtitle">Edit Event</div>'
     +'<button class="mclose" onclick="closeModal()">✕</button></div>'
     +'<div class="flabel">Title</div>'
@@ -1042,7 +1042,7 @@ function showAddModal(){
   el.className="modal-bg";
   el.style.pointerEvents="auto";
   el.onclick=function(e){if(e.target===el)closeModal();};
-  el.innerHTML='<div class="modal" onclick="event.stopPropagation()">'
+  el.innerHTML='<div class="modal">'
     +'<div class="mhdr"><div class="mtitle">Add Event</div>'
     +'<button class="mclose" onclick="closeModal()">✕</button></div>'
     +'<div class="flabel">Title</div>'
