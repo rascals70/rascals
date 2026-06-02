@@ -697,7 +697,7 @@ function pageHome(){
   var upcoming;
   if(viewingCurrent){
     // Current month — show upcoming from today
-    upcoming=allEvs().filter(function(e){return e.date>=TD&&matchFilter(e);}).sort(evSort);
+    upcoming=allEvs().filter(function(e){return e.date>TD&&matchFilter(e);}).sort(evSort);
     // Dedupe recurring by id+date
     var seen={};upcoming=upcoming.filter(function(e){var k=e.id+e.date;if(seen[k])return false;seen[k]=1;return true;}).slice(0,12);
   } else {
@@ -741,7 +741,7 @@ function pageHome(){
     // Count events in next 7 days for this member
     var now7=new Date(NOW);now7.setDate(NOW.getDate()+7);
     var d7=fmtDate(now7);
-    var n=all.filter(function(e){return e.date>=TD&&e.date<=d7&&(e.member===m||e.member==="All"||(Array.isArray(e.member)&&e.member.indexOf(m)>-1));}).length;
+    var n=all.filter(function(e){return e.date>TD&&e.date<=d7&&(e.member===m||e.member==="All"||(Array.isArray(e.member)&&e.member.indexOf(m)>-1));}).length;
     return'<div style="text-align:center;cursor:pointer" data-a="filter-cal" data-m="'+m+'">'
       +'<div style="position:relative;width:48px;height:48px;border-radius:50%;background:'+C[m]+'20;border:2px solid '+C[m]+'50;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto">'+{Jason:"🏃",Kerry:"🌸",Oliver:"📚",Louis:"⭐",Hugo:"🐾"}[m]
       +(n?'<span class="bdg">'+n+'</span>':'')
