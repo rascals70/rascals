@@ -569,6 +569,7 @@ function page(){
     case"info":     return pageInfo();
     case"run":      return pageRun();
     case"school":   return pageSchool();
+    case"todo":     return pageTodo();
     case"weather":  return pageWeather();
     default:        return pageHome();
   }
@@ -591,6 +592,7 @@ function navHTML(){
     +nb("run","🏃","Run")
     +nb("weather","🌤️","Weather")
     +nb("school","🏫","School")
+    +nb("todo","✅","To-do")
     +'<button class="nb" onclick="doUpdate()"><span class="ni">↻</span>Update</button>';
 }
 
@@ -861,6 +863,45 @@ function _sAdd(n){fetch(_fb_shop+"/.json",{method:"POST",headers:{"Content-Type"
 function _sTog(k,d){fetch(_fb_shop+"/"+k+"/done.json",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(!d)}).then(function(){_sLoad();});}
 function _sDel(k){fetch(_fb_shop+"/"+k+".json",{method:"DELETE"}).then(function(){_sLoad();});}
 function _sClr(){var dn=_si.filter(function(i){return i.done;});Promise.all(dn.map(function(i){return fetch(_fb_shop+"/"+i.k+".json",{method:"DELETE"});})).then(function(){_sLoad();});}
+
+var _ti=[],_tl=false;
+var _fb_todo="https://rascal-4c10a-default-rtdb.europe-west1.firebasedatabase.app/todo";
+function _tLoad(){
+  fetch(_fb_todo+".json").then(function(r){return r.json();}).then(function(d){
+    _ti=d&&typeof d==="object"?Object.keys(d).map(function(k){return Object.assign({k:k},d[k]);}).sort(function(a,b){return(a.ts||0)-(b.ts||0);}):[];
+    _tl=true;if(S.tab==="todo")render();
+  }).catch(function(){_tl=true;if(S.tab==="todo")render();});
+}
+function _tAdd(n){fetch(_fb_todo+"/.json",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:n,done:false,ts:Date.now()})}).then(function(){_tLoad();});}
+function _tTog(k,d){fetch(_fb_todo+"/"+k+"/done.json",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(!d)}).then(function(){_tLoad();});}
+function _tDel(k){fetch(_fb_todo+"/"+k+".json",{method:"DELETE"}).then(function(){_tLoad();});}
+function _tClr(){var dn=_ti.filter(function(i){return i.done;});Promise.all(dn.map(function(i){return fetch(_fb_todo+"/"+i.k+".json",{method:"DELETE"});})).then(function(){_tLoad();});}
+
+function pageTodo(){
+  if(!_tl){_tLoad();return'<div class="page"><p style="color:var(--mu)">Loading...</p></div>';}
+  var dn=_ti.filter(function(i){return i.done;}).length;
+  var rows="";
+  for(var i=0;i<_ti.length;i++){
+    var it=_ti[i];
+    rows+='<div style="display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--card);border-radius:12px;margin-bottom:7px;border:1px solid var(--bd)">'
+      +'<div style="width:22px;height:22px;border-radius:50%;border:2px solid '+(it.done?'#22c55e':'var(--mu2)')+';background:'+(it.done?'#22c55e':'transparent')+';display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;cursor:pointer;flex-shrink:0" data-a="todo-tog" data-k="'+it.k+'" data-d="'+it.done+'">'+( it.done?"\u2713":"")+'</div>'
+      +'<div style="flex:1;font-size:15px;font-weight:500;color:var(--tx)'+(it.done?";text-decoration:line-through;opacity:.5":"")+'">'+it.name+'</div>'
+      +'<div style="font-size:18px;color:var(--mu2);padding:4px 4px 4px 8px;cursor:pointer" data-a="todo-del" data-k="'+it.k+'">\u2715</div>'
+      +'</div>';
+  }
+  return'<div class="page">'
+    +'<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px">'
+    +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800">To-do</div>'
+    +(dn?'<button data-a="todo-clr" style="background:none;border:none;font-size:12px;color:var(--mu);cursor:pointer;font-family:inherit">Clear done ('+dn+')</button>':"")
+    +'</div>'
+    +(_ti.length===0?'<p style="color:var(--mu2);font-size:14px;font-style:italic">Nothing to do \ud83c\udf89</p>':rows)
+    +'<div style="margin-top:14px">'
+    +'<input id="ti" placeholder="Add task..." style="width:100%;box-sizing:border-box;background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:14px;padding:9px 10px;font-family:DM Sans,sans-serif;margin-bottom:8px">'
+    +'<button data-a="todo-add" style="width:100%;background:#22c55e;border:none;border-radius:8px;color:#000;font-size:15px;padding:11px;cursor:pointer;font-weight:700;font-family:inherit">Add task</button>'
+    +'</div>'
+    +'<div style="font-size:10px;color:var(--mu2);margin-top:10px;text-align:center">Syncs across all devices</div>'
+    +'</div>';
+}
 
 function pageShop(){
   if(!_sl){_sLoad();return'<div class="page"><p style="color:var(--mu)">Loading...</p></div>';}
@@ -1258,6 +1299,10 @@ document.addEventListener("click",function(e){
   if(a==="shop-del"){_sDel(el.dataset.k);}
   if(a==="shop-add"){var sv=document.getElementById("si");if(sv&&sv.value.trim()){_sAdd(sv.value.trim());sv.value="";}}
   if(a==="shop-clr"){_sClr();}
+  if(a==="todo-tog"){_tTog(el.dataset.k,el.dataset.d==="true");}
+  if(a==="todo-del"){_tDel(el.dataset.k);}
+  if(a==="todo-add"){var tv=document.getElementById("ti");if(tv&&tv.value.trim()){_tAdd(tv.value.trim());tv.value="";}}
+  if(a==="todo-clr"){_tClr();}
   // Watch
   if(a==="watch-tog"){_wTog(el.dataset.k,el.dataset.w==="true");}
   if(a==="watch-del"){_wDel(el.dataset.k);}
