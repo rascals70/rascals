@@ -1079,8 +1079,9 @@ document.addEventListener("click",function(e){
     var id=el.dataset.id;
     var ev=S.events.find(function(e){return e.id===id;});
     if(!ev)return;
-    var ms=Array.isArray(ev.member)?ev.member:[ev.member==="All"?"All":ev.member];
-    if(ms[0]==="All")ms=[];
+    // For All/Holiday, show no pills selected (saves as All)
+    // For specific members, show them selected
+    var ms=Array.isArray(ev.member)?ev.member:(ev.member==="All"||ev.member==="Holiday")?[]:[ ev.member];
     set({showEdit:true,editId:id,edit:{title:ev.title,date:ev.date,endDate:ev.endDate||"",member:ms}});
     showModal();
   }
@@ -1088,7 +1089,17 @@ document.addEventListener("click",function(e){
     var m=el.dataset.m;
     var cur=Array.isArray(S.edit.member)?S.edit.member:[];
     var next=cur.indexOf(m)>-1?cur.filter(function(x){return x!==m;}):[...cur,m];
-    set({edit:Object.assign({},S.edit,{member:next})});
+    // Preserve any typed values before re-rendering
+    var tv=document.getElementById("edit-t")?.value;
+    var dv=document.getElementById("edit-d")?.value;
+    var ev=document.getElementById("edit-end")?.value;
+    var newEdit=Object.assign({},S.edit,{member:next});
+    if(tv)newEdit.title=tv;
+    if(dv)newEdit.date=dv;
+    if(ev!==undefined)newEdit.endDate=ev;
+    S.edit=newEdit;
+    // Remove and re-add modal without full render
+    var old=document.querySelector(".modal-bg");if(old)old.remove();
     showModal();
   }
   if(a==="add-toggle"){
