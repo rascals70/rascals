@@ -867,8 +867,8 @@ var _fb_todo="https://rascal-4c10a-default-rtdb.europe-west1.firebasedatabase.ap
 function _tLoad(){
   fetch(_fb_todo+".json").then(function(r){return r.json();}).then(function(d){
     _ti=d&&typeof d==="object"?Object.keys(d).map(function(k){return Object.assign({k:k},d[k]);}).sort(function(a,b){return(a.ts||0)-(b.ts||0);}):[];
-    _tl=true;if(S.tab==="todo")render();
-  }).catch(function(){_tl=true;if(S.tab==="todo")render();});
+    _tl=true;if(S.tab==="shop")render();
+  }).catch(function(){_tl=true;if(S.tab==="shop")render();});
 }
 function _tAdd(n){fetch(_fb_todo+"/.json",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:n,done:false,ts:Date.now()})}).then(function(){_tLoad();});}
 function _tTog(k,d){fetch(_fb_todo+"/"+k+"/done.json",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(!d)}).then(function(){_tLoad();});}
