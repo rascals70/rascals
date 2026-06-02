@@ -564,12 +564,11 @@ function page(){
     case"land":     return pageLand();
     case"home":     return pageHome();
     case"calendar": return pageCal();
-    case"shop":     return pageShop();
+    case"shop":     return pageLists();
     case"watch":    return pageWatch();
     case"info":     return pageInfo();
     case"run":      return pageRun();
     case"school":   return pageSchool();
-    case"todo":     return pageTodo();
     case"weather":  return pageWeather();
     default:        return pageHome();
   }
@@ -586,13 +585,12 @@ function navHTML(){
   return nb("land","🌿","Rascal")
     +'<button class="nb'+(t==="home"?" on":"")+'" data-a="tab" data-tab="home">'+bdg+'<span class="ni">🏠</span>Home</button>'
     +nb("calendar","📅","Cal")
-    +nb("shop","🛒","Shop")
+    +nb("shop","📝","Lists")
     +nb("watch","🎬","Watch")
     +nb("info","📋","Info")
     +nb("run","🏃","Run")
     +nb("weather","🌤️","Weather")
     +nb("school","🏫","School")
-    +nb("todo","✅","To-do")
     +'<button class="nb" onclick="doUpdate()"><span class="ni">↻</span>Update</button>';
 }
 
@@ -899,6 +897,62 @@ function pageTodo(){
     +'<input id="ti" placeholder="Add task..." style="width:100%;box-sizing:border-box;background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:14px;padding:9px 10px;font-family:DM Sans,sans-serif;margin-bottom:8px">'
     +'<button data-a="todo-add" style="width:100%;background:#22c55e;border:none;border-radius:8px;color:#000;font-size:15px;padding:11px;cursor:pointer;font-weight:700;font-family:inherit">Add task</button>'
     +'</div>'
+    +'<div style="font-size:10px;color:var(--mu2);margin-top:10px;text-align:center">Syncs across all devices</div>'
+    +'</div>';
+}
+
+function pageLists(){
+  var v=S.listView||"shop";
+  var toggle='<div style="display:flex;gap:6px;margin-bottom:16px;background:var(--card2);border-radius:12px;padding:4px">'
+    +'<button data-a="list-view" data-v="shop" style="flex:1;padding:10px;border-radius:9px;border:none;background:'+(v==="shop"?"#22c55e":"transparent")+';color:'+(v==="shop"?"#000":"var(--mu)")+';font-size:14px;font-weight:700;font-family:inherit;cursor:pointer">🛒 Shopping</button>'
+    +'<button data-a="list-view" data-v="todo" style="flex:1;padding:10px;border-radius:9px;border:none;background:'+(v==="todo"?"#22c55e":"transparent")+';color:'+(v==="todo"?"#000":"var(--mu)")+';font-size:14px;font-weight:700;font-family:inherit;cursor:pointer">✅ To-do</button>'
+    +'</div>';
+  // Build the inner body depending on view
+  var inner;
+  if(v==="todo"){
+    if(!_tl){_tLoad();inner='<p style="color:var(--mu)">Loading...</p>';}
+    else{
+      var dnT=_ti.filter(function(i){return i.done;}).length;
+      var rowsT="";
+      for(var i=0;i<_ti.length;i++){
+        var it=_ti[i];
+        rowsT+='<div style="display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--card);border-radius:12px;margin-bottom:7px;border:1px solid var(--bd)">'
+          +'<div style="width:22px;height:22px;border-radius:50%;border:2px solid '+(it.done?"#22c55e":"var(--mu2)")+';background:'+(it.done?"#22c55e":"transparent")+';display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;cursor:pointer;flex-shrink:0" data-a="todo-tog" data-k="'+it.k+'" data-d="'+it.done+'">'+( it.done?"\u2713":"")+'</div>'
+          +'<div style="flex:1;font-size:15px;font-weight:500;color:var(--tx)'+(it.done?";text-decoration:line-through;opacity:.5":"")+'">'+it.name+'</div>'
+          +'<div style="font-size:18px;color:var(--mu2);padding:4px 4px 4px 8px;cursor:pointer" data-a="todo-del" data-k="'+it.k+'">\u2715</div>'
+          +'</div>';
+      }
+      inner=(dnT?'<div style="text-align:right;margin-bottom:8px"><button data-a="todo-clr" style="background:none;border:none;font-size:12px;color:var(--mu);cursor:pointer;font-family:inherit">Clear done ('+dnT+')</button></div>':"")
+        +(_ti.length===0?'<p style="color:var(--mu2);font-size:14px;font-style:italic">Nothing to do \ud83c\udf89</p>':rowsT)
+        +'<div style="margin-top:14px">'
+        +'<input id="ti" placeholder="Add task..." style="width:100%;box-sizing:border-box;background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:14px;padding:9px 10px;font-family:DM Sans,sans-serif;margin-bottom:8px">'
+        +'<button data-a="todo-add" style="width:100%;background:#22c55e;border:none;border-radius:8px;color:#000;font-size:15px;padding:11px;cursor:pointer;font-weight:700;font-family:inherit">Add task</button>'
+        +'</div>';
+    }
+  } else {
+    if(!_sl){_sLoad();inner='<p style="color:var(--mu)">Loading...</p>';}
+    else{
+      var dnS=_si.filter(function(i){return i.done;}).length;
+      var rowsS="";
+      for(var j=0;j<_si.length;j++){
+        var s=_si[j];
+        rowsS+='<div style="display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--card);border-radius:12px;margin-bottom:7px;border:1px solid var(--bd)">'
+          +'<div style="width:22px;height:22px;border-radius:50%;border:2px solid '+(s.done?"#22c55e":"var(--mu2)")+';background:'+(s.done?"#22c55e":"transparent")+';display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;cursor:pointer;flex-shrink:0" data-a="shop-tog" data-k="'+s.k+'" data-d="'+s.done+'">'+( s.done?"\u2713":"")+'</div>'
+          +'<div style="flex:1;font-size:15px;font-weight:500;color:var(--tx)'+(s.done?";text-decoration:line-through;opacity:.5":"")+'">'+s.name+'</div>'
+          +'<div style="font-size:18px;color:var(--mu2);padding:4px 4px 4px 8px;cursor:pointer" data-a="shop-del" data-k="'+s.k+'">\u2715</div>'
+          +'</div>';
+      }
+      inner=(dnS?'<div style="text-align:right;margin-bottom:8px"><button data-a="shop-clr" style="background:none;border:none;font-size:12px;color:var(--mu);cursor:pointer;font-family:inherit">Clear done ('+dnS+')</button></div>':"")
+        +(_si.length===0?'<p style="color:var(--mu2);font-size:14px;font-style:italic">Nothing on the list</p>':rowsS)
+        +'<div style="margin-top:14px">'
+        +'<input id="si" placeholder="Add item..." style="width:100%;box-sizing:border-box;background:var(--card2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:14px;padding:9px 10px;font-family:DM Sans,sans-serif;margin-bottom:8px">'
+        +'<button data-a="shop-add" style="width:100%;background:#22c55e;border:none;border-radius:8px;color:#000;font-size:15px;padding:11px;cursor:pointer;font-weight:700;font-family:inherit">Add to list</button>'
+        +'</div>';
+    }
+  }
+  return'<div class="page">'
+    +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:16px">Lists</div>'
+    +toggle+inner
     +'<div style="font-size:10px;color:var(--mu2);margin-top:10px;text-align:center">Syncs across all devices</div>'
     +'</div>';
 }
@@ -1303,6 +1357,7 @@ document.addEventListener("click",function(e){
   if(a==="todo-del"){_tDel(el.dataset.k);}
   if(a==="todo-add"){var tv=document.getElementById("ti");if(tv&&tv.value.trim()){_tAdd(tv.value.trim());tv.value="";}}
   if(a==="todo-clr"){_tClr();}
+  if(a==="list-view"){S.listView=el.dataset.v;render();}
   // Watch
   if(a==="watch-tog"){_wTog(el.dataset.k,el.dataset.w==="true");}
   if(a==="watch-del"){_wDel(el.dataset.k);}
