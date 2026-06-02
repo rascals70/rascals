@@ -523,9 +523,8 @@ function render(){
   body.innerHTML=page();
   nav.innerHTML=navHTML();
 
-  if(S.showEdit)showModal();
-  else{var m=document.querySelector(".modal-bg");if(m)m.remove();}
-  if(S.showAdd)showAddModal();
+  // Modals are created by their handlers, not render. Just clean up if closed.
+  if(!S.showEdit&&!S.showAdd){var m=document.querySelector(".modal-bg");if(m)m.remove();}
 }
 
 function page(){
@@ -1092,7 +1091,7 @@ document.addEventListener("click",function(e){
   if(a==="cal-prev"){var nm=S.mo-1;set({mo:nm<0?11:nm,y:nm<0?S.y-1:S.y,sel:null});}
   if(a==="cal-next"){var nm=S.mo+1;set({mo:nm>11?0:nm,y:nm>11?S.y+1:S.y,sel:null});}
   if(a==="cal-day"){set({sel:el.dataset.ds});}
-  if(a==="show-add"){set({showAdd:true,nev:{title:"",date:S.sel||TD,member:[]}});showAddModal();}
+  if(a==="show-add"){var ex=document.querySelector(".modal-bg");if(ex)ex.remove();S.showAdd=true;S.nev={title:"",date:S.sel||TD,member:[]};showAddModal();}
   if(a==="open-edit"){
     var id=el.dataset.id;
     var ev=S.events.find(function(e){return e.id===id;});
@@ -1100,8 +1099,7 @@ document.addEventListener("click",function(e){
     // For All/Holiday, show no pills selected (saves as All)
     // For specific members, show them selected
     var ms=Array.isArray(ev.member)?ev.member:(ev.member==="All"||ev.member==="Holiday")?[]:[ ev.member];
-    set({showEdit:true,editId:id,edit:{title:ev.title,date:ev.date,endDate:ev.endDate||"",member:ms}});
-    showModal();
+    var ex=document.querySelector(".modal-bg");if(ex)ex.remove();S.showEdit=true;S.editId=id;S.edit={title:ev.title,date:ev.date,endDate:ev.endDate||"",member:ms};showModal();
   }
   if(a==="edit-toggle"){
     var m=el.dataset.m;
