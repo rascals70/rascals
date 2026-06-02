@@ -205,7 +205,7 @@ function evLoad(){
       if(d&&typeof d==="object"){
         var arr=Object.keys(d).map(function(k){return d[k];})
           .filter(function(e){return e&&e.id&&e.date;})
-          .sort(function(a,b){return a.date.localeCompare(b.date);});
+          .sort(evSort);
         set({events:arr,evLoaded:true});
       } else {
         // Empty — seed from EMBEDDED
@@ -252,6 +252,8 @@ var TERM_DATES=[
 function inTermTime(ds){
   return TERM_DATES.some(function(t){return ds>=t[0]&&ds<=t[1];});
 }
+function todOrder(t){return{morning:0,afternoon:1,evening:2,allday:3}[t||"morning"];}
+function evSort(a,b){var d=a.date.localeCompare(b.date);return d!==0?d:todOrder(a.tod)-todOrder(b.tod);}
 function allEvs(){
   var out=[];
   // Window for expanding recurring events: 6 months back, 18 months forward
@@ -691,7 +693,7 @@ function pageHome(){
   var todayEvs=all.filter(function(e){return e.date===TD;});
   var tom=new Date(NOW);tom.setDate(NOW.getDate()+1);var tomStr=fmtDate(tom);
   var upcoming=S.events.filter(function(e){return e.date>TD;})
-    .sort(function(a,b){return a.date.localeCompare(b.date);}).slice(0,8);
+    .sort(evSort).slice(0,8);
 
   function evRow(e){
     var col=primColor(e);
@@ -820,7 +822,7 @@ function pageCal(){
   var upHTML='';
   if(!S.sel){
     var upcoming=all.filter(function(e){return e.date>=TD&&matchFilter(e);})
-      .sort(function(a,b){return a.date.localeCompare(b.date);})
+      .sort(evSort)
       .slice(0,15);
     if(upcoming.length){
       upHTML='<div style="margin-top:16px">';
@@ -1199,7 +1201,7 @@ function doAddEvent(){
   if(document.getElementById("new-recur")?.checked){ev.recur="weekly";}
   if(document.getElementById("new-term")?.checked){ev.termOnly=true;}
   evWrite(ev);
-  var newEvs=S.events.concat([ev]).sort(function(a,b){return a.date.localeCompare(b.date);});
+  var newEvs=S.events.concat([ev]).sort(evSort);
   set({events:newEvs,showAdd:false,nev:{title:"",date:"",member:[]}});
 }
 
