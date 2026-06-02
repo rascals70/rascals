@@ -1030,7 +1030,7 @@ function showAddModal(){
     +'<div class="mhdr"><div class="mtitle">Add Event</div>'
     +'<button class="mclose" onclick="closeModal()">✕</button></div>'
     +'<div class="flabel">Title</div>'
-    +'<input class="finp" id="new-t" placeholder="Event name...">'
+    +'<input class="finp" id="new-t" placeholder="Event name..." value="'+(S.nev.title||'')+'">'
     +'<div class="flabel">Date</div>'
     +'<input class="finp" type="date" id="new-d" value="'+( S.nev.date||TD)+'" style="color-scheme:dark">'
     +'<div class="flabel">End Date <span style="color:var(--mu);font-weight:400">(optional)</span></div>'
@@ -1048,7 +1048,8 @@ function doAddEvent(){
   var t=document.getElementById("new-t")?.value.trim();
   var d=document.getElementById("new-d")?.value;
   var ed=document.getElementById("new-end")?.value||"";
-  if(!t||!d)return;
+  if(!t){alert("Please enter a title");return;}
+  if(!d){alert("Please enter a date");return;}
   var ms=Array.isArray(S.nev.member)?S.nev.member:[];
   var mem=ms.length===0?"All":ms.length===1?ms[0]:ms;
   var id="u"+Date.now();
@@ -1106,7 +1107,16 @@ document.addEventListener("click",function(e){
     var m=el.dataset.m;
     var cur=Array.isArray(S.nev.member)?S.nev.member:[];
     var next=cur.indexOf(m)>-1?cur.filter(function(x){return x!==m;}):[...cur,m];
-    set({nev:Object.assign({},S.nev,{member:next})});
+    // Preserve typed values
+    var tv=document.getElementById("new-t")?.value;
+    var dv=document.getElementById("new-d")?.value;
+    var ev=document.getElementById("new-end")?.value;
+    var newNev=Object.assign({},S.nev,{member:next});
+    if(tv)newNev.title=tv;
+    if(dv)newNev.date=dv;
+    if(ev)newNev.endDate=ev;
+    S.nev=newNev;
+    var old=document.querySelector(".modal-bg");if(old)old.remove();
     showAddModal();
   }
   if(a==="delete-event"){
