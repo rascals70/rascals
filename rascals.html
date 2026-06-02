@@ -997,6 +997,22 @@ function showModal(){
 
 function closeModal(){set({showEdit:false,showAdd:false,editId:null});}
 
+function toggleAddMember(m){
+  var t=document.getElementById("new-t"),d=document.getElementById("new-d"),e=document.getElementById("new-end");
+  var cur=Array.isArray(S.nev.member)?S.nev.member:[];
+  var next=cur.indexOf(m)>-1?cur.filter(function(x){return x!==m;}):cur.concat([m]);
+  S.nev={title:t?t.value:"",date:d?d.value:"",endDate:e?e.value:"",member:next};
+  var old=document.querySelector(".modal-bg");if(old)old.remove();
+  showAddModal();
+}
+function toggleEditMember(m){
+  var t=document.getElementById("edit-t"),d=document.getElementById("edit-d"),e=document.getElementById("edit-end");
+  var cur=Array.isArray(S.edit.member)?S.edit.member:[];
+  var next=cur.indexOf(m)>-1?cur.filter(function(x){return x!==m;}):cur.concat([m]);
+  S.edit=Object.assign({},S.edit,{title:t?t.value:S.edit.title,date:d?d.value:S.edit.date,endDate:e?e.value:"",member:next});
+  var old=document.querySelector(".modal-bg");if(old)old.remove();
+  showModal();
+}
 function doSaveEdit(){
   var t=document.getElementById("edit-t")?.value.trim();
   var d=document.getElementById("edit-d")?.value;
