@@ -692,8 +692,19 @@ function pageHome(){
   var all=allEvs();
   var todayEvs=all.filter(function(e){return e.date===TD;});
   var tom=new Date(NOW);tom.setDate(NOW.getDate()+1);var tomStr=fmtDate(tom);
-  var upcoming=S.events.filter(function(e){return e.date>TD;})
-    .sort(evSort).slice(0,8);
+  var nowD=new Date();var viewingCurrent=(S.y===nowD.getFullYear()&&S.mo===nowD.getMonth());
+  var mp=p2(S.mo+1);var monthPrefix=S.y+"-"+mp;
+  var upcoming;
+  if(viewingCurrent){
+    // Current month — show upcoming from today
+    upcoming=allEvs().filter(function(e){return e.date>=TD&&matchFilter(e);}).sort(evSort);
+    // Dedupe recurring by id+date
+    var seen={};upcoming=upcoming.filter(function(e){var k=e.id+e.date;if(seen[k])return false;seen[k]=1;return true;}).slice(0,12);
+  } else {
+    // Other month — show that month's events only
+    upcoming=allEvs().filter(function(e){return e.date.indexOf(monthPrefix)===0&&matchFilter(e);}).sort(evSort);
+    var seen2={};upcoming=upcoming.filter(function(e){var k=e.id+e.date;if(seen2[k])return false;seen2[k]=1;return true;});
+  }
 
   function evRow(e){
     var col=primColor(e);
@@ -848,7 +859,7 @@ function pageCal(){
     +'<div style="display:flex;gap:6px;flex-wrap:wrap;padding-bottom:8px">'+pills.join("")+'</div>'
     +'</div>'
     +dayHeaders+grid+selHTML+upHTML
-    +'<button data-a="show-add" style="position:fixed;bottom:calc(var(--nav-h) + var(--sb) + 16px);right:16px;width:50px;height:50px;border-radius:25px;background:#22c55e;border:none;color:#000;font-size:28px;cursor:pointer;box-shadow:0 4px 16px rgba(34,197,94,.4)">+</button>'
+    +'<button data-a="show-add" style="position:fixed;bottom:calc(var(--nav-h) + var(--sb) + 16px);right:16px;width:60px;height:60px;border-radius:30px;background:#22c55e;border:none;color:#000;font-size:32px;box-shadow:0 4px 16px rgba(34,197,94,.5);z-index:50;cursor:pointer;box-shadow:0 4px 16px rgba(34,197,94,.4)">+</button>'
     +'</div>';
 }
 
