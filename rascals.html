@@ -1039,6 +1039,17 @@ function showModal(){
     +'<input class="finp" type="date" id="edit-d" value="'+S.edit.date+'" style="color-scheme:dark">'
     +'<div class="flabel">End Date <span style="color:var(--mu);font-weight:400">(optional)</span></div>'
     +'<input class="finp" type="date" id="edit-end" value="'+( S.edit.endDate||"")+'" style="color-scheme:dark">'
+    +'<div class="flabel">Time of day</div>'
+    +'<div style="display:flex;gap:6px;margin-bottom:8px">'
+    +["allday","morning","afternoon","evening"].map(function(tod){
+      var lbl={allday:"All day",morning:"\ud83c\udf05 AM",afternoon:"\u2600\ufe0f PM",evening:"\ud83c\udf06 Eve"}[tod];
+      var on=(S.edit.tod||"morning")===tod;
+      return '<button data-a="edit-tod" data-tod="'+tod+'" style="flex:1;padding:8px 4px;border-radius:8px;border:1px solid '+(on?"#22c55e":"var(--bd)")+';background:'+(on?"#22c55e20":"var(--card2)")+';color:'+(on?"#22c55e":"var(--tx)")+';font-size:11px;font-weight:600;font-family:inherit;cursor:pointer">'+lbl+'</button>';
+    }).join("")
+    +'</div>'
+    +'<div class="flabel">Repeat</div>'
+    +'<label style="display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer"><input type="checkbox" id="edit-recur" '+(S.edit.recur==="weekly"?"checked":"")+' style="width:18px;height:18px;accent-color:#22c55e"> <span style="font-size:14px">Every week</span></label>'
+    +'<label style="display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer"><input type="checkbox" id="edit-term" '+(S.edit.termOnly?"checked":"")+' style="width:18px;height:18px;accent-color:#22c55e"> <span style="font-size:14px">Term-time only</span></label>'
     +'<div class="flabel">Who</div>'
     +'<div style="margin-bottom:16px">'+pills+'</div>'
     +'<div class="brow">'
