@@ -1074,6 +1074,7 @@ function doSaveEdit(){
   var id=S.editId;
   var updated={id:id,title:t,date:d,member:mem};
   if(ed)updated.endDate=ed;
+  if(S.edit.tod&&S.edit.tod!=="allday"){updated.tod=S.edit.tod;}
   if(document.getElementById("edit-recur")?.checked){updated.recur="weekly";}
   if(document.getElementById("edit-term")?.checked){updated.termOnly=true;}
   // Preserve source
@@ -1108,6 +1109,14 @@ function showAddModal(){
     +'<input class="finp" type="date" id="new-d" value="'+( S.nev.date||TD)+'" style="color-scheme:dark">'
     +'<div class="flabel">End Date <span style="color:var(--mu);font-weight:400">(optional)</span></div>'
     +'<input class="finp" type="date" id="new-end" style="color-scheme:dark">'
+    +'<div class="flabel">Time of day</div>'
+    +'<div class="tod-row" style="display:flex;gap:6px;margin-bottom:4px">'
+    +["allday","morning","afternoon","evening"].map(function(tod){
+      var lbl={allday:"All day",morning:"🌅 AM",afternoon:"☀️ PM",evening:"🌆 Eve"}[tod];
+      var on=(S.nev.tod||"allday")===tod;
+      return '<button class="todpill'+(on?" on":"")+'" data-a="add-tod" data-tod="'+tod+'" style="flex:1;padding:8px 4px;border-radius:8px;border:1px solid '+(on?"#22c55e":"var(--bd)")+';background:'+(on?"#22c55e20":"var(--card2)")+';color:'+(on?"#22c55e":"var(--tx)")+';font-size:11px;font-weight:600;font-family:inherit;cursor:pointer">'+lbl+'</button>';
+    }).join("")
+    +'</div>'
     +'<div class="flabel">Repeat</div>'
     +'<label style="display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer"><input type="checkbox" id="new-recur" '+(S.nev.recur==="weekly"?"checked":"")+' style="width:18px;height:18px;accent-color:#22c55e"> <span style="font-size:14px">Every week</span></label>'
     +'<label style="display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer"><input type="checkbox" id="new-term" '+(S.nev.termOnly?"checked":"")+' style="width:18px;height:18px;accent-color:#22c55e"> <span style="font-size:14px">Term-time only</span></label>'
@@ -1131,6 +1140,7 @@ function doAddEvent(){
   var id="u"+Date.now();
   var ev={id:id,title:t,date:d,member:mem,source:"user"};
   if(ed)ev.endDate=ed;
+  if(S.nev.tod&&S.nev.tod!=="allday"){ev.tod=S.nev.tod;}
   if(document.getElementById("new-recur")?.checked){ev.recur="weekly";}
   if(document.getElementById("new-term")?.checked){ev.termOnly=true;}
   evWrite(ev);
@@ -1161,7 +1171,7 @@ document.addEventListener("click",function(e){
     // For All/Holiday, show no pills selected (saves as All)
     // For specific members, show them selected
     var ms=Array.isArray(ev.member)?ev.member:(ev.member==="All"||ev.member==="Holiday")?[]:[ ev.member];
-    var ex=document.querySelector(".modal-bg");if(ex)ex.remove();S.showEdit=true;S.editId=id;S.edit={title:ev.title,date:ev.date,endDate:ev.endDate||"",member:ms,recur:ev.recur,termOnly:ev.termOnly};showModal();
+    var ex=document.querySelector(".modal-bg");if(ex)ex.remove();S.showEdit=true;S.editId=id;S.edit={title:ev.title,date:ev.date,endDate:ev.endDate||"",member:ms,recur:ev.recur,termOnly:ev.termOnly,tod:ev.tod||"allday"};showModal();
   }
   if(a==="edit-toggle"){
     var m=el.dataset.m;
@@ -1179,6 +1189,32 @@ document.addEventListener("click",function(e){
     // Remove and re-add modal without full render
     var old=document.querySelector(".modal-bg");if(old)old.remove();
     showModal();
+  }
+  if(a==="add-tod"){
+    var tod=el.dataset.tod;
+    var tv=document.getElementById("new-t")?.value;
+    var dv=document.getElementById("new-d")?.value;
+    var ev=document.getElementById("new-end")?.value;
+    S.nev=Object.assign({},S.nev,{tod:tod});
+    if(tv!==undefined)S.nev.title=tv;
+    if(dv)S.nev.date=dv;
+    if(ev)S.nev.endDate=ev;
+    var old=document.querySelector(".modal-bg");if(old)old.remove();
+    showAddModal();
+    return;
+  }
+  if(a==="edit-tod"){
+    var tod2=el.dataset.tod;
+    var tv2=document.getElementById("edit-t")?.value;
+    var dv2=document.getElementById("edit-d")?.value;
+    var ev2=document.getElementById("edit-end")?.value;
+    S.edit=Object.assign({},S.edit,{tod:tod2});
+    if(tv2!==undefined)S.edit.title=tv2;
+    if(dv2)S.edit.date=dv2;
+    if(ev2)S.edit.endDate=ev2;
+    var old2=document.querySelector(".modal-bg");if(old2)old2.remove();
+    showModal();
+    return;
   }
   if(a==="add-toggle"){
     var m=el.dataset.m;
