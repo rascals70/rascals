@@ -690,6 +690,28 @@ function pageLand(){
 // ══════════════════════════════════════════════════════════════════════════════
 function pageHome(){
   var all=allEvs();
+  var recentAdded=allEvs().filter(function(e){return e.created&&(Date.now()-e.created)<14*86400000;})
+    .sort(function(a,b){return b.created-a.created;});
+  // Dedupe by id (recurring expands to many)
+  var seenR={};recentAdded=recentAdded.filter(function(e){if(seenR[e.id])return false;seenR[e.id]=1;return true;}).slice(0,5);
+  var recentHTML="";
+  if(recentAdded.length){
+    recentHTML='<div style="margin-bottom:22px">'
+      +'<div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#22c55e;margin-bottom:10px">\u2728 Recently added</div>';
+    recentAdded.forEach(function(e){
+      var col=primColor(e);
+      var d=new Date(e.date+"T00:00:00");
+      var ds=DAYS_S[d.getDay()]+" "+d.getDate()+" "+MONTHS_S[d.getMonth()];
+      var ago=Math.floor((Date.now()-e.created)/86400000);
+      var agoTxt=ago===0?"today":ago===1?"yesterday":ago+" days ago";
+      recentHTML+='<div class="ev-row" style="border-left-color:'+col+'" data-a="open-edit" data-id="'+e.id+'">'
+        +'<div style="flex:1"><div class="ev-title">'+e.title+'</div>'
+        +'<div class="ev-sub">'+ds+' &middot; '+memberLabel(e.member)+' &middot; added '+agoTxt+'</div></div>'
+        +'<span style="color:var(--mu);font-size:18px">\u203a</span></div>';
+    });
+    recentHTML+='</div>';
+  }
+
   var todayEvs=all.filter(function(e){return e.date===TD;});
   var tom=new Date(NOW);tom.setDate(NOW.getDate()+1);var tomStr=fmtDate(tom);
   var nowD=new Date();var viewingCurrent=(S.y===nowD.getFullYear()&&S.mo===nowD.getMonth());
@@ -1213,7 +1235,7 @@ function doAddEvent(){
   var ms=Array.isArray(S.nev.member)?S.nev.member:[];
   var mem=ms.length===0?"All":ms.length===1?ms[0]:ms;
   var id="u"+Date.now();
-  var ev={id:id,title:t,date:d,member:mem,source:"user"};
+  var ev={id:id,title:t,date:d,member:mem,source:"user",created:Date.now()};
   if(ed)ev.endDate=ed;
   ev.tod=(S.nev.tod&&S.nev.tod!=="allday")?S.nev.tod:"morning";
   if(document.getElementById("new-recur")?.checked){ev.recur="weekly";}
