@@ -252,6 +252,7 @@ var TERM_DATES=[
 function inTermTime(ds){
   return TERM_DATES.some(function(t){return ds>=t[0]&&ds<=t[1];});
 }
+function todShort(t){return{morning:"\ud83c\udf05 AM",afternoon:"\u2600\ufe0f PM",evening:"\ud83c\udf06 Eve"}[t]||"";}
 function todOrder(t){return{morning:0,afternoon:1,evening:2,allday:3}[t||"morning"];}
 function evSort(a,b){var d=a.date.localeCompare(b.date);return d!==0?d:todOrder(a.tod)-todOrder(b.tod);}
 function allEvs(){
@@ -706,7 +707,7 @@ function pageHome(){
       var agoTxt=ago===0?"today":ago===1?"yesterday":ago+" days ago";
       recentHTML+='<div class="ev-row" style="border-left-color:'+col+'" data-a="open-edit" data-id="'+e.id+'">'
         +'<div style="flex:1"><div class="ev-title">'+e.title+'</div>'
-        +'<div class="ev-sub">'+ds+' &middot; '+memberLabel(e.member)+' &middot; added '+agoTxt+'</div></div>'
+        +'<div class="ev-sub">'+ds+' &middot; '+memberLabel(e.member)+(e.tod&&todShort(e.tod)?' &middot; '+todShort(e.tod):'')+' &middot; added '+agoTxt+'</div></div>'
         +'<span style="color:var(--mu);font-size:18px">\u203a</span></div>';
     });
     recentHTML+='</div>';
@@ -737,7 +738,7 @@ function pageHome(){
     return'<div class="ev-row" style="border-left-color:'+col+'" data-a="open-edit" data-id="'+e.id+'">'
       +'<div style="flex:1">'
       +'<div class="ev-title">'+e.title+'</div>'
-      +'<div class="ev-sub">'+memberLabel(e.member)+'</div>'
+      +'<div class="ev-sub">'+memberLabel(e.member)+(e.tod&&todShort(e.tod)?' &middot; '+todShort(e.tod):'')+'</div>'
       +'</div></div>';
   }
 
@@ -754,7 +755,7 @@ function pageHome(){
       +'<div class="date-badge"><div class="day">'+d.getDate()+'</div><div class="mon">'+MONTHS_S[d.getMonth()]+'</div></div>'
       +'<div style="flex:1">'
       +'<div class="ev-title">'+e.title+'</div>'
-      +'<div class="ev-sub" style="display:flex;align-items:center;gap:4px;margin-top:4px">'+dots+' <span>'+memberLabel(e.member)+'</span></div>'
+      +'<div class="ev-sub" style="display:flex;align-items:center;gap:4px;margin-top:4px">'+dots+' <span>'+memberLabel(e.member)+(e.tod&&todShort(e.tod)?' &middot; '+todShort(e.tod):'')+'</span></div>'
       +'</div></div>';
   }
 
@@ -874,7 +875,7 @@ function pageCal(){
         var ds=DAYS_S[d.getDay()]+" "+d.getDate()+" "+MONTHS_S[d.getMonth()];
         upHTML+='<div class="ev-row" style="border-left-color:'+col+'" data-a="open-edit" data-id="'+e.id+'">'
           +'<div style="flex:1"><div class="ev-title">'+e.title+'</div>'
-          +'<div class="ev-sub">'+ds+' &middot; '+memberLabel(e.member)+'</div></div>'
+          +'<div class="ev-sub">'+ds+' &middot; '+memberLabel(e.member)+(e.tod&&todShort(e.tod)?' &middot; '+todShort(e.tod):'')+'</div></div>'
           +'<span style="color:var(--mu);font-size:18px">›</span></div>';
       });
       upHTML+='</div>';
