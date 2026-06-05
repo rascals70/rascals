@@ -206,6 +206,8 @@ function evLoad(){
         var arr=Object.keys(d).map(function(k){return d[k];})
           .filter(function(e){return e&&e.id&&e.date;})
           .sort(evSort);
+        // Belt & braces: default missing tod to morning so faces always show a time
+        arr.forEach(function(e){if(!e.tod)e.tod="morning";});
         set({events:arr,evLoaded:true});
       } else {
         // Empty — seed from EMBEDDED
@@ -233,6 +235,9 @@ function evSeed(){
 function evWrite(ev){
   return fetch(FB+"/events/"+ev.id+".json",{
     method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(ev)
+  }).then(function(r){
+    if(!r.ok)console.error("evWrite failed status",r.status);
+    return r;
   }).catch(function(e){console.error("evWrite",e);});
 }
 
