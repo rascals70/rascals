@@ -246,7 +246,7 @@ function evLoad(){
     arr=applyOverrides(arr).sort(evSort);
     return arr;
   }
-  fetch(FB+"/events.json")
+  fetch(FB+"/events.json?nocache="+Date.now(),{cache:"no-store"})
     .then(function(r){return r.json();})
     .then(function(d){
       var fb=d&&typeof d==="object"?Object.keys(d).map(function(k){return d[k];}):[];
@@ -278,7 +278,7 @@ function toast(msg,ok){
 }
 function evWrite(ev){
   return fetch(FB+"/events/"+ev.id+".json",{
-    method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(ev)
+    method:"PUT",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify(ev)
   }).then(function(r){
     if(r.ok)toast("\u2713 Saved to cloud",true);
     else toast("\u2715 Save failed ("+r.status+")",false);
