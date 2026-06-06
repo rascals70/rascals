@@ -1245,7 +1245,7 @@ function doSaveEdit(){
   // Read tod from the highlighted button (most reliable — avoids stale state)
   var selTodBtn=document.querySelector('[data-a="edit-tod"][data-sel="1"]');
   var selTod=selTodBtn?selTodBtn.dataset.tod:(S.edit.tod||"morning");
-  updated.tod=(selTod&&selTod!=="allday")?selTod:"morning";
+  updated.tod=selTod||"morning";
   updated.rev=Date.now();
   if(document.getElementById("edit-recur")?.checked){updated.recur="weekly";}
   if(document.getElementById("edit-term")?.checked){updated.termOnly=true;}
@@ -1314,7 +1314,7 @@ function doAddEvent(){
   if(ed)ev.endDate=ed;
   var selAddBtn=document.querySelector('[data-a="add-tod"][data-sel="1"]');
   var selAddTod=selAddBtn?selAddBtn.dataset.tod:(S.nev.tod||"morning");
-  ev.tod=(selAddTod&&selAddTod!=="allday")?selAddTod:"morning";
+  ev.tod=selAddTod||"morning";
   if(document.getElementById("new-recur")?.checked){ev.recur="weekly";}
   if(document.getElementById("new-term")?.checked){ev.termOnly=true;}
   saveOverride(ev);
