@@ -306,7 +306,7 @@ var TERM_DATES=[
 function inTermTime(ds){
   return TERM_DATES.some(function(t){return ds>=t[0]&&ds<=t[1];});
 }
-function todShort(t){return{morning:"\ud83c\udf05 AM",afternoon:"\u2600\ufe0f PM",evening:"\ud83c\udf06 Eve"}[t]||"";}
+function todShort(t){return{morning:"\ud83c\udf05 AM",afternoon:"\u2600\ufe0f PM",evening:"\ud83c\udf06 Eve",allday:"\ud83d\udcc5 All day"}[t]||"";}
 function todOrder(t){return{morning:0,afternoon:1,evening:2,allday:3}[t||"morning"];}
 function evSort(a,b){var d=a.date.localeCompare(b.date);return d!==0?d:todOrder(a.tod)-todOrder(b.tod);}
 function allEvs(){
