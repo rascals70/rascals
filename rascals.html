@@ -1219,6 +1219,7 @@ function doSaveEdit(){
   var selTodBtn=document.querySelector('[data-a="edit-tod"][data-sel="1"]');
   var selTod=selTodBtn?selTodBtn.dataset.tod:(S.edit.tod||"morning");
   updated.tod=(selTod&&selTod!=="allday")?selTod:"morning";
+  updated.rev=Date.now();
   if(document.getElementById("edit-recur")?.checked){updated.recur="weekly";}
   if(document.getElementById("edit-term")?.checked){updated.termOnly=true;}
   // Preserve source
