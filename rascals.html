@@ -277,14 +277,15 @@ function toast(msg,ok){
   setTimeout(function(){t.remove();},3500);
 }
 function evWrite(ev){
+  if(!ev||!ev.id){toast("\u2715 No event id!",false);return Promise.resolve();}
   return fetch(FB+"/events/"+ev.id+".json",{
     method:"PUT",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify(ev)
   }).then(function(r){
-    if(r.ok)toast("\u2713 Saved to cloud",true);
-    else toast("\u2715 Save failed ("+r.status+")",false);
+    if(r.ok)toast("\u2713 Wrote id="+ev.id+" tod="+ev.tod,true);
+    else toast("\u2715 Failed "+r.status+" id="+ev.id,false);
     return r;
   }).catch(function(e){
-    toast("\u2715 Save failed (offline?)",false);
+    toast("\u2715 Failed: "+(e.message||e),false);
     console.error("evWrite",e);
   });
 }
