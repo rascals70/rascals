@@ -1171,7 +1171,7 @@ function showModal(){
     +["allday","morning","afternoon","evening"].map(function(tod){
       var lbl={allday:"All day",morning:"\ud83c\udf05 AM",afternoon:"\u2600\ufe0f PM",evening:"\ud83c\udf06 Eve"}[tod];
       var on=(S.edit.tod||"morning")===tod;
-      return '<button data-a="edit-tod" data-tod="'+tod+'" style="flex:1;padding:8px 4px;border-radius:8px;border:1px solid '+(on?"#22c55e":"var(--bd)")+';background:'+(on?"#22c55e20":"var(--card2)")+';color:'+(on?"#22c55e":"var(--tx)")+';font-size:11px;font-weight:600;font-family:inherit;cursor:pointer">'+lbl+'</button>';
+      return '<button data-a="edit-tod" data-tod="'+tod+'" data-sel="'+(on?"1":"0")+'" style="flex:1;padding:8px 4px;border-radius:8px;border:1px solid '+(on?"#22c55e":"var(--bd)")+';background:'+(on?"#22c55e20":"var(--card2)")+';color:'+(on?"#22c55e":"var(--tx)")+';font-size:11px;font-weight:600;font-family:inherit;cursor:pointer">'+lbl+'</button>';
     }).join("")
     +'</div>'
     +'<div class="flabel">Repeat</div>'
@@ -1215,7 +1215,10 @@ function doSaveEdit(){
   var id=S.editId;
   var updated={id:id,title:t,date:d,member:mem};
   if(ed)updated.endDate=ed;
-  updated.tod=(S.edit.tod&&S.edit.tod!=="allday")?S.edit.tod:"morning";
+  // Read tod from the highlighted button (most reliable — avoids stale state)
+  var selTodBtn=document.querySelector('[data-a="edit-tod"][data-sel="1"]');
+  var selTod=selTodBtn?selTodBtn.dataset.tod:(S.edit.tod||"morning");
+  updated.tod=(selTod&&selTod!=="allday")?selTod:"morning";
   if(document.getElementById("edit-recur")?.checked){updated.recur="weekly";}
   if(document.getElementById("edit-term")?.checked){updated.termOnly=true;}
   // Preserve source
@@ -1255,7 +1258,7 @@ function showAddModal(){
     +["allday","morning","afternoon","evening"].map(function(tod){
       var lbl={allday:"All day",morning:"🌅 AM",afternoon:"☀️ PM",evening:"🌆 Eve"}[tod];
       var on=(S.nev.tod||"morning")===tod;
-      return '<button class="todpill'+(on?" on":"")+'" data-a="add-tod" data-tod="'+tod+'" style="flex:1;padding:8px 4px;border-radius:8px;border:1px solid '+(on?"#22c55e":"var(--bd)")+';background:'+(on?"#22c55e20":"var(--card2)")+';color:'+(on?"#22c55e":"var(--tx)")+';font-size:11px;font-weight:600;font-family:inherit;cursor:pointer">'+lbl+'</button>';
+      return '<button class="todpill'+(on?" on":"")+'" data-a="add-tod" data-tod="'+tod+'" data-sel="'+(on?"1":"0")+'" style="flex:1;padding:8px 4px;border-radius:8px;border:1px solid '+(on?"#22c55e":"var(--bd)")+';background:'+(on?"#22c55e20":"var(--card2)")+';color:'+(on?"#22c55e":"var(--tx)")+';font-size:11px;font-weight:600;font-family:inherit;cursor:pointer">'+lbl+'</button>';
     }).join("")
     +'</div>'
     +'<div class="flabel">Repeat</div>'
@@ -1281,7 +1284,9 @@ function doAddEvent(){
   var id="u"+Date.now();
   var ev={id:id,title:t,date:d,member:mem,source:"user",created:Date.now()};
   if(ed)ev.endDate=ed;
-  ev.tod=(S.nev.tod&&S.nev.tod!=="allday")?S.nev.tod:"morning";
+  var selAddBtn=document.querySelector('[data-a="add-tod"][data-sel="1"]');
+  var selAddTod=selAddBtn?selAddBtn.dataset.tod:(S.nev.tod||"morning");
+  ev.tod=(selAddTod&&selAddTod!=="allday")?selAddTod:"morning";
   if(document.getElementById("new-recur")?.checked){ev.recur="weekly";}
   if(document.getElementById("new-term")?.checked){ev.termOnly=true;}
   saveOverride(ev);
