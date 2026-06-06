@@ -1196,6 +1196,21 @@ function showModal(){
     +'<button class="bgh" onclick="closeModal()">Cancel</button>'
     +'</div></div>';
   document.getElementById("app").appendChild(el);
+  // DIAGNOSTIC: fetch this event fresh from Firebase and show its stored time-of-day
+  (function(){
+    var dbg=document.createElement("div");
+    dbg.style.cssText="font-size:11px;color:var(--mu);padding:8px 0;text-align:center";
+    dbg.textContent="Checking cloud...";
+    var modalEl=el.querySelector(".modal");
+    if(modalEl)modalEl.appendChild(dbg);
+    fetch(FB+"/events/"+S.editId+".json?nc="+Date.now(),{cache:"no-store"})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d)dbg.textContent="Cloud says: tod="+(d.tod||"(none)")+", rev="+(d.rev||"(none)");
+        else dbg.textContent="Cloud: event not found (id="+S.editId+")";
+      })
+      .catch(function(){dbg.textContent="Cloud: read failed";});
+  })();
 }
 
 function closeModal(){set({showEdit:false,showAdd:false,editId:null});}
