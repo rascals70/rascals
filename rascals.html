@@ -223,25 +223,37 @@ function applyOverrides(arr){
 }
 
 function evLoad(){
+  // MERGE STRATEGY: EMBEDDED is the base (always current from the app build).
+  // Firebase events layer on top (cross-device additions/edits by family).
+  // localStorage overrides win last (this device's own edits).
+  function build(fbEvents){
+    var byId={};
+    // 1. Start with EMBEDDED
+    EMBEDDED.forEach(function(e){byId[e.id]=Object.assign({},e);});
+    // 2. Overlay Firebase events (newer cross-device data), but DON'T let a stale
+    //    Firebase copy clobber an EMBEDDED event that has a newer 'rev' stamp.
+    if(fbEvents){
+      fbEvents.forEach(function(e){
+        if(!e||!e.id||!e.date)return;
+        var base=byId[e.id];
+        // If embedded has a rev and firebase's is older/absent, keep embedded
+        if(base&&base.rev&&(!e.rev||e.rev<base.rev))return;
+        byId[e.id]=e;
+      });
+    }
+    var arr=Object.keys(byId).map(function(k){return byId[k];});
+    arr.forEach(function(e){if(!e.tod)e.tod="morning";});
+    arr=applyOverrides(arr).sort(evSort);
+    return arr;
+  }
   fetch(FB+"/events.json")
     .then(function(r){return r.json();})
     .then(function(d){
-      if(d&&typeof d==="object"){
-        var arr=Object.keys(d).map(function(k){return d[k];})
-          .filter(function(e){return e&&e.id&&e.date;})
-          .sort(evSort);
-        // Belt & braces: default missing tod to morning so faces always show a time
-        arr.forEach(function(e){if(!e.tod)e.tod="morning";});
-        arr=applyOverrides(arr).sort(evSort);
-        set({events:arr,evLoaded:true});
-      } else {
-        // Empty — seed from EMBEDDED
-        evSeed();
-      }
+      var fb=d&&typeof d==="object"?Object.keys(d).map(function(k){return d[k];}):[];
+      set({events:build(fb),evLoaded:true});
     })
     .catch(function(){
-      // Firebase unavailable — use EMBEDDED
-      set({events:applyOverrides(EMBEDDED.slice()).sort(evSort),evLoaded:true});
+      set({events:build(null),evLoaded:true});
     });
 }
 
