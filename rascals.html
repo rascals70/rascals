@@ -627,6 +627,7 @@ function page(){
     case"run":      return pageRun();
     case"school":   return pageSchool();
     case"todo":     return pageTodo();
+    case"hugo":     return pageHugo();
     case"weather":  return pageWeather();
     default:        return pageHome();
   }
@@ -650,6 +651,7 @@ function navHTML(){
     +nb("weather","🌤️","Weather")
     +nb("school","🏫","School")
     +nb("todo","✅","To-do")
+    +nb("hugo","🐾","Hugo")
     +'<button class="nb" onclick="doUpdate()"><span class="ni">↻</span>Update</button>';
 }
 
@@ -999,6 +1001,70 @@ function pageTodo(){
     +'</div>'
     +'<div style="font-size:10px;color:var(--mu2);margin-top:10px;text-align:center">Syncs across all devices</div>'
     +'</div>';
+}
+
+var HUGO_TASKS=[["Foundations", "Name response — Hugo looks at you instantly when called, indoors, no distractions"], ["Foundations", "Voluntary check-ins — reward Hugo any time he chooses to look at you"], ["Foundations", "Hand-target (touch nose to palm) on cue"], ["Foundations", "Settle on a mat for 30 seconds while you sit nearby"], ["Foundations", "Settle on a mat for 5 minutes while you watch TV"], ["Foundations", "Calm in the crate with door open, choosing to rest there"], ["Foundations", "Capturing calm — reward Hugo for lying down quietly, unprompted"], ["Foundations", "Eye contact / 'watch me' held for 3 seconds"], ["Foundations", "Tolerates collar/harness handling without mouthing"], ["Foundations", "Accepts gentle body handling — paws, ears, mouth, tail"], ["Foundations", "Takes food gently from hand (no snatching)"], ["Foundations", "Calm greeting — four paws on floor, no jumping, for a known person"], ["Foundations", "Relaxed on lead in the garden with no pulling"], ["Foundations", "Follows you around the house off-lead willingly"], ["Foundations", "Disengages from a dropped item when asked ('leave it', easy version)"], ["Obedience", "Sit on verbal cue, no lure"], ["Obedience", "Down on verbal cue, no lure"], ["Obedience", "Stand on cue"], ["Obedience", "Stay in sit for 30 seconds, you 1 step away"], ["Obedience", "Stay in down for 2 minutes, you across the room"], ["Obedience", "Recall from 5 metres in the garden"], ["Obedience", "Recall away from a mild distraction (a toy)"], ["Obedience", "Loose-lead walking for 10 steps, no tension"], ["Obedience", "Loose-lead walking past a parked car / bin"], ["Obedience", "Automatic sit at the kerb before crossing"], ["Obedience", "'Wait' at a doorway until released"], ["Obedience", "'Wait' before getting out of the car"], ["Obedience", "Place / 'on your bed' from 2 metres away"], ["Obedience", "Leave a high-value item (food on floor) on cue"], ["Obedience", "Drop / give up a toy on cue"], ["Obedience", "Settle under a cafe table for 10 minutes"], ["Obedience", "Heel position turns — left, right, about-turn"], ["Obedience", "Emergency stop / 'down' at distance"], ["Obedience", "Middle position (sit between your legs) for steadiness"], ["Obedience", "Released only on cue ('OK / free') from a stay"], ["People", "Calm around a stranger walking past"], ["People", "Calm meeting a person wearing a hat / hood"], ["People", "Calm meeting a person with a beard / sunglasses"], ["People", "Calm around someone using a walking stick or crutches"], ["People", "Calm around a person in a wheelchair"], ["People", "Calm around a child running and being noisy"], ["People", "Calm around a toddler / pushchair"], ["People", "Calm around a person in hi-vis / uniform"], ["People", "Calm around someone carrying bags / boxes"], ["People", "Accepts being approached and stroked by a stranger"], ["People", "Ignores a jogger passing closely"], ["People", "Calm around a cyclist passing"], ["People", "Calm around a group of people talking loudly"], ["People", "Settles while you have a conversation with someone"], ["Animals", "Neutral around a calm dog at distance"], ["Animals", "Neutral around a calm dog passing on lead"], ["Animals", "Polite greeting with a known friendly dog, then disengage"], ["Animals", "Ignores a barking dog behind a fence"], ["Animals", "Calm around an excitable puppy"], ["Animals", "Calm around a large breed dog"], ["Animals", "Recall away from another dog mid-play"], ["Animals", "Calm around cats (if safe to arrange)"], ["Animals", "Calm around horses / livestock behind a fence"], ["Animals", "Calm around ducks / birds at the river"], ["Animals", "Ignores squirrels / wildlife on a walk"], ["Animals", "Neutral passing a dog while you keep walking"], ["Environments", "Walks confidently on grass, gravel, tarmac"], ["Environments", "Walks on metal grating / drain covers"], ["Environments", "Walks on shiny / slippery floors (shop entrance)"], ["Environments", "Walks over a wobble board / unstable surface"], ["Environments", "Up and down a flight of stairs calmly"], ["Environments", "Through an automatic sliding door"], ["Environments", "Calm in a lift (if accessible)"], ["Environments", "Calm walking through a narrow doorway / crowd"], ["Environments", "Settles in a busy cafe or pub (the Early Bar test!)"], ["Environments", "Calm in a car park with movement around"], ["Environments", "Walks calmly through Cookham High Street"], ["Environments", "Calm at the river / Cookham Moor with people about"], ["Environments", "Calm in a garden centre / pet shop"], ["Environments", "Settles outside a shop tied or in a down-stay (supervised)"], ["Environments", "Calm on public transport (bus / train) if planned"], ["Sounds", "Calm with the vacuum cleaner running"], ["Sounds", "Calm with the washing machine / dishwasher"], ["Sounds", "Calm with the doorbell (no barking rush)"], ["Sounds", "Calm with thunder / rain sounds (recording, low volume)"], ["Sounds", "Calm with fireworks recording at low volume"], ["Sounds", "Calm around traffic noise on a busy road"], ["Sounds", "Calm around sirens / emergency vehicles"], ["Sounds", "Calm with sudden dropped-object noise (recover quickly)"], ["Sounds", "Calm with kitchen noises — blender, pans"], ["Sounds", "Calm around lawnmower / power tools in the garden"], ["Resilience", "Settles alone in a room for 10 minutes, no fuss"], ["Resilience", "Alone in the house for 30 minutes calmly"], ["Resilience", "Alone in the house for 1–2 hours calmly"], ["Resilience", "Calm when left tied briefly (supervised) outside"], ["Resilience", "Recovers quickly from a startle (bounces back within seconds)"], ["Resilience", "Calm at the vet — happy visits, no procedure"], ["Resilience", "Accepts vet handling — stand still for examination"], ["Resilience", "Calm being groomed / brushed all over"], ["Resilience", "Calm having nails done / dremel introduced"], ["Resilience", "Settles in a new / unfamiliar place within minutes"], ["Proofing", "Holds a down-stay while another dog walks past"], ["Proofing", "Holds position while food is dropped nearby"], ["Proofing", "Recall past a person offering food"], ["Proofing", "Ignores food on the pavement on a walk ('leave')"], ["Proofing", "Steady when a ball is thrown for another dog"], ["Proofing", "Calm and focused in a brand-new busy environment"], ["Proofing", "Whole-walk loose lead through town with full distractions"], ["Proofing", "A genuinely unflappable day out — start to finish"]];
+var _hp={},_hpl=false;
+var _fb_hugo="https://rascal-4c10a-default-rtdb.europe-west1.firebasedatabase.app/hugo_training";
+function _hpLoad(){
+  fetch(_fb_hugo+".json?nc="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
+    _hp=d&&typeof d==="object"?d:{};_hpl=true;if(S.tab==="hugo")render();
+  }).catch(function(){_hpl=true;if(S.tab==="hugo")render();});
+}
+function _hpTog(i){
+  var key="t"+i;
+  _hp[key]=!_hp[key];
+  fetch(_fb_hugo+"/"+key+".json",{method:"PUT",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify(_hp[key])}).catch(function(){});
+  render();
+}
+
+function pageHugo(){
+  if(!_hpl){_hpLoad();return'<div class="page"><p style="color:var(--mu)">Loading Hugo\'s progress...</p></div>';}
+  var done=0;for(var k in _hp){if(_hp[k])done++;}
+  var total=HUGO_TASKS.length;
+  var pct=Math.round(done/total*100);
+  // Stage colours
+  var stageColors={Foundations:"#f59e0b",Obedience:"#3b82f6",People:"#ec4899",Animals:"#22c55e",Environments:"#a855f7",Sounds:"#06b6d4",Resilience:"#f97316",Proofing:"#ef4444"};
+  var stageEmoji={Foundations:"\ud83c\udf31",Obedience:"\ud83c\udf93",People:"\ud83d\udc65",Animals:"\ud83d\udc15",Environments:"\ud83c\udfd9\ufe0f",Sounds:"\ud83d\udd0a",Resilience:"\ud83d\udcaa",Proofing:"\ud83c\udfc5"};
+
+  var html='<div class="page">'
+    +'<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;margin-bottom:2px">Hugo Training</div>'
+    +'<div style="font-size:12px;color:var(--mu);margin-bottom:16px">Building a calm, unflappable, fully-socialised dog</div>';
+
+  // Progress bar
+  html+='<div style="background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:20px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">'
+    +'<div style="font-family:Syne,sans-serif;font-size:28px;font-weight:800;color:#f59e0b">'+done+'<span style="font-size:14px;color:var(--mu)">/'+total+'</span></div>'
+    +'<div style="font-size:13px;font-weight:700;color:#22c55e">'+pct+'%</div></div>'
+    +'<div style="height:8px;background:var(--card2);border-radius:4px;overflow:hidden">'
+    +'<div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,#f59e0b,#22c55e);border-radius:4px;transition:width .3s"></div></div>'
+    +'</div>';
+
+  // Group tasks by stage, preserving order
+  var stages=[],seen={};
+  HUGO_TASKS.forEach(function(t){if(!seen[t[0]]){seen[t[0]]=1;stages.push(t[0]);}});
+  var idx=0;
+  stages.forEach(function(stage){
+    var stageTasks=[];
+    HUGO_TASKS.forEach(function(t,i){if(t[0]===stage)stageTasks.push([i,t[1]]);});
+    var sDone=stageTasks.filter(function(x){return _hp["t"+x[0]];}).length;
+    var col=stageColors[stage]||"#888";
+    html+='<div style="margin-bottom:8px;margin-top:18px;display:flex;align-items:center;gap:8px">'
+      +'<span style="font-size:16px">'+(stageEmoji[stage]||"")+'</span>'
+      +'<span style="font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:'+col+'">'+stage+'</span>'
+      +'<span style="font-size:11px;color:var(--mu);margin-left:auto">'+sDone+'/'+stageTasks.length+'</span></div>';
+    stageTasks.forEach(function(x){
+      var i=x[0],txt=x[1],on=!!_hp["t"+i];
+      html+='<div data-a="hugo-tog" data-i="'+i+'" style="display:flex;align-items:flex-start;gap:11px;padding:11px 13px;background:var(--card);border-radius:11px;margin-bottom:6px;border:1px solid var(--bd);cursor:pointer">'
+        +'<div style="width:21px;height:21px;border-radius:50%;border:2px solid '+(on?col:"var(--mu2)")+';background:'+(on?col:"transparent")+';display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;flex-shrink:0;margin-top:1px">'+(on?"\u2713":"")+'</div>'
+        +'<div style="flex:1;font-size:13px;line-height:1.35;color:var(--tx)'+(on?";opacity:.5":"")+'">'+txt+'</div>'
+        +'</div>';
+    });
+  });
+
+  html+='<div style="font-size:10px;color:var(--mu2);margin-top:16px;text-align:center;line-height:1.5">Tap any item to mark complete \u00b7 syncs across devices<br>Work through the stages in order \u2014 calm foundations first, proofing last</div>';
+  html+='</div>';
+  return html;
 }
 
 function pageShop(){
@@ -1409,6 +1475,7 @@ document.addEventListener("click",function(e){
   if(a==="todo-del"){_tDel(el.dataset.k);}
   if(a==="todo-add"){var tv=document.getElementById("ti");if(tv&&tv.value.trim()){_tAdd(tv.value.trim());tv.value="";}}
   if(a==="todo-clr"){_tClr();}
+  if(a==="hugo-tog"){_hpTog(parseInt(el.dataset.i));}
   // Watch
   if(a==="watch-tog"){_wTog(el.dataset.k,el.dataset.w==="true");}
   if(a==="watch-del"){_wDel(el.dataset.k);}
